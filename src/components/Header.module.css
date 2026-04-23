@@ -1,0 +1,57 @@
+.header {
+  background: var(--blue);
+  color: #fff;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: var(--shadow-header);
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  flex-shrink: 0;
+}
+
+.dash { color: #93C5FD; }
+
+.chip {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-pill);
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.progress {
+  flex: 1;
+  margin: 0 16px;
+  min-width: 0;
+}
+
+.bar {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: #4ADE80;
+  border-radius: 5px;
+  transition: width 0.5s ease;
+}
+
+.label {
+  font-size: 12px;
+  margin-top: 4px;
+  opacity: 0.85;
+}

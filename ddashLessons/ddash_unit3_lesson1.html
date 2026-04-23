@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D-DASH · Unit 3 · Lesson 1: Rules of Divisibility</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1E6FD9;--blue-dark:#1558B0;--blue-light:#EEF4FF;
+  --green:#16A34A;--green-bg:#DCFCE7;--green-border:#86EFAC;
+  --red:#DC2626;--red-bg:#FEE2E2;--red-border:#FCA5A5;
+  --amber:#D97706;--amber-bg:#FEF3C7;--amber-border:#FCD34D;
+  --purple:#7C3AED;--purple-bg:#EDE9FE;--purple-border:#C4B5FD;
+  --bg:#F0F4FF;--border:#C7D7F5;--text:#1E293B;--muted:#64748B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);font-size:17px;line-height:1.5}
+
+/* ── HEADER ── */
+.header{background:var(--blue);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(30,111,217,.3)}
+.logo{font-size:22px;font-weight:900;letter-spacing:-1px}.logo .dash{color:#93C5FD}
+.lesson-chip{background:rgba(255,255,255,.2);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;white-space:nowrap}
+.hdr-progress{flex:1;margin:0 16px;min-width:0}
+.hdr-bar{height:10px;background:rgba(255,255,255,.25);border-radius:5px;overflow:hidden}
+.hdr-fill{height:100%;background:#4ADE80;border-radius:5px;transition:width .5s ease;width:0%}
+.hdr-label{font-size:12px;margin-top:4px;opacity:.85}
+.page{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+
+/* ── OBJECTIVE ── */
+.obj-card{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:20px 24px;margin-bottom:24px}
+.obj-card h2{font-size:13px;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.obj-card p{font-size:19px;font-weight:800}
+
+/* ── EXPLAIN ── */
+.explain{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
+.explain h3{font-size:16px;font-weight:800;color:var(--blue);margin-bottom:10px}
+.rule-box{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:13px 16px;margin:10px 0;font-size:15px;line-height:1.9}
+.rule-box strong{color:var(--blue-dark)}
+.rule-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.rule-card{border-radius:10px;padding:11px 14px;font-size:14px;font-weight:700;line-height:1.6}
+.rc-2{background:#FFF7ED;border:1.5px solid #FED7AA;color:#9A3412}
+.rc-3{background:#F0FDF4;border:1.5px solid #BBF7D0;color:#166534}
+.rc-4{background:#EFF6FF;border:1.5px solid #BFDBFE;color:#1E40AF}
+.rc-5{background:#FDF4FF;border:1.5px solid #E9D5FF;color:#6B21A8}
+.rc-6{background:#FFF1F2;border:1.5px solid #FECDD3;color:#9F1239}
+.rc-9{background:#FFFBEB;border:1.5px solid #FDE68A;color:#92400E}
+.rc-10{background:#F0FDFA;border:1.5px solid #99F6E4;color:#134E4A}
+
+/* ── SECTION ── */
+.section{background:#fff;border:1.5px solid var(--border);border-radius:16px;margin-bottom:24px}
+.sec-header{background:var(--blue-light);border-bottom:1.5px solid var(--border);padding:16px 20px;display:flex;align-items:flex-start;gap:12px;border-radius:16px 16px 0 0}
+.q-badge{width:38px;height:38px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-title{font-size:17px;font-weight:800}
+.sec-sub{font-size:14px;color:var(--muted);margin-top:3px}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;margin-left:8px}
+.tag-guided{background:#EDE9FE;color:#5B21B6}
+.tag-drag{background:#DCFCE7;color:#15803D}
+.tag-venn{background:#FEF3C7;color:#92400E}
+.sec-score{margin-left:auto;font-size:14px;font-weight:800;color:var(--green);white-space:nowrap}
+.sec-body{padding:20px}
+
+/* ── Q GROUP ── */
+.q-group{background:#F8FAFF;border-radius:14px;padding:18px;margin-bottom:16px;border:1px solid var(--border)}
+.q-group:last-child{margin-bottom:0}
+.q-group-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:14px}
+
+/* ── Q ITEM (ex 1) ── */
+.q-item{margin-bottom:16px;padding-bottom:16px;border-bottom:1px dashed var(--border)}
+.q-item:last-of-type{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.q-item-label{font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.lbl-circle{background:var(--blue);color:#fff;min-width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;flex-shrink:0}
+.num-chip{background:#EEF4FF;color:var(--blue-dark);border:1.5px solid var(--border);border-radius:8px;padding:2px 10px;font-size:18px;font-weight:900;font-family:monospace}
+.guided-hint{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:9px 13px;font-size:14px;color:var(--amber);font-weight:700;margin-bottom:10px}
+
+/* ── DIVISIBILITY SENTENCE BUILDER ── */
+.sent-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:17px;font-weight:700;margin-bottom:8px}
+.sent-text{color:var(--text)}
+.drop-slot{width:44px;height:40px;border:2.5px dashed var(--border);border-radius:8px;background:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:var(--blue);cursor:default;transition:all .2s;position:relative}
+.drop-slot.filled{border-style:solid;border-color:var(--blue);background:var(--blue-light)}
+.drop-slot.drag-over{border-color:var(--green);background:var(--green-bg);transform:scale(1.08)}
+.drop-slot.correct-slot{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:solid!important}
+.drop-slot.wrong-slot{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important;border-style:solid!important}
+.drop-slot.reveal-slot{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:dashed!important}
+
+/* ── NUMBER PALETTE ── */
+.palette{background:var(--blue-light);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:16px}
+.palette-label{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px}
+.num-chip-drag{
+  background:#fff;color:var(--blue-dark);border:2px solid var(--blue);
+  border-radius:10px;padding:7px 14px;font-size:17px;font-weight:900;
+  cursor:grab;user-select:none;transition:all .15s;
+  display:inline-flex;align-items:center;justify-content:center;min-width:42px;
+}
+.num-chip-drag:hover{background:var(--blue);color:#fff;transform:translateY(-2px);box-shadow:0 3px 10px rgba(30,111,217,.25)}
+.num-chip-drag:active{cursor:grabbing;transform:scale(.95)}
+.num-chip-drag.dragging{opacity:.35}
+.num-chip-drag.used{opacity:.3;pointer-events:none}
+
+/* ── CHECK / FEEDBACK ── */
+.check-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:11px 26px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:12px;display:inline-flex;align-items:center;gap:7px;transition:background .15s,transform .1s}
+.check-btn:hover{background:var(--blue-dark)}.check-btn:active{transform:scale(.97)}
+.feedback{display:none;padding:12px 16px;border-radius:10px;font-size:15px;font-weight:700;margin-top:10px;align-items:center;gap:8px}
+.fb-correct{background:var(--green-bg);color:var(--green);border:1.5px solid var(--green-border);display:flex!important}
+.fb-wrong{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red-border);display:flex!important}
+.fb-hint{background:var(--amber-bg);color:var(--amber);border:1.5px solid var(--amber-border);display:flex!important}
+
+/* ── SCORE TRACK ── */
+.score-track{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.score-track-label{font-size:14px;font-weight:800;color:var(--muted);white-space:nowrap}
+.score-track-bar{flex:1;height:14px;background:#E2E8F0;border-radius:7px;overflow:hidden}
+.score-track-fill{height:100%;background:linear-gradient(to right,#16A34A,#4ADE80);border-radius:7px;transition:width .5s ease;width:0%}
+.score-track-num{font-size:15px;font-weight:900;color:var(--green);white-space:nowrap}
+
+/* ══════════════════════════════════════
+   VENN DIAGRAM — EXERCISE 3
+══════════════════════════════════════ */
+.venn-wrap{position:relative;width:100%;max-width:640px;margin:0 auto}
+.venn-svg-wrap{position:relative;width:100%;padding-bottom:75%;/* aspect ratio */}
+.venn-svg{position:absolute;top:0;left:0;width:100%;height:100%}
+
+/* number bubble bank */
+.bubble-bank{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:14px;background:var(--blue-light);border:1.5px solid var(--border);border-radius:12px;margin-bottom:16px}
+.num-bubble{
+  background:#fff;border:2.5px solid var(--blue);border-radius:999px;
+  padding:8px 16px;font-size:16px;font-weight:900;color:var(--blue-dark);
+  cursor:grab;user-select:none;transition:all .15s;
+}
+.num-bubble:hover{background:var(--blue);color:#fff;transform:translateY(-2px);box-shadow:0 3px 10px rgba(30,111,217,.25)}
+.num-bubble:active{cursor:grabbing}
+.num-bubble.dragging{opacity:.3}
+.num-bubble.placed{display:none}
+
+/* drop zones overlaid on SVG */
+.venn-zones{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.venn-zone{
+  position:absolute;border-radius:50%;
+  pointer-events:all;cursor:default;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.venn-zone.drag-over{outline:3px dashed var(--green);outline-offset:2px}
+
+/* placed items inside zones */
+.zone-items{position:absolute;display:flex;flex-wrap:wrap;gap:4px;align-items:center;justify-content:center;pointer-events:none}
+.zone-item{
+  background:#fff;border:2px solid #64748B;border-radius:999px;
+  padding:3px 9px;font-size:13px;font-weight:900;color:#1E293B;
+  pointer-events:all;cursor:pointer;
+}
+.zone-item:hover{border-color:var(--red);color:var(--red)}
+.zone-item.correct-item{border-color:var(--green)!important;color:var(--green)!important;background:var(--green-bg)!important}
+.zone-item.wrong-item{border-color:var(--red)!important;color:var(--red)!important;background:var(--red-bg)!important}
+.zone-item.reveal-item{border-color:var(--green)!important;color:var(--green)!important;background:var(--green-bg)!important;border-style:dashed!important}
+
+/* outside box drop zone */
+.outside-zone{
+  background:transparent;border:2.5px dashed #CBD5E1;border-radius:12px;
+  padding:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  min-height:52px;margin-top:14px;
+  transition:border-color .2s,background .2s;
+}
+.outside-zone.drag-over{border-color:var(--green);background:#F0FDF4}
+.outside-zone-label{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+
+/* ── SUMMARY ── */
+.summary{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:32px;text-align:center;margin-top:32px;display:none}
+.summary h2{font-size:26px;font-weight:900;margin-bottom:8px}
+.big-score{font-size:64px;font-weight:900;margin:12px 0;line-height:1}
+.stars-row{font-size:40px;margin:12px 0;display:flex;justify-content:center;gap:6px}
+
+@media(max-width:600px){
+  .rule-grid{grid-template-columns:1fr}
+  .sent-row{font-size:15px}
+  .drop-slot{width:38px;height:36px;font-size:16px}
+  .num-chip-drag{font-size:15px;padding:6px 11px;min-width:36px}
+  .num-bubble{font-size:14px;padding:6px 12px}
+  .zone-item{font-size:12px;padding:2px 7px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">D<span class="dash">-DASH</span></div>
+  <div class="lesson-chip">Unit 3 · Lesson 1</div>
+  <div class="hdr-progress">
+    <div class="hdr-bar"><div class="hdr-fill" id="hdrFill"></div></div>
+    <div class="hdr-label" id="hdrLabel">0 / 2 sections complete</div>
+  </div>
+</div>
+
+<div class="page">
+
+<div class="obj-card">
+  <h2>🎯 Learning Objective</h2>
+  <p>Use rules of divisibility to find which numbers (2–10) divide exactly into a given number</p>
+</div>
+
+<div class="explain">
+  <h3>📐 Key Concept: Rules of Divisibility</h3>
+  <p style="font-size:15px;margin-bottom:4px">A number is <strong>divisible</strong> by another if there is <strong>no remainder</strong>. Use these quick rules to test — no long division needed!</p>
+  <div class="rule-grid">
+    <div class="rule-card rc-2">÷ <strong>2</strong> — Last digit is even (0, 2, 4, 6, 8)</div>
+    <div class="rule-card rc-3">÷ <strong>3</strong> — Sum of digits is divisible by 3</div>
+    <div class="rule-card rc-4">÷ <strong>4</strong> — Last two digits divisible by 4</div>
+    <div class="rule-card rc-5">÷ <strong>5</strong> — Last digit is 0 or 5</div>
+    <div class="rule-card rc-6">÷ <strong>6</strong> — Divisible by both 2 AND 3</div>
+    <div class="rule-card rc-9">÷ <strong>9</strong> — Sum of digits is divisible by 9</div>
+    <div class="rule-card rc-10">÷ <strong>10</strong> — Last digit is 0</div>
+    <div class="rule-card" style="background:#F8FAFF;border:1.5px solid var(--border);color:var(--muted)">÷ <strong>7 &amp; 8</strong> — Divide directly to check</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCORE TRACK
+══════════════════════════════════════════ -->
+<div class="score-track">
+  <div class="score-track-label">Progress</div>
+  <div class="score-track-bar"><div class="score-track-fill" id="scoreBarFill"></div></div>
+  <div class="score-track-num" id="scoreBarNum">0 / 2 done</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     EXERCISE 1
+══════════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="sec-header">
+    <div class="q-badge">1</div>
+    <div style="flex:1">
+      <div class="sec-title">Find all divisors — drag the correct numbers into the boxes <span class="tag tag-drag">Drag & Drop</span></div>
+      <div class="sec-sub">Use the rules of divisibility. Drag numbers 2–10 from the palette into the correct blank boxes. <span style="color:var(--purple);font-weight:800">★ Guided: a &amp; b</span></div>
+    </div>
+    <div class="sec-score" id="s1score"></div>
+  </div>
+  <div class="sec-body" id="s1body">
+    <!-- Built by JS -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     EXERCISE 3 — VENN DIAGRAM
+══════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="sec-header">
+    <div class="q-badge">3</div>
+    <div style="flex:1">
+      <div class="sec-title">Sort numbers into the Venn diagram <span class="tag tag-venn">Venn Drag</span></div>
+      <div class="sec-sub">Drag each number bubble into the correct section of the diagram. Numbers can belong to more than one circle — or none at all!</div>
+    </div>
+    <div class="sec-score" id="s2score"></div>
+  </div>
+  <div class="sec-body" id="s2body">
+    <!-- Built by JS -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SUMMARY
+══════════════════════════════════════════ -->
+<div class="summary" id="summary">
+  <h2>🎉 Lesson Complete!</h2>
+  <div class="big-score" id="finalScore">—</div>
+  <div class="stars-row" id="starsRow"></div>
+  <p id="summaryMsg" style="font-size:16px;font-weight:700;opacity:.9;max-width:400px;margin:0 auto"></p>
+</div>
+
+</div><!-- /page -->
+
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════
+var G = { s1done: false, s2done: false };
+
+function mk(tag, cls){
+  var e = document.createElement(tag || 'div');
+  if(cls) e.className = cls;
+  return e;
+}
+function showFB(el, type, msg){
+  if(typeof el === 'string') el = document.getElementById(el);
+  if(!el) return;
+  el.className = 'feedback fb-' + type;
+  el.innerHTML = msg;
+}
+function updateProgress(){
+  var done = (G.s1done ? 1 : 0) + (G.s2done ? 1 : 0);
+  var pct = Math.round(done / 2 * 100);
+  document.getElementById('hdrFill').style.width = pct + '%';
+  document.getElementById('hdrLabel').textContent = done + ' / 2 sections complete';
+  document.getElementById('scoreBarFill').style.width = pct + '%';
+  document.getElementById('scoreBarNum').textContent = done + ' / 2 done';
+  if(done === 2) showSummary();
+}
+function showSummary(){
+  var s = document.getElementById('summary');
+  s.style.display = 'block';
+  s.scrollIntoView({behavior:'smooth'});
+  document.getElementById('finalScore').textContent = '100%';
+  document.getElementById('starsRow').innerHTML = '<span style="color:#FBBF24">★</span><span style="color:#FBBF24">★</span><span style="color:#FBBF24">★</span>';
+  document.getElementById('summaryMsg').textContent = 'Excellent! You can apply all the divisibility rules like a pro!';
+}
+
+// ══════════════════════════════════════════════════════
+//  EXERCISE 1 — DRAG DIVISORS INTO SLOTS
+// ══════════════════════════════════════════════════════
+
+// Each question: number, correct divisors (from 2–10), guided flag, hint
+var EX1 = [
+  { lbl:'a', n:81,   div:[3,9],             guided:true,  hint:'Digit sum = 8+1=9. Divisible by 3 (sum÷3) and 9 (sum÷9).' },
+  { lbl:'b', n:96,   div:[2,3,4,6,8],       guided:true,  hint:'Even → ÷2. Digit sum=15 → ÷3. Last two=96 → ÷4. ÷2 and ÷3 → ÷6. Last three÷8=12 → ÷8.' },
+  { lbl:'c', n:170,  div:[2,5,10],          guided:false, hint:'Last digit=0 → ÷2, ÷5, ÷10.' },
+  { lbl:'d', n:156,  div:[2,3,4,6],         guided:false, hint:'Even→÷2. Sum=12→÷3. Last two 56÷4=14→÷4. ÷2&÷3→÷6.' },
+  { lbl:'e', n:252,  div:[2,3,4,6,7,9],     guided:false, hint:'Even→÷2. Sum=9→÷3,÷9. 52÷4=13→÷4. ÷2&÷3→÷6. 252÷7=36→÷7.' },
+  { lbl:'f', n:1680, div:[2,3,4,5,6,7,8,10],guided:false, hint:'Last digit 0→÷2,÷5,÷10. Sum=15→÷3. 80÷4→÷4. 80÷8→÷8. ÷2&÷3→÷6. 1680÷7=240→÷7.' },
+  { lbl:'g', n:945,  div:[3,5,7,9],         guided:false, hint:'Sum=18→÷3,÷9. Last digit 5→÷5. 945÷7=135→÷7.' },
+  { lbl:'h', n:4050, div:[2,3,5,6,9,10],    guided:false, hint:'Even→÷2. Sum=9→÷3,÷9. Last 0→÷5,÷10. ÷2&÷3→÷6.' }
+];
+
+// per-group attempt counters & results
+var ex1Att = {};
+var ex1Res = {};
+var ex1TotalGroups = 0;
+
+// drag state
+var dragSrc = null; // { val, chipEl }
+
+function buildEx1(){
+  var body = document.getElementById('s1body');
+
+  // Group in pairs
+  var perGroup = 2;
+  var groups = [];
+  for(var i=0; i<EX1.length; i+=perGroup) groups.push(EX1.slice(i, i+perGroup));
+  ex1TotalGroups = groups.length;
+
+  groups.forEach(function(grp, gi){
+    var grpDiv = mk('div','q-group');
+
+    // Title
+    var title = mk('div','q-group-title');
+    title.textContent = 'Questions ' + grp.map(function(q){return q.lbl.toUpperCase();}).join(' & ');
+    grpDiv.appendChild(title);
+
+    // Shared palette for this group (numbers 2–10)
+    var palId = 'pal_' + gi;
+    var palWrap = mk('div','palette');
+    var palLbl = mk('div','palette-label');
+    palLbl.innerHTML = '🃏 Drag numbers into the boxes below';
+    palWrap.appendChild(palLbl);
+    var chipRow = mk('div','chip-row');
+    chipRow.id = palId;
+    palWrap.appendChild(chipRow);
+    grpDiv.appendChild(palWrap);
+
+    // Build chips 2-10
+    for(var v=2; v<=10; v++){
+      var chip = mk('div','num-chip-drag');
+      chip.textContent = v;
+      chip.dataset.val = v;
+      chip.dataset.group = gi;
+      chip.draggable = true;
+      chip.addEventListener('dragstart', onChipDragStart);
+      chip.addEventListener('dragend', onChipDragEnd);
+      chipRow.appendChild(chip);
+    }
+
+    // Build each question
+    grp.forEach(function(q){
+      var item = mk('div','q-item');
+
+      // Guided hint
+      if(q.guided){
+        var gh = mk('div','guided-hint');
+        gh.innerHTML = '💡 <strong>Guided:</strong> ' + q.hint;
+        item.appendChild(gh);
+      }
+
+      // Sentence row
+      var sentRow = mk('div','sent-row');
+      var numSpan = mk('span','sent-text');
+      numSpan.innerHTML = '<strong>' + q.n + '</strong> is divisible by';
+      sentRow.appendChild(numSpan);
+
+      // Create slots (one per correct divisor)
+      var slots = [];
+      for(var s=0; s<q.div.length; s++){
+        var slot = mk('div','drop-slot');
+        slot.dataset.qid = q.lbl;
+        slot.dataset.group = gi;
+        slot.dataset.slotIdx = s;
+        slot.dataset.correctVals = q.div.join(','); // all acceptable vals
+        slot.textContent = '';
+        slot.addEventListener('dragover', function(e){ e.preventDefault(); this.classList.add('drag-over'); });
+        slot.addEventListener('dragleave', function(){ this.classList.remove('drag-over'); });
+        slot.addEventListener('drop', onSlotDrop);
+        slots.push(slot);
+        // separators
+        if(s < q.div.length - 2){
+          sentRow.appendChild(slot);
+          var comma = mk('span','sent-text'); comma.textContent = ','; sentRow.appendChild(comma);
+        } else if(s === q.div.length - 2){
+          sentRow.appendChild(slot);
+          var andTxt = mk('span','sent-text'); andTxt.textContent = 'and'; sentRow.appendChild(andTxt);
+        } else {
+          sentRow.appendChild(slot);
+          var dot = mk('span','sent-text'); dot.textContent = '.'; sentRow.appendChild(dot);
+        }
+      }
+      item.appendChild(sentRow);
+      grpDiv.appendChild(item);
+    });
+
+    // Check button
+    var fbId = 'fb_ex1_' + gi;
+    var cb = mk('button','check-btn');
+    cb.innerHTML = '✓ Check ' + grp.map(function(q){return q.lbl.toUpperCase();}).join(' & ');
+    (function(g, grpRef, fid){
+      cb.onclick = function(){ checkEx1Group(g, grpRef, fid); };
+    })(gi, grp, fbId);
+    grpDiv.appendChild(cb);
+
+    var fb = mk('div','feedback');
+    fb.id = fbId;
+    grpDiv.appendChild(fb);
+
+    body.appendChild(grpDiv);
+  });
+}
+
+function onChipDragStart(e){
+  dragSrc = { val: parseInt(this.dataset.val), chipEl: this };
+  this.classList.add('dragging');
+  e.dataTransfer.setData('text/plain', this.dataset.val);
+  e.dataTransfer.effectAllowed = 'copy';
+}
+function onChipDragEnd(){
+  this.classList.remove('dragging');
+  dragSrc = null;
+}
+
+function onSlotDrop(e){
+  e.preventDefault();
+  this.classList.remove('drag-over');
+  if(!dragSrc) return;
+
+  // If slot already has a value, put it back (visually just allow overwrite)
+  var val = dragSrc.val;
+  this.textContent = val;
+  this.dataset.placed = val;
+  this.classList.add('filled');
+}
+
+function checkEx1Group(gi, grp, fbId){
+  if(!ex1Att[gi]) ex1Att[gi] = 0;
+  ex1Att[gi]++;
+  var att = ex1Att[gi];
+
+  var totalSlots = 0, correctSlots = 0;
+
+  grp.forEach(function(q){
+    var slots = document.querySelectorAll('.drop-slot[data-qid="' + q.lbl + '"]');
+    var placed = [];
+    slots.forEach(function(sl){
+      if(sl.dataset.placed) placed.push(parseInt(sl.dataset.placed));
+    });
+
+    // Sort both and compare
+    var expected = q.div.slice().sort(function(a,b){return a-b;});
+    var got = placed.slice().sort(function(a,b){return a-b;});
+
+    slots.forEach(function(sl, si){
+      totalSlots++;
+      var v = parseInt(sl.dataset.placed);
+      if(isNaN(v)){
+        // empty
+        if(att >= 3){ sl.textContent = expected[si] || '?'; sl.className='drop-slot reveal-slot'; }
+        else { sl.className='drop-slot'; }
+        return;
+      }
+      // Check if v belongs in expected AND hasn't been counted yet
+      var idx = expected.indexOf(v);
+      if(idx > -1){
+        sl.className = 'drop-slot correct-slot';
+        correctSlots++;
+        expected.splice(idx,1); // don't double-count
+      } else {
+        sl.className = 'drop-slot wrong-slot';
+        if(att >= 3){ sl.textContent = q.div[si] || '?'; sl.className='drop-slot reveal-slot'; }
+      }
+    });
+
+    // If on 3rd attempt, fill in any empty slots
+    if(att >= 3){
+      // re-fetch
+      var freshSlots = document.querySelectorAll('.drop-slot[data-qid="' + q.lbl + '"]');
+      var revealVals = q.div.slice();
+      freshSlots.forEach(function(sl,si){
+        if(!sl.classList.contains('correct-slot')){
+          sl.textContent = revealVals[si] || '';
+          sl.className = 'drop-slot reveal-slot';
+        }
+      });
+    }
+  });
+
+  var fb = document.getElementById(fbId);
+  if(totalSlots > 0 && correctSlots === totalSlots){
+    showFB(fb,'correct','🎉 All correct! Great use of the divisibility rules!');
+    ex1Res[gi] = true;
+  } else if(att >= 3){
+    showFB(fb,'hint','✅ Correct answers revealed. Review the rules in the Key Concept box above.');
+    ex1Res[gi] = false;
+  } else if(att === 2){
+    showFB(fb,'hint','💡 ' + correctSlots + '/' + totalSlots + ' slots correct. Check: does the digit sum rule work? Is the last digit even?');
+    return;
+  } else {
+    showFB(fb,'wrong','✗ Some slots incorrect. Check your divisibility rules and try again.');
+    return;
+  }
+
+  if(Object.keys(ex1Res).length >= ex1TotalGroups){
+    document.getElementById('s1score').textContent = 'Complete ✓';
+    G.s1done = true;
+    updateProgress();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  EXERCISE 3 — VENN DIAGRAM
+// ══════════════════════════════════════════════════════
+
+var VENN_NUMBERS = [3845, 1004, 6237, 3618, 7158, 2700, 8523, 5634, 7440, 3915];
+
+// Compute membership for each number
+function divisible(n, d){ return n % d === 0; }
+function getZone(n){
+  var by5 = divisible(n,5);
+  var by6 = divisible(n,6);
+  var by9 = divisible(n,9);
+  if(by5 && by6 && by9) return 'all';
+  if(by5 && by6)  return '5_6';
+  if(by5 && by9)  return '5_9';
+  if(by6 && by9)  return '6_9';
+  if(by5) return '5';
+  if(by6) return '6';
+  if(by9) return '9';
+  return 'none';
+}
+
+// Map zone keys to zone IDs
+var ZONE_CORRECT = {};
+VENN_NUMBERS.forEach(function(n){
+  ZONE_CORRECT[n] = getZone(n);
+});
+
+// State: where each number is placed
+var vennPlaced = {}; // n -> zoneId or null
+
+// Attempt counter for ex3
+var ex3Att = 0;
+var ex3Checked = false;
+
+// Zone definitions: id, label for tooltip
+var ZONES = ['5','6','9','5_6','5_9','6_9','all','none'];
+
+function buildEx3(){
+  var body = document.getElementById('s2body');
+
+  // ── Bubble bank ──
+  var bankLabel = mk('div','');
+  bankLabel.innerHTML = '<div class="palette-label" style="text-transform:uppercase;letter-spacing:.5px;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:8px">🃏 Drag each number into the correct section of the diagram</div>';
+  body.appendChild(bankLabel);
+
+  var bank = mk('div','bubble-bank');
+  bank.id = 'bubbleBank';
+  VENN_NUMBERS.forEach(function(n){
+    var bub = mk('div','num-bubble');
+    bub.textContent = n;
+    bub.dataset.num = n;
+    bub.draggable = true;
+    bub.id = 'bub_' + n;
+    bub.addEventListener('dragstart', function(e){
+      e.dataTransfer.setData('text/plain', String(n));
+      bub.classList.add('dragging');
+    });
+    bub.addEventListener('dragend', function(){
+      bub.classList.remove('dragging');
+    });
+    bank.appendChild(bub);
+    vennPlaced[n] = null;
+  });
+  body.appendChild(bank);
+
+  // ── Guided hint ──
+  var gh = mk('div','guided-hint');
+  gh.innerHTML = '💡 <strong>Guided examples:</strong> 2700 → divisible by 5, 6 AND 9, so it goes in the centre (all three overlap). 1004 → not divisible by 5, 6 or 9, so it goes <em>outside</em> all circles.';
+  body.appendChild(gh);
+
+  // ── Venn diagram ──
+  var vennWrap = mk('div','venn-wrap');
+
+  // SVG circles
+  var svgWrap = mk('div','venn-svg-wrap');
+  // We'll use a fixed coordinate system 640x480
+  svgWrap.innerHTML = `
+  <svg class="venn-svg" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+    <!-- outer box -->
+    <rect x="10" y="10" width="620" height="460" rx="14" fill="#F8FAFF" stroke="#C7D7F5" stroke-width="2"/>
+    <!-- Div by 5 circle (orange, left) -->
+    <circle cx="230" cy="270" r="155" fill="rgba(251,146,60,0.18)" stroke="#FB923C" stroke-width="2.5"/>
+    <!-- Div by 6 circle (green, top) -->
+    <circle cx="320" cy="175" r="155" fill="rgba(74,222,128,0.18)" stroke="#22C55E" stroke-width="2.5"/>
+    <!-- Div by 9 circle (yellow, right) -->
+    <circle cx="410" cy="270" r="155" fill="rgba(250,204,21,0.22)" stroke="#EAB308" stroke-width="2.5"/>
+    <!-- Labels -->
+    <text x="120" y="430" font-family="Nunito,sans-serif" font-size="15" font-weight="800" fill="#C2410C">Divisible by 5</text>
+    <text x="270" y="42"  font-family="Nunito,sans-serif" font-size="15" font-weight="800" fill="#15803D">Divisible by 6</text>
+    <text x="468" y="430" font-family="Nunito,sans-serif" font-size="15" font-weight="800" fill="#A16207">Divisible by 9</text>
+  </svg>`;
+  vennWrap.appendChild(svgWrap);
+
+  // Overlay clickable/droppable zones
+  // Zones are positioned as percentages of the SVG viewBox (640x480)
+  // We define each zone as a drop region with absolute positioning
+  var zonesEl = mk('div','venn-zones');
+
+  // Zone layout (approximate centres, as % of 640x480)
+  var zoneLayouts = {
+    '5':    { left:'7%',  top:'52%', width:'22%', height:'22%' },   // only-5 (left outer)
+    '6':    { left:'38%', top:'5%',  width:'23%', height:'22%' },   // only-6 (top outer)
+    '9':    { left:'71%', top:'52%', width:'22%', height:'22%' },   // only-9 (right outer)
+    '5_6':  { left:'23%', top:'22%', width:'20%', height:'20%' },   // 5&6 overlap (top-left)
+    '5_9':  { left:'40%', top:'62%', width:'20%', height:'20%' },   // 5&9 overlap (bottom)
+    '6_9':  { left:'56%', top:'22%', width:'20%', height:'20%' },   // 6&9 overlap (top-right)
+    'all':  { left:'38%', top:'42%', width:'24%', height:'22%' },   // centre
+    'none': { left:'1%',  top:'1%',  width:'12%', height:'15%' }    // outside (top-left corner)
+  };
+
+  var zoneLabels = {
+    '5':'÷5 only','6':'÷6 only','9':'÷9 only',
+    '5_6':'÷5&6','5_9':'÷5&9','6_9':'÷6&9',
+    'all':'÷5,6&9','none':'None'
+  };
+
+  ZONES.forEach(function(zid){
+    var layout = zoneLayouts[zid];
+    var zone = mk('div','venn-zone');
+    zone.id = 'zone_' + zid;
+    zone.dataset.zid = zid;
+    Object.assign(zone.style, layout);
+    zone.style.position = 'absolute';
+
+    // Items container inside zone
+    var itemsDiv = mk('div','zone-items');
+    itemsDiv.id = 'zoneitems_' + zid;
+    itemsDiv.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:3px;padding:4px;';
+    zone.appendChild(itemsDiv);
+
+    zone.addEventListener('dragover', function(e){ e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', function(){ zone.classList.remove('drag-over'); });
+    zone.addEventListener('drop', function(e){
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      var numStr = e.dataTransfer.getData('text/plain');
+      var num = parseInt(numStr);
+      if(isNaN(num)) return;
+      placeInZone(num, zid);
+    });
+
+    zonesEl.appendChild(zone);
+  });
+
+  svgWrap.appendChild(zonesEl);
+  vennWrap.appendChild(svgWrap);
+  body.appendChild(vennWrap);
+
+  // Outside zone (separate box below diagram)
+  var outsideLabel = mk('div','outside-zone-label');
+  outsideLabel.textContent = '🔲 Not divisible by 5, 6 or 9 — place here:';
+  body.appendChild(outsideLabel);
+  var outsideZone = mk('div','outside-zone');
+  outsideZone.id = 'zone_none_box';
+  outsideZone.title = 'None of the circles';
+  outsideZone.addEventListener('dragover', function(e){ e.preventDefault(); outsideZone.classList.add('drag-over'); });
+  outsideZone.addEventListener('dragleave', function(){ outsideZone.classList.remove('drag-over'); });
+  outsideZone.addEventListener('drop', function(e){
+    e.preventDefault();
+    outsideZone.classList.remove('drag-over');
+    var numStr = e.dataTransfer.getData('text/plain');
+    var num = parseInt(numStr);
+    if(isNaN(num)) return;
+    placeInZone(num, 'none');
+  });
+  body.appendChild(outsideZone);
+
+  // Check button
+  var cb = mk('button','check-btn');
+  cb.innerHTML = '✓ Check Venn Diagram';
+  cb.onclick = checkEx3;
+  body.appendChild(cb);
+
+  var fb = mk('div','feedback');
+  fb.id = 'fb_ex3';
+  body.appendChild(fb);
+
+  // Pre-place guided examples (2700 → all, 1004 → none)
+  setTimeout(function(){
+    placeInZone(2700, 'all');
+    placeInZone(1004, 'none');
+  }, 50);
+}
+
+function placeInZone(num, zid){
+  // Remove from previous zone if any
+  var prev = vennPlaced[num];
+  if(prev !== null){
+    var prevItems = document.getElementById('zoneitems_' + prev);
+    var prevBox   = document.getElementById('zone_none_box');
+    // Remove item from wherever it was
+    var existing = document.querySelectorAll('.zone-item[data-num="' + num + '"]');
+    existing.forEach(function(el){ el.parentNode.removeChild(el); });
+  }
+
+  vennPlaced[num] = zid;
+
+  // Hide bubble in bank
+  var bub = document.getElementById('bub_' + num);
+  if(bub) bub.classList.add('placed');
+
+  // Create zone item
+  var item = mk('div','zone-item');
+  item.textContent = num;
+  item.dataset.num = num;
+  item.title = 'Click to return to bank';
+  item.addEventListener('click', function(){
+    returnToBank(num);
+  });
+  // Make it draggable too (re-drag from zone)
+  item.draggable = true;
+  item.addEventListener('dragstart', function(e){
+    e.dataTransfer.setData('text/plain', String(num));
+    returnToBank(num, true); // silently return before dragging
+  });
+
+  if(zid === 'none'){
+    document.getElementById('zone_none_box').appendChild(item);
+  } else {
+    document.getElementById('zoneitems_' + zid).appendChild(item);
+  }
+}
+
+function returnToBank(num, silent){
+  // Remove from zone
+  var existing = document.querySelectorAll('.zone-item[data-num="' + num + '"]');
+  existing.forEach(function(el){ el.parentNode.removeChild(el); });
+  vennPlaced[num] = null;
+  // Restore bubble
+  var bub = document.getElementById('bub_' + num);
+  if(bub){
+    bub.classList.remove('placed');
+    bub.classList.remove('dragging');
+  }
+  if(!silent){
+    // un-lock if checked
+  }
+}
+
+function checkEx3(){
+  ex3Att++;
+  var att = ex3Att;
+  var correct = 0, total = VENN_NUMBERS.length;
+
+  VENN_NUMBERS.forEach(function(n){
+    var expected = ZONE_CORRECT[n];
+    var placed   = vennPlaced[n];
+    var items    = document.querySelectorAll('.zone-item[data-num="' + n + '"]');
+
+    if(placed === expected){
+      correct++;
+      items.forEach(function(el){ el.className = 'zone-item correct-item'; el.style.pointerEvents='none'; });
+    } else {
+      items.forEach(function(el){ el.className = 'zone-item wrong-item'; });
+      if(att >= 3){
+        // Remove and re-place in correct zone
+        returnToBank(n, true);
+        placeInZone(n, expected);
+        var newItems = document.querySelectorAll('.zone-item[data-num="' + n + '"]');
+        newItems.forEach(function(el){ el.className = 'zone-item reveal-item'; el.style.pointerEvents='none'; });
+      }
+    }
+  });
+
+  var fb = document.getElementById('fb_ex3');
+  if(correct === total){
+    showFB(fb,'correct','🎉 ' + correct + '/' + total + ' correct! Perfect Venn diagram!');
+    if(!G.s2done){ G.s2done = true; document.getElementById('s2score').textContent = 'Complete ✓'; updateProgress(); }
+  } else if(att >= 3){
+    showFB(fb,'hint','✅ All answers revealed. Remember: ÷6 means divisible by both 2 AND 3.');
+    if(!G.s2done){ G.s2done = true; document.getElementById('s2score').textContent = 'Complete ✓'; updateProgress(); }
+  } else if(att === 2){
+    showFB(fb,'hint','💡 ' + correct + '/' + total + ' correct. Check overlapping regions — a number divisible by two categories goes in their overlap!');
+  } else {
+    showFB(fb,'wrong','✗ ' + (total-correct) + ' number(s) in the wrong section. Review the rules and try again.');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+buildEx1();
+buildEx3();
+</script>
+</body>
+</html>

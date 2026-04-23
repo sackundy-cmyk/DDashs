@@ -1,0 +1,13 @@
+{
+  "unit": 1,
+  "lesson": 1,
+  "title": "Place Value in Decimals",
+  "objective": "Read, write and identify digits in decimal numbers up to hundredths — like 37.28",
+  "sections": ["s1", "s2"],
+  "keyFacts": [
+    "Tens digit is left of units",
+    "Tenths = 1st decimal place = 1/10",
+    "Hundredths = 2nd decimal place = 1/100",
+    "Trailing zeros do not change a decimal value: 3.40 = 3.4"
+  ]
+}

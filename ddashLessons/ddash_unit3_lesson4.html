@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D-DASH · Unit 3 · Lesson 4: Prime & Square Numbers</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1E6FD9;--blue-dark:#1558B0;--blue-light:#EEF4FF;
+  --green:#16A34A;--green-bg:#DCFCE7;--green-border:#86EFAC;
+  --red:#DC2626;--red-bg:#FEE2E2;--red-border:#FCA5A5;
+  --amber:#D97706;--amber-bg:#FEF3C7;--amber-border:#FCD34D;
+  --bg:#F0F4FF;--border:#C7D7F5;--text:#1E293B;--muted:#64748B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);font-size:17px;line-height:1.5}
+
+.header{background:var(--blue);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(30,111,217,.3)}
+.logo{font-size:22px;font-weight:900;letter-spacing:-1px}.logo .dash{color:#93C5FD}
+.lesson-chip{background:rgba(255,255,255,.2);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;white-space:nowrap}
+.hdr-progress{flex:1;margin:0 16px;min-width:0}
+.hdr-bar{height:10px;background:rgba(255,255,255,.25);border-radius:5px;overflow:hidden}
+.hdr-fill{height:100%;background:#4ADE80;border-radius:5px;transition:width .5s ease;width:0%}
+.hdr-label{font-size:12px;margin-top:4px;opacity:.85}
+.page{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+
+.obj-card{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:20px 24px;margin-bottom:24px}
+.obj-card h2{font-size:13px;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.obj-card p{font-size:19px;font-weight:800}
+
+.explain{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
+.explain h3{font-size:16px;font-weight:800;color:var(--blue);margin-bottom:10px}
+.rule-box{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:13px 16px;margin:10px 0;font-size:15px;line-height:1.9}
+.rule-box strong{color:var(--blue-dark)}
+
+.section{background:#fff;border:1.5px solid var(--border);border-radius:16px;margin-bottom:24px}
+.sec-header{background:var(--blue-light);border-bottom:1.5px solid var(--border);padding:16px 20px;display:flex;align-items:flex-start;gap:12px;border-radius:16px 16px 0 0}
+.q-badge{width:40px;height:40px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-title{font-size:17px;font-weight:800}
+.sec-sub{font-size:14px;color:var(--muted);margin-top:3px}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;margin-left:8px}
+.tag-tap{background:#FEF3C7;color:#92400E}
+.tag-drag{background:#DCFCE7;color:#15803D}
+.sec-score{margin-left:auto;font-size:14px;font-weight:800;color:var(--green);white-space:nowrap;flex-shrink:0}
+.sec-body{padding:20px}
+
+.check-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:14px;display:inline-flex;align-items:center;gap:7px;transition:background .15s,transform .1s}
+.check-btn:hover{background:var(--blue-dark)}.check-btn:active{transform:scale(.97)}
+.check-btn:disabled{opacity:.5;pointer-events:none}
+.feedback{display:none;padding:12px 16px;border-radius:10px;font-size:15px;font-weight:700;margin-top:10px}
+.fb-correct{background:var(--green-bg);color:var(--green);border:1.5px solid var(--green-border);display:block!important}
+.fb-wrong{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red-border);display:block!important}
+.fb-hint{background:var(--amber-bg);color:var(--amber);border:1.5px solid var(--amber-border);display:block!important}
+
+.score-track{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.score-track-label{font-size:14px;font-weight:800;color:var(--muted);white-space:nowrap}
+.score-track-bar{flex:1;height:14px;background:#E2E8F0;border-radius:7px;overflow:hidden}
+.score-track-fill{height:100%;background:linear-gradient(to right,#16A34A,#4ADE80);border-radius:7px;transition:width .5s ease;width:0%}
+.score-track-num{font-size:15px;font-weight:900;color:var(--green);white-space:nowrap}
+
+.summary{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:32px;text-align:center;margin-top:32px;display:none}
+.summary h2{font-size:26px;font-weight:900;margin-bottom:8px}
+.big-score{font-size:64px;font-weight:900;margin:12px 0;line-height:1}
+.stars-row{font-size:40px;margin:12px 0;display:flex;justify-content:center;gap:6px}
+
+/* ── Q1 GRID ── */
+.grid-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;font-size:13px;font-weight:700}
+.leg-item{display:flex;align-items:center;gap:6px}
+.leg-swatch{width:20px;height:20px;border-radius:5px;flex-shrink:0}
+.number-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin-bottom:16px;max-width:600px}
+.grid-cell{
+  aspect-ratio:1;border-radius:8px;border:2px solid #D4C990;
+  background:#FEFCE8;color:#3D3200;
+  font-size:15px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;user-select:none;
+}
+.grid-cell:hover{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark);transform:scale(1.1)}
+.grid-cell.selected{background:#7C3AED;border-color:#5B21B6;color:#fff;transform:scale(1.08);box-shadow:0 2px 8px rgba(124,58,237,.4)}
+.grid-cell.correct-prime{background:var(--green)!important;border-color:#15803D!important;color:#fff!important;cursor:default;transform:none}
+.grid-cell.wrong-selected{background:var(--red)!important;border-color:#B91C1C!important;color:#fff!important;transform:none}
+.grid-cell.missed-prime{background:#F59E0B!important;border-color:#B45309!important;color:#fff!important;transform:none}
+.grid-cell.not-prime{cursor:default;opacity:.6;transform:none}
+.grid-cell[data-n="1"]{cursor:default;opacity:.45}
+
+/* ── Q2 DRAG ── */
+.sq-group{background:#F8FAFF;border-radius:14px;padding:18px;margin-bottom:16px;border:1px solid var(--border)}
+.sq-group:last-child{margin-bottom:0}
+.sq-group-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:14px}
+.card-bank{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:16px}
+.card-bank-lbl{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.card-row{display:flex;flex-wrap:wrap;gap:10px}
+.num-card{background:#fff;color:var(--blue-dark);border:2.5px solid var(--blue);border-radius:10px;padding:10px 18px;font-size:22px;font-weight:900;cursor:grab;user-select:none;transition:all .15s;min-width:54px;text-align:center;box-shadow:0 2px 6px rgba(30,111,217,.1)}
+.num-card:hover{background:var(--blue);color:#fff;transform:translateY(-2px);box-shadow:0 4px 12px rgba(30,111,217,.3)}
+.num-card:active{cursor:grabbing}.num-card.dragging{opacity:.3}
+
+.sq-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.sq-row:last-of-type{margin-bottom:0}
+.sq-lbl{background:var(--blue);color:#fff;min-width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0;box-shadow:0 2px 6px rgba(30,111,217,.25)}
+.sq-expr{font-size:24px;font-weight:900;color:var(--text)}
+.sq-expr sup{font-size:15px;font-weight:900;color:var(--blue)}
+.sq-eq{font-size:24px;font-weight:700;color:var(--muted)}
+.sq-drop{min-width:90px;height:54px;border:2.5px dashed var(--border);border-radius:10px;background:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:var(--muted);transition:all .2s;padding:0 14px}
+.sq-drop.drag-over{border-color:var(--green);background:var(--green-bg)}
+.sq-drop.filled{border-style:solid;border-color:var(--blue);color:var(--blue-dark);background:var(--blue-light)}
+.sq-drop.correct-drop{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:solid!important}
+.sq-drop.wrong-drop{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important;border-style:solid!important}
+.sq-drop.reveal-drop{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:dashed!important}
+.guided-hint{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:10px 14px;font-size:15px;color:var(--amber);font-weight:700;margin-bottom:14px}
+
+/* ── Q3 TAP ── */
+.q3-group{background:#F8FAFF;border-radius:14px;padding:18px;margin-bottom:16px;border:1px solid var(--border)}
+.q3-group:last-child{margin-bottom:0}
+.q3-group-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:14px}
+.q3-item{margin-bottom:18px;padding-bottom:18px;border-bottom:1px dashed var(--border)}
+.q3-item:last-of-type{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.q3-label-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.lbl-circle{background:var(--blue);color:#fff;min-width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0;box-shadow:0 2px 8px rgba(30,111,217,.3)}
+.q3-question-text{font-size:18px;font-weight:800;color:var(--text)}
+.q3-numbers{display:flex;flex-wrap:wrap;gap:10px}
+.q3-num{background:#fff;border:2.5px solid var(--border);border-radius:12px;padding:12px 22px;font-size:24px;font-weight:900;color:var(--text);cursor:pointer;transition:all .15s;user-select:none}
+.q3-num:hover{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark);transform:translateY(-1px)}
+.q3-num.tapped{border-color:#DC2626;background:var(--red-bg);color:var(--red);transform:scale(1.05)}
+.q3-num.correct-tap{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;cursor:default;transform:none}
+.q3-num.wrong-tap{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important;transform:none}
+.q3-num.reveal-tap{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:dashed!important;cursor:default;transform:none}
+.q3-num.is-square{border-color:#D4C990;background:#FEFCE8;color:#9CA3AF;cursor:default;transform:none}
+
+@media(max-width:600px){
+  .grid-cell{font-size:11px;border-radius:5px;border-width:1.5px}
+  .number-grid{gap:3px}
+  .num-card{font-size:18px;padding:8px 12px;min-width:46px}
+  .sq-drop{min-width:70px;height:48px;font-size:22px}
+  .sq-expr{font-size:20px}
+  .q3-num{font-size:20px;padding:10px 16px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">D<span class="dash">-DASH</span></div>
+  <div class="lesson-chip">Unit 3 · Lesson 4</div>
+  <div class="hdr-progress">
+    <div class="hdr-bar"><div class="hdr-fill" id="hdrFill"></div></div>
+    <div class="hdr-label" id="hdrLabel">0 / 3 sections complete</div>
+  </div>
+</div>
+
+<div class="page">
+
+<div class="obj-card">
+  <h2>🎯 Learning Objective</h2>
+  <p>Identify prime numbers up to 100, calculate square numbers, and spot non-square numbers</p>
+</div>
+
+<div class="explain">
+  <h3>📐 Key Concepts</h3>
+  <div class="rule-box">
+    <strong>Prime number:</strong> Has exactly 2 factors — 1 and itself. (e.g. 2, 3, 5, 7, 11, 13…)<br>
+    ⚠️ <strong>1 is NOT prime</strong> — it has only one factor. &nbsp; <strong>2 is the only even prime.</strong><br><br>
+    <strong>Square number:</strong> A whole number multiplied by itself. (e.g. 6 × 6 = 6² = <strong>36</strong>)<br>
+    Square numbers up to 100: <strong>1, 4, 9, 16, 25, 36, 49, 64, 81, 100</strong>
+  </div>
+</div>
+
+<div class="score-track">
+  <div class="score-track-label">Progress</div>
+  <div class="score-track-bar"><div class="score-track-fill" id="scoreBarFill"></div></div>
+  <div class="score-track-num" id="scoreBarNum">0 / 3 done</div>
+</div>
+
+<!-- Q1 -->
+<div class="section" id="s1">
+  <div class="sec-header">
+    <div class="q-badge">1</div>
+    <div style="flex:1">
+      <div class="sec-title">Tap all the prime numbers in the 100 square <span class="tag tag-tap">Tap to Select</span></div>
+      <div class="sec-sub">Tap a number to highlight it purple — tap again to deselect. When ready, press Check.</div>
+    </div>
+    <div class="sec-score" id="s1score"></div>
+  </div>
+  <div class="sec-body">
+    <div class="grid-legend">
+      <div class="leg-item"><div class="leg-swatch" style="background:#7C3AED;border:2px solid #5B21B6"></div>Selected</div>
+      <div class="leg-item"><div class="leg-swatch" style="background:var(--green);border:2px solid #15803D"></div>Correct prime ✓</div>
+      <div class="leg-item"><div class="leg-swatch" style="background:var(--red);border:2px solid #B91C1C"></div>Not a prime ✗</div>
+    </div>
+    <div class="number-grid" id="numGrid"></div>
+    <button class="check-btn" id="checkGrid" onclick="checkPrimes()">✓ Check My Prime Numbers</button>
+    <div class="feedback" id="fb_q1"></div>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="section" id="s2">
+  <div class="sec-header">
+    <div class="q-badge">2</div>
+    <div style="flex:1">
+      <div class="sec-title">Work out the squared numbers <span class="tag tag-drag">Drag & Drop</span></div>
+      <div class="sec-sub">Drag the correct answer card into the answer box. Each pair of questions has its own card bank and Check button.</div>
+    </div>
+    <div class="sec-score" id="s2score"></div>
+  </div>
+  <div class="sec-body" id="s2body"></div>
+</div>
+
+<!-- Q3 -->
+<div class="section" id="s3">
+  <div class="sec-header">
+    <div class="q-badge">3</div>
+    <div style="flex:1">
+      <div class="sec-title">Tap the numbers that are <u>NOT</u> square numbers <span class="tag tag-tap">Tap to Select</span></div>
+      <div class="sec-sub">Each row shows 4 numbers. Tap the one(s) that are NOT square numbers. Check after each pair.</div>
+    </div>
+    <div class="sec-score" id="s3score"></div>
+  </div>
+  <div class="sec-body" id="s3body"></div>
+</div>
+
+<div class="summary" id="summary">
+  <h2>🎉 Lesson Complete!</h2>
+  <div class="big-score" id="finalScore">—</div>
+  <div class="stars-row" id="starsRow"></div>
+  <p id="summaryMsg" style="font-size:16px;font-weight:700;opacity:.9;max-width:420px;margin:0 auto"></p>
+</div>
+
+</div>
+
+<script>
+'use strict';
+
+// ── GLOBAL ──
+var G={done:{},total:3};
+function markDone(sid,label){
+  if(G.done[sid])return; G.done[sid]=true;
+  if(label) document.getElementById(sid+'score').textContent=label;
+  var n=Object.keys(G.done).length;
+  var pct=Math.round(n/G.total*100);
+  document.getElementById('hdrFill').style.width=pct+'%';
+  document.getElementById('hdrLabel').textContent=n+' / '+G.total+' sections complete';
+  document.getElementById('scoreBarFill').style.width=pct+'%';
+  document.getElementById('scoreBarNum').textContent=n+' / '+G.total+' done';
+  if(n===G.total) showSummary();
+}
+function showSummary(){
+  var s=document.getElementById('summary');
+  s.style.display='block'; s.scrollIntoView({behavior:'smooth'});
+  document.getElementById('finalScore').textContent='100%';
+  document.getElementById('starsRow').innerHTML='<span style="color:#FBBF24">★</span><span style="color:#FBBF24">★</span><span style="color:#FBBF24">★</span>';
+  document.getElementById('summaryMsg').textContent='Brilliant! You know your primes and square numbers inside out!';
+}
+function mk(tag,cls){var e=document.createElement(tag||'div');if(cls)e.className=cls;return e;}
+function showFB(el,type,msg){
+  if(typeof el==='string') el=document.getElementById(el);
+  if(!el)return; el.className='feedback fb-'+type; el.innerHTML=msg;
+}
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+
+function isPrime(n){if(n<2)return false;for(var i=2;i<=Math.sqrt(n);i++){if(n%i===0)return false;}return true;}
+var PRIMES=[]; for(var _p=2;_p<=100;_p++){if(isPrime(_p))PRIMES.push(_p);}
+var SQUARES=[1,4,9,16,25,36,49,64,81,100];
+
+// ══════════════════════════════════════
+//  Q1 — 100 GRID
+// ══════════════════════════════════════
+var selectedCells=new Set(), gridChecked=false;
+
+function buildGrid(){
+  var grid=document.getElementById('numGrid');
+  for(var n=1;n<=100;n++){
+    (function(num){
+      var cell=mk('div','grid-cell');
+      cell.textContent=num; cell.dataset.n=num;
+      if(num===1){cell.title='1 is not a prime number';grid.appendChild(cell);return;}
+      cell.addEventListener('click',function(){
+        if(gridChecked)return; // only lock after perfect score
+        if(cell.classList.contains('correct-prime'))return; // can't deselect confirmed primes
+        if(selectedCells.has(num)){
+          selectedCells.delete(num);
+          cell.classList.remove('selected','wrong-selected');
+        } else {
+          selectedCells.add(num);
+          cell.classList.remove('wrong-selected');
+          cell.classList.add('selected');
+        }
+      });
+      grid.appendChild(cell);
+    })(n);
+  }
+}
+
+function checkPrimes(){
+  var correct=0, wrong=0;
+  var total=PRIMES.length;
+  document.querySelectorAll('.grid-cell').forEach(function(cell){
+    var num=parseInt(cell.dataset.n);
+    if(num===1) return;
+    var prime=isPrime(num), sel=selectedCells.has(num);
+    if(sel && prime)  { cell.className='grid-cell correct-prime'; correct++; }
+    else if(sel && !prime){ cell.className='grid-cell wrong-selected'; wrong++; }
+    else              { cell.className='grid-cell'; }
+  });
+  var fb=document.getElementById('fb_q1');
+  if(wrong===0 && correct===total){
+    showFB(fb,'correct','🎉 Perfect! You found all '+total+' prime numbers up to 100!');
+    document.getElementById('checkGrid').disabled=true;
+    gridChecked=true;
+    markDone('s1',total+'/'+total+' ✓');
+  } else if(selectedCells.size===0){
+    showFB(fb,'wrong','Tap some numbers in the grid first, then check!');
+  } else if(wrong===0){
+    showFB(fb,'hint','✓ All '+correct+' of your chosen numbers are correct primes! Keep finding more and check again.');
+  } else {
+    showFB(fb,'wrong','✓ '+correct+' correct. <strong style="color:var(--red)">'+wrong+' of your choices are NOT prime (shown in red)</strong> — deselect them and keep going!');
+  }
+}
+
+// ══════════════════════════════════════
+//  Q2 — SQUARED NUMBERS DRAG
+// ══════════════════════════════════════
+var Q2_DATA=[
+  {lbl:'a',expr:'3²', ans:9,  guided:true,  hint:'3 squared means 3 × 3. What does 3 × 3 equal?'},
+  {lbl:'b',expr:'10²',ans:100,guided:true,  hint:'10 squared means 10 × 10 = ?'},
+  {lbl:'c',expr:'4²', ans:16, guided:false},
+  {lbl:'d',expr:'9²', ans:81, guided:false},
+  {lbl:'e',expr:'6²', ans:36, guided:false},
+  {lbl:'f',expr:'2²', ans:4,  guided:false},
+  {lbl:'g',expr:'5²', ans:25, guided:false},
+  {lbl:'h',expr:'7²', ans:49, guided:false},
+  {lbl:'i',expr:'8²', ans:64, guided:false},
+  {lbl:'j',expr:'1²', ans:1,  guided:false}
+];
+
+var q2Res={}, q2TotalGroups=0;
+
+function buildQ2(){
+  var body=document.getElementById('s2body');
+  var perGroup=2;
+  var groups=[];
+  for(var i=0;i<Q2_DATA.length;i+=perGroup) groups.push(Q2_DATA.slice(i,i+perGroup));
+  q2TotalGroups=groups.length;
+
+  groups.forEach(function(grp,gi){
+    var grpDiv=mk('div','sq-group');
+    var title=mk('div','sq-group-title');
+    title.textContent='Questions '+grp.map(function(q){return q.lbl.toUpperCase();}).join(' & ');
+    grpDiv.appendChild(title);
+
+    // Palette: correct answers + distractors
+    var answers=grp.map(function(q){return q.ans;});
+    var dis=[];
+    answers.forEach(function(ans){
+      [ans+2,ans-2,ans+10,ans-10,ans+5].forEach(function(v){
+        if(v>0&&!answers.includes(v)&&!dis.includes(v))dis.push(v);
+      });
+    });
+    var palVals=shuffle(answers.concat(shuffle(dis).slice(0,4)));
+
+    var bank=mk('div','card-bank');
+    var blbl=mk('div','card-bank-lbl'); blbl.textContent='🃏 Drag the correct answer into the box'; bank.appendChild(blbl);
+    var crow=mk('div','card-row');
+    palVals.forEach(function(v){
+      var chip=mk('div','num-card');
+      chip.textContent=v; chip.draggable=true;
+      chip.addEventListener('dragstart',function(e){chip.classList.add('dragging');e.dataTransfer.setData('text/plain',String(v));});
+      chip.addEventListener('dragend',function(){chip.classList.remove('dragging');});
+      crow.appendChild(chip);
+    });
+    bank.appendChild(crow);
+    grpDiv.appendChild(bank);
+
+    // Each sub-question
+    grp.forEach(function(q){
+      if(q.guided){
+        var gh=mk('div','guided-hint');
+        gh.innerHTML='💡 <strong>Guided:</strong> '+q.hint;
+        grpDiv.appendChild(gh);
+      }
+      var row=mk('div','sq-row');
+      var lc=mk('span','sq-lbl'); lc.textContent=q.lbl.toUpperCase(); row.appendChild(lc);
+      var ex=mk('span','sq-expr'); ex.innerHTML=q.expr.replace('²','<sup>2</sup>'); row.appendChild(ex);
+      var eq=mk('span','sq-eq'); eq.textContent=' ='; row.appendChild(eq);
+      var drop=mk('div','sq-drop');
+      drop.textContent='?'; drop.dataset.qid=q.lbl; drop.dataset.ans=q.ans;
+      drop.addEventListener('dragover',function(e){e.preventDefault();drop.classList.add('drag-over');});
+      drop.addEventListener('dragleave',function(){drop.classList.remove('drag-over');});
+      drop.addEventListener('drop',function(e){
+        e.preventDefault(); drop.classList.remove('drag-over');
+        var v=e.dataTransfer.getData('text/plain');
+        drop.textContent=v; drop.dataset.placed=v; drop.classList.add('filled');
+      });
+      row.appendChild(drop);
+      grpDiv.appendChild(row);
+    });
+
+    var fbId='fb_q2_'+gi;
+    var cb=mk('button','check-btn');
+    cb.innerHTML='✓ Check '+grp.map(function(q){return q.lbl.toUpperCase();}).join(' & ');
+    (function(g,grpRef,fid){
+      var att=0;
+      cb.onclick=function(){
+        att++;
+        var correct=0,total=grpRef.length;
+        grpRef.forEach(function(q){
+          var drop=document.querySelector('.sq-drop[data-qid="'+q.lbl+'"]');
+          var placed=parseInt(drop.dataset.placed);
+          if(placed===q.ans){drop.className='sq-drop correct-drop';correct++;}
+          else{
+            drop.className='sq-drop wrong-drop';
+            if(att>=3){drop.textContent=q.ans;drop.className='sq-drop reveal-drop';}
+          }
+        });
+        q2Res[g]={got:correct,tot:total};
+        var fb=document.getElementById(fid);
+        if(correct===total){showFB(fb,'correct','🎉 '+correct+'/'+total+' correct! Well done!');cb.disabled=true;}
+        else if(att>=3){showFB(fb,'hint','✅ Correct answers revealed. Remember n² = n × n.');cb.disabled=true;}
+        else if(att===2){showFB(fb,'hint','💡 '+correct+'/'+total+' correct. Multiply the number by itself!');}
+        else{showFB(fb,'wrong','✗ Not quite. Check: what is the number × itself?');}
+        if(Object.keys(q2Res).length>=q2TotalGroups){
+          var tg=Object.values(q2Res).reduce(function(a,b){return a+b.got;},0);
+          var tt=Object.values(q2Res).reduce(function(a,b){return a+b.tot;},0);
+          markDone('s2',tg+'/'+tt+' ✓');
+        }
+      };
+    })(gi,grp,fbId);
+    grpDiv.appendChild(cb);
+    var fb=mk('div','feedback'); fb.id=fbId; grpDiv.appendChild(fb);
+    body.appendChild(grpDiv);
+  });
+}
+
+// ══════════════════════════════════════
+//  Q3 — NOT SQUARE NUMBERS
+// ══════════════════════════════════════
+var Q3_DATA=[
+  {lbl:'a',nums:[36,24,16,64]},
+  {lbl:'b',nums:[25,81,9,15]},
+  {lbl:'c',nums:[1,100,46,4]},
+  {lbl:'d',nums:[18,49,9,81]},
+  {lbl:'e',nums:[36,6,4,64]},
+  {lbl:'f',nums:[49,9,39,100]}
+];
+
+var q3Tapped={}, q3Res={}, q3TotalGroups=0;
+
+function buildQ3(){
+  var body=document.getElementById('s3body');
+  var perGroup=2;
+  var groups=[];
+  for(var i=0;i<Q3_DATA.length;i+=perGroup) groups.push(Q3_DATA.slice(i,i+perGroup));
+  q3TotalGroups=groups.length;
+
+  groups.forEach(function(grp,gi){
+    var grpDiv=mk('div','q3-group');
+    var title=mk('div','q3-group-title');
+    title.textContent='Questions '+grp.map(function(q){return q.lbl.toUpperCase();}).join(' & ');
+    grpDiv.appendChild(title);
+
+    grp.forEach(function(q){
+      q3Tapped[q.lbl]=new Set();
+      var item=mk('div','q3-item');
+
+      var labelRow=mk('div','q3-label-row');
+      var lc=mk('span','lbl-circle'); lc.textContent=q.lbl.toUpperCase(); labelRow.appendChild(lc);
+      var qt=mk('span','q3-question-text'); qt.textContent='Which number is NOT a square number?'; labelRow.appendChild(qt);
+      item.appendChild(labelRow);
+
+      var numRow=mk('div','q3-numbers');
+      q.nums.forEach(function(n){
+        var btn=mk('div','q3-num');
+        btn.textContent=n; btn.dataset.num=n; btn.dataset.qid=q.lbl;
+        btn.addEventListener('click',function(){
+          if(btn.classList.contains('correct-tap')||btn.classList.contains('reveal-tap')||btn.classList.contains('is-square')) return;
+          if(q3Tapped[q.lbl].has(n)){q3Tapped[q.lbl].delete(n);btn.classList.remove('tapped');}
+          else{q3Tapped[q.lbl].add(n);btn.classList.add('tapped');}
+        });
+        numRow.appendChild(btn);
+      });
+      item.appendChild(numRow);
+      grpDiv.appendChild(item);
+    });
+
+    var fbId='fb_q3_'+gi;
+    var cb=mk('button','check-btn');
+    cb.innerHTML='✓ Check '+grp.map(function(q){return q.lbl.toUpperCase();}).join(' & ');
+    (function(g,grpRef,fid){
+      var att=0;
+      cb.onclick=function(){
+        att++;
+        var correct=0,total=grpRef.length;
+        grpRef.forEach(function(q){
+          var notSq=q.nums.filter(function(n){return!SQUARES.includes(n);});
+          var tapped=Array.from(q3Tapped[q.lbl]);
+          var allCorrect=notSq.every(function(n){return tapped.includes(n);})&&tapped.every(function(n){return notSq.includes(n);});
+          var btns=document.querySelectorAll('.q3-num[data-qid="'+q.lbl+'"]');
+          btns.forEach(function(btn){
+            var num=parseInt(btn.dataset.num);
+            var isNS=notSq.includes(num);
+            var wasTapped=q3Tapped[q.lbl].has(num);
+            if(allCorrect){
+              btn.className=isNS?'q3-num correct-tap':'q3-num is-square';
+            } else {
+              if(wasTapped&&isNS) btn.className='q3-num correct-tap';
+              else if(wasTapped&&!isNS) btn.className='q3-num wrong-tap';
+              else if(!wasTapped&&isNS&&att>=3) btn.className='q3-num reveal-tap';
+              else if(!wasTapped&&!isNS) btn.className='q3-num is-square';
+            }
+          });
+          if(allCorrect) correct++;
+        });
+        q3Res[g]={got:correct,tot:total};
+        var fb=document.getElementById(fid);
+        if(correct===total){showFB(fb,'correct','🎉 '+correct+'/'+total+' correct! You spotted all the non-square numbers!');cb.disabled=true;}
+        else if(att>=3){showFB(fb,'hint','✅ Correct answers revealed. Square numbers: '+SQUARES.join(', '));cb.disabled=true;}
+        else if(att===2){showFB(fb,'hint','💡 '+correct+'/'+total+' correct. Check the square numbers list: 1, 4, 9, 16, 25, 36, 49, 64, 81, 100');}
+        else{showFB(fb,'wrong','✗ Not all correct. Tap any number that is NOT in the square numbers list.');}
+        if(Object.keys(q3Res).length>=q3TotalGroups){
+          var tg=Object.values(q3Res).reduce(function(a,b){return a+b.got;},0);
+          var tt=Object.values(q3Res).reduce(function(a,b){return a+b.tot;},0);
+          markDone('s3',tg+'/'+tt+' ✓');
+        }
+      };
+    })(gi,grp,fbId);
+    grpDiv.appendChild(cb);
+    var fb=mk('div','feedback'); fb.id=fbId; grpDiv.appendChild(fb);
+    body.appendChild(grpDiv);
+  });
+}
+
+// ── INIT ──
+buildGrid();
+buildQ2();
+buildQ3();
+</script>
+</body>
+</html>

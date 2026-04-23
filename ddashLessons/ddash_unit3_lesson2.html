@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D-DASH · Unit 3 · Lesson: Multiples</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1E6FD9;--blue-dark:#1558B0;--blue-light:#EEF4FF;
+  --green:#16A34A;--green-bg:#DCFCE7;--green-border:#86EFAC;
+  --red:#DC2626;--red-bg:#FEE2E2;--red-border:#FCA5A5;
+  --amber:#D97706;--amber-bg:#FEF3C7;--amber-border:#FCD34D;
+  --purple:#7C3AED;--purple-bg:#EDE9FE;--purple-border:#C4B5FD;
+  --bg:#F0F4FF;--border:#C7D7F5;--text:#1E293B;--muted:#64748B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);font-size:17px;line-height:1.5}
+
+.header{background:var(--blue);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(30,111,217,.3)}
+.logo{font-size:22px;font-weight:900;letter-spacing:-1px}.logo .dash{color:#93C5FD}
+.lesson-chip{background:rgba(255,255,255,.2);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;white-space:nowrap}
+.hdr-progress{flex:1;margin:0 16px;min-width:0}
+.hdr-bar{height:10px;background:rgba(255,255,255,.25);border-radius:5px;overflow:hidden}
+.hdr-fill{height:100%;background:#4ADE80;border-radius:5px;transition:width .5s ease;width:0%}
+.hdr-label{font-size:12px;margin-top:4px;opacity:.85}
+.page{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+
+.obj-card{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:20px 24px;margin-bottom:24px}
+.obj-card h2{font-size:13px;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.obj-card p{font-size:19px;font-weight:800}
+
+.explain{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
+.explain h3{font-size:16px;font-weight:800;color:var(--blue);margin-bottom:10px}
+.rule-box{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:13px 16px;margin:10px 0;font-size:15px;line-height:1.9}
+.rule-box strong{color:var(--blue-dark)}
+
+.section{background:#fff;border:1.5px solid var(--border);border-radius:16px;margin-bottom:24px}
+.sec-header{background:var(--blue-light);border-bottom:1.5px solid var(--border);padding:16px 20px;display:flex;align-items:flex-start;gap:12px;border-radius:16px 16px 0 0}
+.q-badge{width:38px;height:38px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-title{font-size:17px;font-weight:800}
+.sec-sub{font-size:14px;color:var(--muted);margin-top:3px}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;margin-left:8px}
+.tag-mcq{background:#EDE9FE;color:#5B21B6}
+.tag-drag{background:#DCFCE7;color:#15803D}
+.tag-venn{background:#FEF3C7;color:#92400E}
+.tag-guided{background:#FEE2E2;color:#DC2626}
+.sec-score{margin-left:auto;font-size:14px;font-weight:800;color:var(--green);white-space:nowrap;flex-shrink:0}
+.sec-body{padding:20px}
+
+.q-group{background:#F8FAFF;border-radius:14px;padding:18px;margin-bottom:16px;border:1px solid var(--border)}
+.q-group:last-child{margin-bottom:0}
+.q-group-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:14px}
+.q-item{margin-bottom:16px;padding-bottom:16px;border-bottom:1px dashed var(--border)}
+.q-item:last-of-type{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.q-item-label{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.lbl-circle{background:var(--blue);color:#fff;min-width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0}
+.num-chip{background:#EEF4FF;color:var(--blue-dark);border:1.5px solid var(--border);border-radius:8px;padding:2px 10px;font-size:17px;font-weight:900;font-family:monospace}
+.guided-hint{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:9px 13px;font-size:14px;color:var(--amber);font-weight:700;margin-bottom:10px}
+
+/* MCQ */
+.mcq-opts{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.mcq-opt{background:#fff;color:var(--text);border:2px solid var(--border);border-radius:10px;padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;text-align:left;font-family:'Nunito',sans-serif;line-height:1.4}
+.mcq-opt:hover{border-color:var(--blue);background:var(--blue-light)}
+.mcq-opt.selected{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark)}
+.mcq-opt.correct{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important}
+.mcq-opt.wrong{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important}
+.mcq-opt.reveal{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:dashed!important}
+.mcq-opt:disabled{pointer-events:none}
+
+/* Drag LCM */
+.lcm-palette{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px}
+.lcm-palette-lbl{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.lcm-chips{display:flex;flex-wrap:wrap;gap:8px}
+.lcm-chip{background:#fff;color:var(--blue-dark);border:2px solid var(--blue);border-radius:10px;padding:7px 16px;font-size:17px;font-weight:900;cursor:grab;user-select:none;transition:all .15s}
+.lcm-chip:hover{background:var(--blue);color:#fff;transform:translateY(-2px);box-shadow:0 3px 10px rgba(30,111,217,.2)}
+.lcm-chip:active{cursor:grabbing}
+.lcm-chip.dragging{opacity:.3}
+.lcm-drop{min-width:80px;height:44px;border:2.5px dashed var(--border);border-radius:10px;background:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:var(--muted);margin-left:8px;transition:all .2s;padding:0 12px}
+.lcm-drop.drag-over{border-color:var(--green);background:var(--green-bg)}
+.lcm-drop.filled{border-style:solid;border-color:var(--blue);color:var(--blue-dark);background:var(--blue-light)}
+.lcm-drop.correct-drop{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:solid!important}
+.lcm-drop.wrong-drop{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important;border-style:solid!important}
+.lcm-drop.reveal-drop{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:dashed!important}
+.lcm-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:16px;font-weight:700}
+
+/* Q5 drag answer zones */
+.q5-numbers{background:var(--blue-light);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.q5-numbers-lbl{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.q5-chips{display:flex;flex-wrap:wrap;gap:8px}
+.q5-chip{background:#fff;color:var(--blue-dark);border:2px solid var(--blue);border-radius:10px;padding:7px 14px;font-size:16px;font-weight:900;cursor:grab;user-select:none;transition:all .15s}
+.q5-chip:hover{background:var(--blue);color:#fff;transform:translateY(-2px)}
+.q5-chip:active{cursor:grabbing}
+.q5-chip.dragging{opacity:.3}
+.q5-answer-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:16px;font-weight:700;margin-top:6px}
+.q5-drop-zone{min-width:200px;min-height:44px;border:2.5px dashed var(--border);border-radius:10px;background:#fff;padding:6px 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;transition:all .2s;flex:1}
+.q5-drop-zone.drag-over{border-color:var(--green);background:var(--green-bg)}
+.q5-placed{background:var(--blue-light);border:2px solid var(--blue);border-radius:8px;padding:4px 10px;font-size:15px;font-weight:900;color:var(--blue-dark);cursor:pointer}
+.q5-placed:hover{border-color:var(--red);color:var(--red)}
+.q5-placed.correct-p{border-color:var(--green)!important;color:var(--green)!important;background:var(--green-bg)!important;cursor:default}
+.q5-placed.wrong-p{border-color:var(--red)!important;color:var(--red)!important;background:var(--red-bg)!important}
+.q5-placed.reveal-p{border-color:var(--green)!important;color:var(--green)!important;background:var(--green-bg)!important;border-style:dashed!important;cursor:default}
+
+/* Q6 Venn */
+.venn-card{background:#F8FAFF;border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:20px}
+.venn-card:last-child{margin-bottom:0}
+.venn-card-title{font-size:14px;font-weight:800;color:var(--blue-dark);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.venn-bubble-bank{display:flex;flex-wrap:wrap;gap:8px;background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:14px}
+.venn-bubble-lbl{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;width:100%;margin-bottom:4px}
+.vbubble{background:#fff;border:2.5px solid var(--blue);border-radius:999px;padding:6px 14px;font-size:15px;font-weight:900;color:var(--blue-dark);cursor:grab;user-select:none;transition:all .15s}
+.vbubble:hover{background:var(--blue);color:#fff;transform:translateY(-2px)}
+.vbubble:active{cursor:grabbing}
+.vbubble.vdragging{opacity:.3}
+.vbubble.vplaced{display:none}
+
+.venn2-wrap{position:relative;width:100%;max-width:560px;margin:0 auto}
+.venn2-svg-wrap{position:relative;width:100%;padding-bottom:55%}
+.venn2-svg{position:absolute;top:0;left:0;width:100%;height:100%}
+.venn2-zones{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.venn2-zone{position:absolute;pointer-events:all;cursor:default;display:flex;align-items:center;justify-content:center;transition:outline .15s}
+.venn2-zone.drag-over{outline:3px dashed var(--green);outline-offset:3px;border-radius:8px}
+.vzone-items{position:absolute;display:flex;flex-wrap:wrap;gap:3px;align-items:center;justify-content:center;pointer-events:none;padding:4px}
+.vzone-item{background:#fff;border:2px solid #64748B;border-radius:999px;padding:3px 8px;font-size:13px;font-weight:900;color:#1E293B;pointer-events:all;cursor:pointer}
+.vzone-item:hover{border-color:var(--red);color:var(--red)}
+.vzone-item.vc-ok{border-color:var(--green)!important;color:var(--green)!important;background:var(--green-bg)!important}
+.vzone-item.vc-bad{border-color:var(--red)!important;color:var(--red)!important;background:var(--red-bg)!important}
+.vzone-item.vc-rev{border-color:var(--green)!important;color:var(--green)!important;background:var(--green-bg)!important;border-style:dashed!important}
+
+/* check/feedback */
+.check-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:11px 26px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:12px;display:inline-flex;align-items:center;gap:7px;transition:background .15s,transform .1s}
+.check-btn:hover{background:var(--blue-dark)}.check-btn:active{transform:scale(.97)}
+.feedback{display:none;padding:12px 16px;border-radius:10px;font-size:15px;font-weight:700;margin-top:10px}
+.fb-correct{background:var(--green-bg);color:var(--green);border:1.5px solid var(--green-border);display:block!important}
+.fb-wrong{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red-border);display:block!important}
+.fb-hint{background:var(--amber-bg);color:var(--amber);border:1.5px solid var(--amber-border);display:block!important}
+
+.score-track{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.score-track-label{font-size:14px;font-weight:800;color:var(--muted);white-space:nowrap}
+.score-track-bar{flex:1;height:14px;background:#E2E8F0;border-radius:7px;overflow:hidden}
+.score-track-fill{height:100%;background:linear-gradient(to right,#16A34A,#4ADE80);border-radius:7px;transition:width .5s ease;width:0%}
+.score-track-num{font-size:15px;font-weight:900;color:var(--green);white-space:nowrap}
+
+.summary{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:32px;text-align:center;margin-top:32px;display:none}
+.summary h2{font-size:26px;font-weight:900;margin-bottom:8px}
+.big-score{font-size:64px;font-weight:900;margin:12px 0;line-height:1}
+.stars-row{font-size:40px;margin:12px 0;display:flex;justify-content:center;gap:6px}
+
+@media(max-width:600px){
+  .mcq-opt{font-size:13px;padding:9px 12px}
+  .lcm-chip,.q5-chip,.vbubble{font-size:14px;padding:6px 11px}
+  .lcm-drop,.q5-drop-zone{min-width:140px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">D<span class="dash">-DASH</span></div>
+  <div class="lesson-chip">Unit 3 · Multiples</div>
+  <div class="hdr-progress">
+    <div class="hdr-bar"><div class="hdr-fill" id="hdrFill"></div></div>
+    <div class="hdr-label" id="hdrLabel">0 / 5 sections complete</div>
+  </div>
+</div>
+
+<div class="page">
+
+<div class="obj-card">
+  <h2>🎯 Learning Objective</h2>
+  <p>Find common multiples, lowest common multiples (LCM), and sort numbers using Venn diagrams</p>
+</div>
+
+<div class="explain">
+  <h3>📐 Key Concepts</h3>
+  <div class="rule-box">
+    <strong>Multiple:</strong> A number you get by multiplying another number by 1, 2, 3, 4 … (e.g. multiples of 4: 4, 8, 12, 16, 20 …)<br>
+    <strong>Common multiple:</strong> A number that is a multiple of two or more numbers (e.g. 12 is a common multiple of 3 and 4)<br>
+    <strong>LCM (Lowest Common Multiple):</strong> The smallest common multiple (e.g. LCM of 3 and 4 is 12)
+  </div>
+</div>
+
+<div class="score-track">
+  <div class="score-track-label">Progress</div>
+  <div class="score-track-bar"><div class="score-track-fill" id="scoreBarFill"></div></div>
+  <div class="score-track-num" id="scoreBarNum">0 / 5 done</div>
+</div>
+
+<!-- ═══════════════ QUESTION 1 ═══════════════ -->
+<div class="section" id="s1">
+  <div class="sec-header">
+    <div class="q-badge">1</div>
+    <div style="flex:1">
+      <div class="sec-title">Find all common multiples up to 100 for each pair <span class="tag tag-mcq">MCQ</span></div>
+      <div class="sec-sub">Choose the correct set of common multiples. <span style="color:#7C3AED;font-weight:800">★ Guided: a &amp; b</span></div>
+    </div>
+    <div class="sec-score" id="s1score"></div>
+  </div>
+  <div class="sec-body" id="s1body"></div>
+</div>
+
+<!-- ═══════════════ QUESTION 2 ═══════════════ -->
+<div class="section" id="s2">
+  <div class="sec-header">
+    <div class="q-badge">2</div>
+    <div style="flex:1">
+      <div class="sec-title">Find all common multiples up to 100 for each set of 3 numbers <span class="tag tag-mcq">MCQ</span></div>
+      <div class="sec-sub">Choose the correct set. <span style="color:#7C3AED;font-weight:800">★ Guided: a &amp; b</span></div>
+    </div>
+    <div class="sec-score" id="s2score"></div>
+  </div>
+  <div class="sec-body" id="s2body"></div>
+</div>
+
+<!-- ═══════════════ QUESTION 4 ═══════════════ -->
+<div class="section" id="s4">
+  <div class="sec-header">
+    <div class="q-badge">4</div>
+    <div style="flex:1">
+      <div class="sec-title">What is the lowest common multiple (LCM)? <span class="tag tag-drag">Drag Answer</span></div>
+      <div class="sec-sub">Drag the correct number card into the answer box. <span style="color:#7C3AED;font-weight:800">★ Guided: a &amp; b</span></div>
+    </div>
+    <div class="sec-score" id="s4score"></div>
+  </div>
+  <div class="sec-body" id="s4body"></div>
+</div>
+
+<!-- ═══════════════ QUESTION 5 ═══════════════ -->
+<div class="section" id="s5">
+  <div class="sec-header">
+    <div class="q-badge">5</div>
+    <div style="flex:1">
+      <div class="sec-title">Which of these numbers are multiples of…? <span class="tag tag-drag">Drag & Drop</span></div>
+      <div class="sec-sub">Drag numbers from the bank above into each answer box. Numbers may be used more than once!</div>
+    </div>
+    <div class="sec-score" id="s5score"></div>
+  </div>
+  <div class="sec-body" id="s5body"></div>
+</div>
+
+<!-- ═══════════════ QUESTION 6 ═══════════════ -->
+<div class="section" id="s6">
+  <div class="sec-header">
+    <div class="q-badge">6</div>
+    <div style="flex:1">
+      <div class="sec-title">Sort numbers into the correct Venn diagram section <span class="tag tag-venn">Venn Drag</span></div>
+      <div class="sec-sub">Each diagram has its own number bank. Drag each number into the left, right, or middle (both) section.</div>
+    </div>
+    <div class="sec-score" id="s6score"></div>
+  </div>
+  <div class="sec-body" id="s6body"></div>
+</div>
+
+<div class="summary" id="summary">
+  <h2>🎉 Lesson Complete!</h2>
+  <div class="big-score" id="finalScore">—</div>
+  <div class="stars-row" id="starsRow"></div>
+  <p id="summaryMsg" style="font-size:16px;font-weight:700;opacity:.9;max-width:420px;margin:0 auto"></p>
+</div>
+
+</div>
+
+<script>
+'use strict';
+// ─────────────────────────────────────────────
+//  GLOBAL STATE
+// ─────────────────────────────────────────────
+var G = { done:{}, total:5 };
+function markDone(sid){
+  if(G.done[sid]) return;
+  G.done[sid]=true;
+  var n = Object.keys(G.done).length;
+  var pct = Math.round(n/G.total*100);
+  document.getElementById('hdrFill').style.width=pct+'%';
+  document.getElementById('hdrLabel').textContent=n+' / '+G.total+' sections complete';
+  document.getElementById('scoreBarFill').style.width=pct+'%';
+  document.getElementById('scoreBarNum').textContent=n+' / '+G.total+' done';
+  if(n===G.total) showSummary();
+}
+function showSummary(){
+  var s=document.getElementById('summary');
+  s.style.display='block'; s.scrollIntoView({behavior:'smooth'});
+  document.getElementById('finalScore').textContent='100%';
+  document.getElementById('starsRow').innerHTML='<span style="color:#FBBF24">★</span><span style="color:#FBBF24">★</span><span style="color:#FBBF24">★</span>';
+  document.getElementById('summaryMsg').textContent='Excellent! You have mastered multiples and LCM!';
+}
+function mk(tag,cls){var e=document.createElement(tag||'div');if(cls)e.className=cls;return e;}
+function showFB(id,type,msg){
+  var el=typeof id==='string'?document.getElementById(id):id;
+  if(!el)return; el.className='feedback fb-'+type; el.innerHTML=msg;
+}
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+
+// ─────────────────────────────────────────────
+//  QUESTION 1 — MCQ common multiples (pairs)
+// ─────────────────────────────────────────────
+function getCommonMultiples(a,b,max){
+  var res=[];
+  for(var i=1;i*a<=max||i*b<=max;i++){
+    var m=i*a;
+    if(m<=max && m%b===0) res.push(m);
+  }
+  // ensure using LCM approach
+  var lcm=a*b/gcd(a,b);
+  var r=[];
+  for(var v=lcm;v<=max;v+=lcm) r.push(v);
+  return r;
+}
+function getCommonMultiples3(a,b,c,max){
+  var lcmAB=lcmOf(a,b); var lcmABC=lcmOf(lcmAB,c);
+  var r=[];
+  for(var v=lcmABC;v<=max;v+=lcmABC) r.push(v);
+  return r;
+}
+function gcd(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
+function lcmOf(a,b){return a*b/gcd(a,b);}
+
+var Q1_DATA=[
+  {lbl:'a',pair:[3,4], guided:true, hint:'List multiples of 3 and 4 — highlight those that appear in both lists.'},
+  {lbl:'b',pair:[6,10],guided:true, hint:'LCM of 6 and 10 = 30. Every multiple of 30 up to 100.'},
+  {lbl:'c',pair:[3,9], guided:false,hint:''},
+  {lbl:'d',pair:[2,5], guided:false,hint:''},
+  {lbl:'e',pair:[7,8], guided:false,hint:''},
+  {lbl:'f',pair:[3,7], guided:false,hint:''},
+  {lbl:'g',pair:[4,6], guided:false,hint:''},
+  {lbl:'h',pair:[6,9], guided:false,hint:''}
+];
+
+var Q2_DATA=[
+  {lbl:'a',triple:[2,4,8],  guided:true, hint:'LCM(2,4,8)=8. Every multiple of 8 up to 100.'},
+  {lbl:'b',triple:[4,6,9],  guided:true, hint:'LCM(4,6,9)=36. Multiples of 36 up to 100.'},
+  {lbl:'c',triple:[6,15,18],guided:false,hint:''},
+  {lbl:'d',triple:[3,5,10], guided:false,hint:''},
+  {lbl:'e',triple:[8,12,18],guided:false,hint:''},
+  {lbl:'f',triple:[4,10,12],guided:false,hint:''},
+  {lbl:'g',triple:[6,10,15],guided:false,hint:''},
+  {lbl:'h',triple:[3,6,21], guided:false,hint:''}
+];
+
+function fmtMultiples(arr){ return arr.length?arr.join(', '):'None up to 100'; }
+
+function makeWrongSets(correct, a, b, max, isTriple, extra){
+  // Generate 3 plausible wrong sets
+  var wrongs=[];
+  // Wrong 1: multiples of just a (not b)
+  var mA=[];
+  for(var v=a;v<=max;v+=a){ if(!correct.includes(v)) mA.push(v); }
+  if(mA.length>=3) wrongs.push(mA.slice(0,Math.min(mA.length,6)));
+  // Wrong 2: all multiples of a up to 30
+  var mAall=[];
+  for(var v2=a;v2<=Math.min(max,60);v2+=a) mAall.push(v2);
+  wrongs.push(mAall.slice(0,8));
+  // Wrong 3: correct but missing one
+  if(correct.length>1){var w3=correct.slice(0,-1); wrongs.push(w3);}
+  else {var w3b=correct.concat([correct[correct.length-1]+(b||a)]); wrongs.push(w3b);}
+  return wrongs.slice(0,3);
+}
+
+var q1Att={}, q1Res={}, q1TotalGroups=0;
+var q2Att={}, q2Res={}, q2TotalGroups=0;
+
+function buildMCQSection(data, bodyId, qkey, attObj, resObj, totalGroupsRef, sid, isTriple){
+  var body=document.getElementById(bodyId);
+  var perGroup=2;
+  var groups=[];
+  for(var i=0;i<data.length;i+=perGroup) groups.push(data.slice(i,i+perGroup));
+  totalGroupsRef.val=groups.length;
+
+  groups.forEach(function(grp,gi){
+    var grpDiv=mk('div','q-group');
+    var title=mk('div','q-group-title');
+    title.textContent='Questions '+grp.map(function(q){return q.lbl.toUpperCase();}).join(' & ');
+    grpDiv.appendChild(title);
+
+    grp.forEach(function(q){
+      var item=mk('div','q-item');
+      var lbl=mk('div','q-item-label');
+      var lc=mk('span','lbl-circle'); lc.textContent=q.lbl; lbl.appendChild(lc);
+      var nums = isTriple ? q.triple : q.pair;
+      var txt=document.createTextNode(' Common multiples of ');
+      lbl.appendChild(txt);
+      nums.forEach(function(n,i){
+        var ch=mk('span','num-chip'); ch.textContent=n; lbl.appendChild(ch);
+        if(i<nums.length-1){var sep=document.createTextNode(i===nums.length-2?' and ':', ');lbl.appendChild(sep);}
+      });
+      item.appendChild(lbl);
+
+      if(q.guided){
+        var gh=mk('div','guided-hint');
+        gh.innerHTML='💡 <strong>Guided:</strong> '+q.hint;
+        item.appendChild(gh);
+      }
+
+      // Build correct & wrong options
+      var correct = isTriple
+        ? getCommonMultiples3(q.triple[0],q.triple[1],q.triple[2],100)
+        : getCommonMultiples(q.pair[0],q.pair[1],100);
+
+      var wrongSets = makeWrongSets(correct, nums[0], nums[1]||nums[0], 100, isTriple);
+      // Build 4 options: correct + 3 wrongs
+      var opts = [{label: fmtMultiples(correct), isCorrect:true}];
+      wrongSets.forEach(function(ws){
+        var ws2=ws.slice().sort(function(a,b){return a-b;});
+        var label=fmtMultiples(ws2);
+        if(label!==fmtMultiples(correct)) opts.push({label:label,isCorrect:false});
+      });
+      // Deduplicate
+      var seen={[fmtMultiples(correct)]:true};
+      opts=opts.filter(function(o){ if(seen[o.label])return false; seen[o.label]=true; return true; });
+      while(opts.length<4){opts.push({label:'None up to 100',isCorrect:false});}
+      opts=opts.slice(0,4);
+      opts=shuffle(opts);
+
+      var mcqDiv=mk('div','mcq-opts');
+      opts.forEach(function(opt){
+        var btn=mk('button','mcq-opt');
+        btn.textContent=opt.label;
+        btn.dataset.correct=opt.isCorrect?'1':'0';
+        btn.dataset.qid=q.lbl;
+        btn.dataset.qkey=qkey;
+        btn.addEventListener('click',function(){
+          if(btn.classList.contains('correct')||btn.classList.contains('wrong'))return;
+          document.querySelectorAll('.mcq-opt[data-qkey="'+qkey+'"][data-qid="'+q.lbl+'"]').forEach(function(b){b.classList.remove('selected');});
+          btn.classList.add('selected');
+        });
+        mcqDiv.appendChild(btn);
+      });
+      item.appendChild(mcqDiv);
+      grpDiv.appendChild(item);
+    });
+
+    var fbId='fb_'+qkey+'_'+gi;
+    var cb=mk('button','check-btn');
+    cb.innerHTML='✓ Check '+grp.map(function(q){return q.lbl.toUpperCase();}).join(' & ');
+    (function(g,grpRef,fid,tgRef,sid2){
+      cb.onclick=function(){
+        if(!attObj[g])attObj[g]=0; attObj[g]++;
+        var att=attObj[g];
+        var correct=0,total=grpRef.length;
+        grpRef.forEach(function(q){
+          var opts=document.querySelectorAll('.mcq-opt[data-qkey="'+qkey+'"][data-qid="'+q.lbl+'"]');
+          var sel=null;
+          opts.forEach(function(o){if(o.classList.contains('selected'))sel=o;});
+          if(sel&&sel.dataset.correct==='1'){sel.classList.remove('selected');sel.classList.add('correct');correct++;}
+          else{
+            if(sel){sel.classList.remove('selected');sel.classList.add('wrong');}
+            if(att>=3) opts.forEach(function(o){if(o.dataset.correct==='1')o.classList.add('reveal');});
+          }
+        });
+        resObj[g]={got:correct,tot:total};
+        var fb=document.getElementById(fid);
+        if(correct===total) showFB(fb,'correct','🎉 '+correct+'/'+total+' correct!');
+        else if(att>=3) showFB(fb,'hint','✅ Correct answers revealed. Find the LCM first, then list its multiples up to 100.');
+        else if(att===2) showFB(fb,'hint','💡 '+correct+'/'+total+' correct. Tip: find the LCM, then list its multiples.');
+        else showFB(fb,'wrong','✗ Not quite — look for numbers that appear in BOTH lists of multiples.');
+        if(Object.keys(resObj).length>=tgRef.val){
+          var tg=Object.values(resObj).reduce(function(a,b){return a+b.got;},0);
+          var tt=Object.values(resObj).reduce(function(a,b){return a+b.tot;},0);
+          document.getElementById(sid2+'score').textContent=tg+'/'+tt+' ✓';
+          markDone(sid2);
+        }
+      };
+    })(gi,grp,fbId,totalGroupsRef,sid);
+    grpDiv.appendChild(cb);
+    var fb=mk('div','feedback'); fb.id=fbId; grpDiv.appendChild(fb);
+    body.appendChild(grpDiv);
+  });
+}
+
+// ─────────────────────────────────────────────
+//  QUESTION 4 — Drag LCM
+// ─────────────────────────────────────────────
+var Q4_DATA=[
+  {lbl:'a',nums:[5,8],   guided:true,  hint:'List multiples of 8: 8,16,24,32,40 — which is also a multiple of 5?'},
+  {lbl:'b',nums:[9,4],   guided:true,  hint:'LCM(9,4): 9×4=36, GCD=1, so LCM=36.'},
+  {lbl:'c',nums:[10,25], guided:false, hint:''},
+  {lbl:'d',nums:[6,10],  guided:false, hint:''},
+  {lbl:'e',nums:[2,3,7], guided:false, hint:''},
+  {lbl:'f',nums:[7,9,21],guided:false, hint:''},
+  {lbl:'g',nums:[6,12,14],guided:false,hint:''},
+  {lbl:'h',nums:[9,4,5], guided:false, hint:''}
+];
+
+var q4Att={}, q4Res={}, q4DragSrc=null;
+
+function buildQ4(){
+  var body=document.getElementById('s4body');
+  var perGroup=2;
+  var groups=[];
+  for(var i=0;i<Q4_DATA.length;i+=perGroup) groups.push(Q4_DATA.slice(i,i+perGroup));
+
+  groups.forEach(function(grp,gi){
+    var grpDiv=mk('div','q-group');
+    var title=mk('div','q-group-title');
+    title.textContent='Questions '+grp.map(function(q){return q.lbl.toUpperCase();}).join(' & ');
+    grpDiv.appendChild(title);
+
+    // Compute all LCMs for this group, make a shared palette
+    var answers=grp.map(function(q){
+      if(q.nums.length===2) return lcmOf(q.nums[0],q.nums[1]);
+      return lcmOf(lcmOf(q.nums[0],q.nums[1]),q.nums[2]);
+    });
+
+    // Build wrong options: 4 per correct
+    var palVals=[];
+    answers.forEach(function(ans){
+      palVals.push(ans);
+      // add plausible wrongs
+      var ws=[ans*2, ans+Math.round(ans*0.1), Math.round(ans/2), ans-Math.round(ans*0.1)];
+      ws.forEach(function(w){if(w>0&&w!==ans&&!palVals.includes(w))palVals.push(w);});
+    });
+    // deduplicate, shuffle, take max 10
+    palVals=[...new Set(palVals)].sort(function(a,b){return a-b;});
+    palVals=shuffle(palVals).slice(0,Math.min(10,palVals.length));
+    palVals.sort(function(a,b){return a-b;});
+
+    var pal=mk('div','lcm-palette');
+    var plbl=mk('div','lcm-palette-lbl'); plbl.textContent='🃏 Drag the correct LCM into the answer box'; pal.appendChild(plbl);
+    var chipRow=mk('div','lcm-chips');
+    palVals.forEach(function(v){
+      var chip=mk('div','lcm-chip');
+      chip.textContent=v; chip.dataset.val=v;
+      chip.draggable=true;
+      chip.addEventListener('dragstart',function(e){
+        q4DragSrc=v; chip.classList.add('dragging');
+        e.dataTransfer.setData('text/plain',String(v));
+      });
+      chip.addEventListener('dragend',function(){chip.classList.remove('dragging');});
+      chipRow.appendChild(chip);
+    });
+    pal.appendChild(chipRow);
+    grpDiv.appendChild(pal);
+
+    grp.forEach(function(q){
+      var item=mk('div','q-item');
+      if(q.guided){
+        var gh=mk('div','guided-hint');
+        gh.innerHTML='💡 <strong>Guided:</strong> '+q.hint; item.appendChild(gh);
+      }
+      var row=mk('div','lcm-row');
+      var lc=mk('span','lbl-circle'); lc.textContent=q.lbl; row.appendChild(lc);
+      var txt=document.createTextNode(' LCM of ');
+      row.appendChild(txt);
+      q.nums.forEach(function(n,i){
+        var ch=mk('span','num-chip'); ch.textContent=n; row.appendChild(ch);
+        if(i<q.nums.length-1){var s=document.createTextNode(i===q.nums.length-2?' and ':', ');row.appendChild(s);}
+      });
+      var eqTxt=document.createTextNode(' = '); row.appendChild(eqTxt);
+
+      var drop=mk('div','lcm-drop');
+      drop.textContent='?'; drop.dataset.qid=q.lbl;
+      drop.addEventListener('dragover',function(e){e.preventDefault();drop.classList.add('drag-over');});
+      drop.addEventListener('dragleave',function(){drop.classList.remove('drag-over');});
+      drop.addEventListener('drop',function(e){
+        e.preventDefault(); drop.classList.remove('drag-over');
+        var v=e.dataTransfer.getData('text/plain');
+        drop.textContent=v; drop.dataset.placed=v; drop.classList.add('filled');
+      });
+      row.appendChild(drop);
+      item.appendChild(row);
+      grpDiv.appendChild(item);
+    });
+
+    var fbId='fb_q4_'+gi;
+    var cb=mk('button','check-btn');
+    cb.innerHTML='✓ Check '+grp.map(function(q){return q.lbl.toUpperCase();}).join(' & ');
+    (function(g,grpRef,fid,answersRef){
+      cb.onclick=function(){
+        if(!q4Att[g])q4Att[g]=0; q4Att[g]++;
+        var att=q4Att[g];
+        var correct=0, total=grpRef.length;
+        grpRef.forEach(function(q,qi){
+          var drop=document.querySelector('.lcm-drop[data-qid="'+q.lbl+'"]');
+          var placed=parseInt(drop.dataset.placed);
+          var ans=answersRef[qi];
+          if(placed===ans){drop.className='lcm-drop correct-drop';drop.textContent=ans;correct++;}
+          else{
+            drop.className='lcm-drop wrong-drop';
+            if(att>=3){drop.textContent=ans;drop.className='lcm-drop reveal-drop';}
+          }
+        });
+        q4Res[g]={got:correct,tot:total};
+        var fb=document.getElementById(fid);
+        if(correct===total) showFB(fb,'correct','🎉 '+correct+'/'+total+' correct! Great LCM work!');
+        else if(att>=3) showFB(fb,'hint','✅ Correct LCMs revealed. Find the LCM by listing multiples or using: LCM = a×b ÷ GCD.');
+        else if(att===2) showFB(fb,'hint','💡 '+correct+'/'+total+' correct. Try listing multiples of the larger number until you find one divisible by the others.');
+        else showFB(fb,'wrong','✗ Not correct. Remember the LCM is the SMALLEST number that is a multiple of both.');
+        if(Object.keys(q4Res).length>=groups.length){
+          var tg=Object.values(q4Res).reduce(function(a,b){return a+b.got;},0);
+          var tt=Object.values(q4Res).reduce(function(a,b){return a+b.tot;},0);
+          document.getElementById('s4score').textContent=tg+'/'+tt+' ✓';
+          markDone('s4');
+        }
+      };
+    })(gi,grp,fbId,answers);
+    grpDiv.appendChild(cb);
+    var fb=mk('div','feedback'); fb.id=fbId; grpDiv.appendChild(fb);
+    body.appendChild(grpDiv);
+  });
+}
+
+// ─────────────────────────────────────────────
+//  QUESTION 5 — Drag numbers as answers
+// ─────────────────────────────────────────────
+var Q5_NUMBERS=[6880, 4728, 1530, 864, 1008, 3150];
+var Q5_QS=[
+  {lbl:'a', q:'multiples of 8',   check:function(n){return n%8===0;}},
+  {lbl:'b', q:'multiples of 7',   check:function(n){return n%7===0;}},
+  {lbl:'c', q:'multiples of 5',   check:function(n){return n%5===0;}},
+  {lbl:'d', q:'multiples of 6',   check:function(n){return n%6===0;}},
+  {lbl:'e', q:'multiples of 9',   check:function(n){return n%9===0;}},
+  {lbl:'f', q:'multiples of 4 and 7', check:function(n){return n%4===0&&n%7===0;}},
+  {lbl:'g', q:'multiples of 3 and 8', check:function(n){return n%3===0&&n%8===0;}},
+  {lbl:'h', q:'multiples of 2, 5 and 9', check:function(n){return n%2===0&&n%5===0&&n%9===0;}}
+];
+
+var q5Placed={}; // qid -> [nums]
+var q5Att={}, q5Res={}, q5DragNum=null;
+
+function buildQ5(){
+  var body=document.getElementById('s5body');
+  var perGroup=2;
+  // Groups of 2 questions, each group has its own number bank displayed above
+  for(var gi=0;gi*perGroup<Q5_QS.length;gi++){
+    var grp=Q5_QS.slice(gi*perGroup,gi*perGroup+perGroup);
+    var grpDiv=mk('div','q-group');
+
+    var title=mk('div','q-group-title');
+    title.textContent='Questions '+grp.map(function(q){return q.lbl.toUpperCase();}).join(' & ');
+    grpDiv.appendChild(title);
+
+    // Number bank (always all 6 numbers — persistent for re-dragging)
+    var bankId='q5bank_'+gi;
+    var bankWrap=mk('div','q5-numbers');
+    var bankLbl=mk('div','q5-numbers-lbl'); bankLbl.textContent='🃏 Drag any of these numbers as your answer:'; bankWrap.appendChild(bankLbl);
+    var chipsRow=mk('div','q5-chips'); chipsRow.id=bankId; bankWrap.appendChild(chipsRow);
+    Q5_NUMBERS.forEach(function(n){
+      var chip=mk('div','q5-chip');
+      chip.textContent=n; chip.dataset.num=n; chip.dataset.bank=gi;
+      chip.draggable=true;
+      chip.addEventListener('dragstart',function(e){
+        q5DragNum=n; chip.classList.add('dragging');
+        e.dataTransfer.setData('text/plain',String(n));
+      });
+      chip.addEventListener('dragend',function(){chip.classList.remove('dragging');});
+      chipsRow.appendChild(chip);
+    });
+    grpDiv.appendChild(bankWrap);
+
+    // Questions
+    grp.forEach(function(q){
+      q5Placed[q.lbl]=[];
+      var item=mk('div','q-item');
+      var row=mk('div','q5-answer-row');
+      var lc=mk('span','lbl-circle'); lc.textContent=q.lbl; row.appendChild(lc);
+      var qtxt=mk('span',''); qtxt.style.cssText='font-size:15px;font-weight:700'; qtxt.textContent='Which are '+q.q+'?'; row.appendChild(qtxt);
+      var zone=mk('div','q5-drop-zone'); zone.id='q5zone_'+q.lbl;
+      zone.innerHTML='<span style="color:var(--muted);font-size:13px">Drop numbers here…</span>';
+      zone.addEventListener('dragover',function(e){e.preventDefault();zone.classList.add('drag-over');});
+      zone.addEventListener('dragleave',function(){zone.classList.remove('drag-over');});
+      zone.addEventListener('drop',function(e){
+        e.preventDefault(); zone.classList.remove('drag-over');
+        var numStr=e.dataTransfer.getData('text/plain');
+        var num=parseInt(numStr);
+        if(isNaN(num)) return;
+        if(q5Placed[q.lbl].includes(num)) return; // already placed
+        q5Placed[q.lbl].push(num);
+        // Remove placeholder
+        var ph=zone.querySelector('span');
+        if(ph&&ph.style&&!ph.classList.contains('q5-placed')) ph.remove();
+        // Add placed item
+        var pl=mk('div','q5-placed'); pl.textContent=num; pl.dataset.num=num; pl.dataset.qid=q.lbl;
+        pl.addEventListener('click',function(){
+          // Remove placed item
+          q5Placed[q.lbl]=q5Placed[q.lbl].filter(function(v){return v!==num;});
+          pl.remove();
+          if(zone.children.length===0){
+            var ph2=mk('span',''); ph2.style.cssText='color:var(--muted);font-size:13px'; ph2.textContent='Drop numbers here…';
+            zone.appendChild(ph2);
+          }
+        });
+        zone.appendChild(pl);
+      });
+      row.appendChild(zone);
+      item.appendChild(row);
+      grpDiv.appendChild(item);
+    });
+
+    // Check button
+    var fbId='fb_q5_'+gi;
+    var cb=mk('button','check-btn');
+    cb.innerHTML='✓ Check '+grp.map(function(q){return q.lbl.toUpperCase();}).join(' & ');
+    (function(g,grpRef,fid){
+      cb.onclick=function(){
+        if(!q5Att[g])q5Att[g]=0; q5Att[g]++;
+        var att=q5Att[g];
+        var correct=0,total=grpRef.length;
+        grpRef.forEach(function(q){
+          var expected=Q5_NUMBERS.filter(function(n){return q.check(n);});
+          var placed=q5Placed[q.lbl].slice().sort(function(a,b){return a-b;});
+          var exp=expected.slice().sort(function(a,b){return a-b;});
+          var match=placed.length===exp.length&&placed.every(function(v,i){return v===exp[i];});
+          var zone=document.getElementById('q5zone_'+q.lbl);
+          var items=zone.querySelectorAll('.q5-placed');
+          if(match){
+            correct++;
+            items.forEach(function(el){el.className='q5-placed correct-p';});
+          } else {
+            items.forEach(function(el){el.className='q5-placed wrong-p';});
+            if(att>=3){
+              // clear and show correct
+              zone.innerHTML='';
+              exp.forEach(function(n){
+                var pl=mk('div','q5-placed reveal-p'); pl.textContent=n; zone.appendChild(pl);
+              });
+              if(exp.length===0){var ph=mk('span','');ph.style.cssText='color:var(--muted);font-size:13px';ph.textContent='None of these numbers';zone.appendChild(ph);}
+            }
+          }
+        });
+        q5Res[g]={got:correct,tot:total};
+        var fb=document.getElementById(fid);
+        if(correct===total) showFB(fb,'correct','🎉 '+correct+'/'+total+' correct!');
+        else if(att>=3) showFB(fb,'hint','✅ Correct answers filled in. Divide each number by the multiple rule to check.');
+        else if(att===2) showFB(fb,'hint','💡 '+correct+'/'+total+' correct. Try dividing each number — if there\'s no remainder, it\'s a multiple!');
+        else showFB(fb,'wrong','✗ Some answers wrong. Check by dividing each number by the divisor.');
+        if(Object.keys(q5Res).length>=Math.ceil(Q5_QS.length/2)){
+          var tg=Object.values(q5Res).reduce(function(a,b){return a+b.got;},0);
+          var tt=Object.values(q5Res).reduce(function(a,b){return a+b.tot;},0);
+          document.getElementById('s5score').textContent=tg+'/'+tt+' ✓';
+          markDone('s5');
+        }
+      };
+    })(gi,grp,fbId);
+    grpDiv.appendChild(cb);
+    var fb=mk('div','feedback'); fb.id=fbId; grpDiv.appendChild(fb);
+    body.appendChild(grpDiv);
+  }
+}
+
+// ─────────────────────────────────────────────
+//  QUESTION 6 — Four Venn diagrams
+// ─────────────────────────────────────────────
+var Q6_VENNS=[
+  {id:'va', lbl:'a', left:6,  right:8},
+  {id:'vb', lbl:'b', left:4,  right:6},
+  {id:'vc', lbl:'c', left:5,  right:7},
+  {id:'vd', lbl:'d', left:3,  right:5}
+];
+
+// Generate 10 numbers for each Venn: ~3 left-only, ~3 right-only, ~2-3 both, ~1-2 neither
+function genVennNumbers(l, r){
+  var nums=[];
+  // both: multiples of LCM
+  var both_lcm=lcmOf(l,r);
+  for(var v=both_lcm;v<=both_lcm*4&&nums.length<3;v+=both_lcm) nums.push(v);
+  // left only
+  var lo=[];
+  for(var v2=l;v2<=l*20;v2+=l){ if(v2%r!==0&&!nums.includes(v2)) lo.push(v2); }
+  nums=nums.concat(lo.slice(0,3));
+  // right only
+  var ro=[];
+  for(var v3=r;v3<=r*20;v3+=r){ if(v3%l!==0&&!nums.includes(v3)) ro.push(v3); }
+  nums=nums.concat(ro.slice(0,3));
+  // neither
+  var ne=[];
+  for(var v4=2;v4<=50;v4++){ if(v4%l!==0&&v4%r!==0&&!nums.includes(v4)) ne.push(v4); }
+  nums=nums.concat(ne.slice(0,1));
+  return shuffle(nums).slice(0,10);
+}
+
+var q6Placed={}; // vid+num -> zone
+var q6Att={}, q6Res={};
+
+function buildQ6(){
+  var body=document.getElementById('s6body');
+
+  Q6_VENNS.forEach(function(venn,vi){
+    var nums=genVennNumbers(venn.left,venn.right);
+
+    var card=mk('div','venn-card');
+    var ctitle=mk('div','venn-card-title');
+    ctitle.innerHTML='<span class="lbl-circle">'+venn.lbl+'</span> Multiples of <span class="num-chip" style="font-size:15px">'+venn.left+'</span> and <span class="num-chip" style="font-size:15px">'+venn.right+'</span>';
+    card.appendChild(ctitle);
+
+    // Bubble bank
+    var bank=mk('div','venn-bubble-bank');
+    var blbl=mk('div','venn-bubble-lbl'); blbl.textContent='🃏 Drag each number into the correct section'; bank.appendChild(blbl);
+    nums.forEach(function(n){
+      var bub=mk('div','vbubble');
+      bub.textContent=n; bub.dataset.num=n; bub.dataset.vid=venn.id;
+      bub.id='vbub_'+venn.id+'_'+n;
+      bub.draggable=true;
+      bub.addEventListener('dragstart',function(e){
+        bub.classList.add('vdragging');
+        e.dataTransfer.setData('text/plain',JSON.stringify({n:n,vid:venn.id}));
+      });
+      bub.addEventListener('dragend',function(){bub.classList.remove('vdragging');});
+      bank.appendChild(bub);
+      q6Placed[venn.id+'_'+n]=null;
+    });
+    card.appendChild(bank);
+
+    // Venn SVG (2 circles)
+    var wrap=mk('div','venn2-wrap');
+    var svgWrap=mk('div','venn2-svg-wrap');
+    svgWrap.innerHTML=`
+    <svg class="venn2-svg" viewBox="0 0 560 308" xmlns="http://www.w3.org/2000/svg">
+      <rect x="5" y="5" width="550" height="298" rx="12" fill="#F8FAFF" stroke="#C7D7F5" stroke-width="1.5"/>
+      <circle cx="200" cy="154" r="130" fill="rgba(251,146,60,0.2)" stroke="#FB923C" stroke-width="2.5"/>
+      <circle cx="360" cy="154" r="130" fill="rgba(250,204,21,0.22)" stroke="#EAB308" stroke-width="2.5"/>
+      <text x="88" y="260" font-family="Nunito,sans-serif" font-size="13" font-weight="800" fill="#C2410C">Multiples of ${venn.left}</text>
+      <text x="378" y="260" font-family="Nunito,sans-serif" font-size="13" font-weight="800" fill="#A16207">Multiples of ${venn.right}</text>
+    </svg>`;
+
+    // Overlay zones
+    var zonesEl=mk('div','venn2-zones');
+
+    // Left only zone
+    var zLeft=mk('div','venn2-zone');
+    Object.assign(zLeft.style,{left:'5%',top:'15%',width:'30%',height:'70%',position:'absolute'});
+    zLeft.dataset.vid=venn.id; zLeft.dataset.zone='left';
+    var zLeftItems=mk('div','vzone-items'); zLeftItems.id='vzitems_'+venn.id+'_left';
+    Object.assign(zLeftItems.style,{top:'0',left:'0',width:'100%',height:'100%',position:'absolute'});
+    zLeft.appendChild(zLeftItems);
+    addVennDrop(zLeft,venn.id,'left',nums);
+    zonesEl.appendChild(zLeft);
+
+    // Both zone
+    var zBoth=mk('div','venn2-zone');
+    Object.assign(zBoth.style,{left:'37%',top:'15%',width:'26%',height:'70%',position:'absolute'});
+    zBoth.dataset.vid=venn.id; zBoth.dataset.zone='both';
+    var zBothItems=mk('div','vzone-items'); zBothItems.id='vzitems_'+venn.id+'_both';
+    Object.assign(zBothItems.style,{top:'0',left:'0',width:'100%',height:'100%',position:'absolute'});
+    zBoth.appendChild(zBothItems);
+    addVennDrop(zBoth,venn.id,'both',nums);
+    zonesEl.appendChild(zBoth);
+
+    // Right only zone
+    var zRight=mk('div','venn2-zone');
+    Object.assign(zRight.style,{left:'65%',top:'15%',width:'30%',height:'70%',position:'absolute'});
+    zRight.dataset.vid=venn.id; zRight.dataset.zone='right';
+    var zRightItems=mk('div','vzone-items'); zRightItems.id='vzitems_'+venn.id+'_right';
+    Object.assign(zRightItems.style,{top:'0',left:'0',width:'100%',height:'100%',position:'absolute'});
+    zRight.appendChild(zRightItems);
+    addVennDrop(zRight,venn.id,'right',nums);
+    zonesEl.appendChild(zRight);
+
+    svgWrap.appendChild(zonesEl);
+    wrap.appendChild(svgWrap);
+    card.appendChild(wrap);
+
+    // Check button
+    var fbId='fb_q6_'+vi;
+    var cb=mk('button','check-btn');
+    cb.innerHTML='✓ Check diagram '+venn.lbl.toUpperCase();
+    (function(v,numsList,fid){
+      cb.onclick=function(){
+        if(!q6Att[v.id])q6Att[v.id]=0; q6Att[v.id]++;
+        var att=q6Att[v.id];
+        var correct=0,total=numsList.length;
+        numsList.forEach(function(n){
+          var inLeft=n%v.left===0;
+          var inRight=n%v.right===0;
+          var expected=inLeft&&inRight?'both':inLeft?'left':inRight?'right':null;
+          var placed=q6Placed[v.id+'_'+n];
+          var items=document.querySelectorAll('.vzone-item[data-vid="'+v.id+'"][data-num="'+n+'"]');
+          if(placed===expected&&placed!==null){
+            correct++;
+            items.forEach(function(el){el.className='vzone-item vc-ok';el.style.pointerEvents='none';});
+          } else {
+            items.forEach(function(el){el.className='vzone-item vc-bad';});
+            if(att>=3&&expected){
+              // move to correct zone
+              vennReturnToBank(v.id,n,true);
+              vennPlaceInZone(v.id,n,expected);
+              var ni=document.querySelectorAll('.vzone-item[data-vid="'+v.id+'"][data-num="'+n+'"]');
+              ni.forEach(function(el){el.className='vzone-item vc-rev';el.style.pointerEvents='none';});
+            }
+          }
+        });
+        // numbers not placed at all
+        if(att>=3){
+          numsList.forEach(function(n){
+            var inLeft=n%v.left===0, inRight=n%v.right===0;
+            var expected=inLeft&&inRight?'both':inLeft?'left':inRight?'right':null;
+            if(!expected) return; // outside—ignore
+            if(q6Placed[v.id+'_'+n]===null){
+              vennPlaceInZone(v.id,n,expected);
+              var ni=document.querySelectorAll('.vzone-item[data-vid="'+v.id+'"][data-num="'+n+'"]');
+              ni.forEach(function(el){el.className='vzone-item vc-rev';el.style.pointerEvents='none';});
+            }
+          });
+        }
+        var fb=document.getElementById(fid);
+        if(correct===total) showFB(fb,'correct','🎉 Perfect! All '+total+' numbers in the right section!');
+        else if(att>=3) showFB(fb,'hint','✅ Correct placements revealed. Middle = multiples of BOTH numbers.');
+        else if(att===2) showFB(fb,'hint','💡 '+correct+'/'+total+' correct. Numbers divisible by BOTH go in the middle overlap!');
+        else showFB(fb,'wrong','✗ Some wrong. Check: is the number in the left circle only, right circle only, or both?');
+        q6Res[v.id]={got:correct,tot:total};
+        if(Object.keys(q6Res).length>=Q6_VENNS.length){
+          var tg=Object.values(q6Res).reduce(function(a,b){return a+b.got;},0);
+          var tt=Object.values(q6Res).reduce(function(a,b){return a+b.tot;},0);
+          document.getElementById('s6score').textContent=tg+'/'+tt+' ✓';
+          markDone('s6');
+        }
+      };
+    })(venn,nums,fbId);
+    card.appendChild(cb);
+    var fb=mk('div','feedback'); fb.id=fbId; card.appendChild(fb);
+    body.appendChild(card);
+  });
+}
+
+function addVennDrop(zone,vid,zoneId,nums){
+  zone.addEventListener('dragover',function(e){e.preventDefault();zone.classList.add('drag-over');});
+  zone.addEventListener('dragleave',function(){zone.classList.remove('drag-over');});
+  zone.addEventListener('drop',function(e){
+    e.preventDefault(); zone.classList.remove('drag-over');
+    var data; try{data=JSON.parse(e.dataTransfer.getData('text/plain'));}catch(err){return;}
+    if(data.vid!==vid) return;
+    vennPlaceInZone(vid,data.n,zoneId);
+  });
+}
+
+function vennPlaceInZone(vid,num,zoneId){
+  // Remove from old zone
+  vennReturnToBank(vid,num,true);
+  q6Placed[vid+'_'+num]=zoneId;
+  // Hide bubble
+  var bub=document.getElementById('vbub_'+vid+'_'+num);
+  if(bub) bub.classList.add('vplaced');
+  // Create zone item
+  var item=mk('div','vzone-item');
+  item.textContent=num; item.dataset.num=num; item.dataset.vid=vid;
+  item.title='Click to return to bank';
+  item.addEventListener('click',function(){vennReturnToBank(vid,num,false);});
+  item.draggable=true;
+  item.addEventListener('dragstart',function(e){
+    e.dataTransfer.setData('text/plain',JSON.stringify({n:num,vid:vid}));
+    vennReturnToBank(vid,num,true);
+  });
+  var container=document.getElementById('vzitems_'+vid+'_'+zoneId);
+  if(container) container.appendChild(item);
+}
+
+function vennReturnToBank(vid,num,silent){
+  var existing=document.querySelectorAll('.vzone-item[data-vid="'+vid+'"][data-num="'+num+'"]');
+  existing.forEach(function(el){el.parentNode.removeChild(el);});
+  q6Placed[vid+'_'+num]=null;
+  var bub=document.getElementById('vbub_'+vid+'_'+num);
+  if(bub){bub.classList.remove('vplaced','vdragging');}
+}
+
+// ─────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────
+var q1TotalGroupsRef={val:0}, q2TotalGroupsRef={val:0};
+buildMCQSection(Q1_DATA,'s1body','q1',q1Att,q1Res,q1TotalGroupsRef,'s1',false);
+buildMCQSection(Q2_DATA,'s2body','q2',q2Att,q2Res,q2TotalGroupsRef,'s2',true);
+buildQ4();
+buildQ5();
+buildQ6();
+</script>
+</body>
+</html>

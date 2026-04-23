@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D-DASH · Lesson 2: Thousandths</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1E6FD9;--blue-dark:#1558B0;--blue-light:#EEF4FF;
+  --green:#16A34A;--green-bg:#DCFCE7;--green-border:#86EFAC;
+  --red:#DC2626;--red-bg:#FEE2E2;--red-border:#FCA5A5;
+  --amber:#D97706;--amber-bg:#FEF3C7;--amber-border:#FCD34D;
+  --purple:#7C3AED;--bg:#F0F4FF;--card:#fff;
+  --border:#C7D7F5;--text:#1E293B;--muted:#64748B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.5}
+
+/* HEADER */
+.header{background:var(--blue);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(30,111,217,.3)}
+.logo{font-size:22px;font-weight:900;letter-spacing:-1px}
+.logo .dash{color:#93C5FD}
+.lesson-chip{background:rgba(255,255,255,.2);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;white-space:nowrap}
+.hdr-progress{flex:1;margin:0 16px;min-width:0}
+.hdr-bar{height:10px;background:rgba(255,255,255,.25);border-radius:5px;overflow:hidden}
+.hdr-fill{height:100%;background:#4ADE80;border-radius:5px;transition:width .5s ease;width:0%}
+.hdr-label{font-size:12px;margin-top:4px;opacity:.85}
+
+/* PAGE */
+.page{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+
+/* OBJECTIVE */
+.obj-card{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:20px 24px;margin-bottom:24px}
+.obj-card h2{font-size:13px;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.obj-card p{font-size:18px;font-weight:800}
+
+/* EXPLAIN */
+.explain{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
+.explain h3{font-size:15px;font-weight:800;color:var(--blue);margin-bottom:12px}
+.place-demo{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:14px 0}
+.pd-box{border-radius:10px;padding:10px 14px;font-size:24px;font-weight:900;text-align:center;min-width:50px}
+.pd-tens{background:#DBEAFE;color:#1E40AF}
+.pd-units{background:#D1FAE5;color:#065F46}
+.pd-dot{font-size:28px;font-weight:900;color:#94A3B8;padding:0 2px}
+.pd-tenths{background:#FEF3C7;color:#92400E}
+.pd-hundredths{background:#FCE7F3;color:#9D174D}
+.pd-thousandths{background:#F3E8FF;color:#6B21A8}
+.pd-labels{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:11px;font-weight:800;margin-top:6px}
+.pd-labels span{min-width:50px;text-align:center}
+
+/* SECTION */
+.section{background:#fff;border:1.5px solid var(--border);border-radius:16px;margin-bottom:24px}
+.sec-header{background:var(--blue-light);border-bottom:1.5px solid var(--border);padding:16px 20px;display:flex;align-items:flex-start;gap:12px;border-radius:16px 16px 0 0}
+.q-badge{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-title{font-size:17px;font-weight:800}
+.sec-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;margin-left:8px}
+.tag-guided{background:#EDE9FE;color:#5B21B6}
+.tag-indep{background:#E0F2FE;color:#0369A1}
+.tag-bonus{background:#FEF3C7;color:#92400E}
+.sec-score{margin-left:auto;font-size:13px;font-weight:800;color:var(--green);white-space:nowrap}
+.sec-body{padding:20px}
+
+/* NUMBER CARD PALETTE */
+.palette{background:var(--blue-light);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.palette-label{font-size:12px;font-weight:800;color:var(--blue);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.card-row{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.num-card{width:46px;height:50px;border-radius:10px;background:var(--blue);color:#fff;font-size:21px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:grab;user-select:none;border:2px solid var(--blue-dark);transition:transform .1s,box-shadow .1s;flex-shrink:0;-webkit-user-select:none}
+.num-card:hover{transform:translateY(-3px) scale(1.06);box-shadow:0 6px 16px rgba(30,111,217,.35)}
+.num-card:active{cursor:grabbing;transform:scale(.95)}
+.num-card.card-dot{background:var(--purple);border-color:#5B21B6}
+.num-card.card-del{background:var(--red);border-color:#B91C1C;font-size:13px;font-weight:900;width:54px}
+
+/* DROP ZONES */
+.drop-zone{width:50px;height:50px;border-radius:10px;border:2.5px dashed var(--border);background:#F8FAFF;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:var(--muted);transition:all .2s}
+.drop-zone.dragover{border-color:var(--blue);background:var(--blue-light);transform:scale(1.08)}
+.drop-zone.filled{border-style:solid;border-color:var(--blue);background:#EEF4FF;color:var(--blue)}
+.drop-zone.correct{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:solid!important}
+.drop-zone.wrong{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important;border-style:solid!important}
+.drop-zone.locked{background:#F1F5F9;border-style:solid;border-color:#CBD5E1;color:#475569;cursor:default}
+
+/* Q GROUP */
+.q-group{background:#F8FAFF;border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid var(--border)}
+.q-group-title{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.q-item{margin-bottom:20px}
+.q-item:last-child{margin-bottom:0}
+.guided-hint{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--amber);font-weight:700;margin-bottom:8px}
+
+/* KEY CHIPS */
+.num-chip{display:inline-flex;align-items:center;justify-content:center;background:#DBEAFE;color:#1E40AF;border:1.5px solid #93C3FD;border-radius:8px;padding:2px 10px;font-size:20px;font-weight:900;line-height:1.3;vertical-align:middle;margin:0 3px}
+.lbl-circle{background:var(--blue);color:#fff;min-width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0}
+.q-item-label{font-size:17px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* SLOTS ROW */
+.slots-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.slot-hint{font-size:12px;color:var(--muted);margin-left:6px}
+
+/* CHECK BTN */
+.check-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:10px;display:inline-flex;align-items:center;gap:7px;transition:background .2s,transform .1s}
+.check-btn:hover{background:var(--blue-dark)}
+.check-btn:active{transform:scale(.97)}
+
+/* FEEDBACK */
+.feedback{display:none;padding:11px 15px;border-radius:10px;font-size:14px;font-weight:700;margin-top:8px;align-items:center;gap:8px}
+.fb-correct{background:var(--green-bg);color:var(--green);border:1.5px solid var(--green-border)}
+.fb-wrong{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red-border)}
+.fb-hint{background:var(--amber-bg);color:var(--amber);border:1.5px solid var(--amber-border)}
+
+/* MCQ */
+.mcq-options{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px}
+.mcq-opt{padding:12px 14px;border:2.5px solid var(--border);border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;background:#fff;text-align:center;transition:all .15s;user-select:none}
+.mcq-opt:hover{border-color:var(--blue);background:var(--blue-light)}
+.mcq-opt.selected{border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
+.mcq-opt.correct{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important}
+.mcq-opt.wrong{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important}
+.mcq-opt.reveal{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important}
+
+/* WORD TILES */
+.word-bank{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:10px}
+.word-bank-label{font-size:12px;font-weight:800;color:var(--blue);margin-bottom:7px;text-transform:uppercase;letter-spacing:.4px}
+.word-tiles-row{display:flex;flex-wrap:wrap;gap:6px}
+.word-tile{background:var(--blue);color:#fff;border-radius:8px;padding:7px 12px;font-size:14px;font-weight:700;cursor:grab;user-select:none;border:2px solid var(--blue-dark);transition:transform .1s;-webkit-user-select:none}
+.word-tile:hover{transform:translateY(-2px)}
+.word-tile.dragging{opacity:.4}
+.word-slots{display:flex;flex-wrap:wrap;gap:5px;min-height:44px;border:2px dashed var(--border);border-radius:10px;padding:7px;background:#fff;transition:all .2s}
+.word-slots.dragover{border-color:var(--blue);background:var(--blue-light)}
+.word-slots.correct-area{border-color:var(--green)!important;background:var(--green-bg)!important}
+.word-slots.wrong-area{border-color:var(--red)!important;background:var(--red-bg)!important}
+.word-placed{background:#EEF4FF;color:var(--blue);border:1.5px solid var(--blue);border-radius:7px;padding:6px 10px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+.word-placed:hover{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+/* Tap-to-highlight the red-digit word */
+.word-placed.highlighted-red{background:var(--red-bg);border-color:var(--red);color:var(--red);font-weight:900}
+.word-placed.confirmed-correct{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+
+/* RED DIGIT DISPLAY */
+.red-digit-num{font-size:22px;font-weight:900;font-family:monospace;letter-spacing:2px}
+.red-digit-num .rdigit{color:var(--red)}
+.tap-instruction{font-size:13px;color:var(--muted);margin-top:6px;font-style:italic}
+
+/* FRACTION DISPLAY — whole number visually separated */
+.frac-display{display:inline-flex;align-items:stretch;background:#DBEAFE;border:1.5px solid #93C3FD;border-radius:8px;overflow:hidden;vertical-align:middle;margin:0 4px}
+.frac-whole{font-size:22px;font-weight:900;color:#1E40AF;padding:4px 10px;border-right:2.5px solid #93C3FD;background:#BFDBFE;display:flex;align-items:center}
+.frac-part{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 10px;gap:1px}
+.frac-num{font-size:14px;font-weight:900;color:#1E40AF;border-bottom:2px solid #1E40AF;padding-bottom:1px;line-height:1.3;min-width:28px;text-align:center}
+.frac-den{font-size:14px;font-weight:900;color:#1E40AF;line-height:1.3;text-align:center}
+.frac-only{display:inline-flex;align-items:center;background:#DBEAFE;border:1.5px solid #93C3FD;border-radius:8px;padding:3px 10px;vertical-align:middle;margin:0 4px}
+
+/* SEQUENCE (Q3) — drag redesign */
+.seq-block{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}
+.seq-display{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:10px 0}
+.seq-num{background:#EEF4FF;border:2px solid var(--border);border-radius:8px;padding:7px 12px;font-size:17px;font-weight:800;color:var(--text)}
+.seq-arrow{font-size:18px;color:var(--muted);font-weight:700}
+.seq-drop{min-width:88px;height:46px;border-radius:9px;border:2.5px dashed var(--border);background:#F8FAFF;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:var(--muted);transition:all .2s;cursor:pointer;padding:0 8px}
+.seq-drop.dragover{border-color:var(--blue);background:var(--blue-light)}
+.seq-drop.filled{border-style:solid;border-color:var(--blue);background:#EEF4FF;color:var(--blue)}
+.seq-drop.correct{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:solid!important}
+.seq-drop.wrong{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important;border-style:solid!important}
+.seq-bank{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:12px}
+.seq-bank-label{font-size:12px;font-weight:800;color:var(--blue);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px}
+.seq-chip-row{display:flex;flex-wrap:wrap;gap:8px}
+.seq-chip{background:var(--blue);color:#fff;border:2px solid var(--blue-dark);border-radius:9px;padding:8px 14px;font-size:15px;font-weight:800;cursor:grab;user-select:none;-webkit-user-select:none;transition:transform .1s,box-shadow .1s}
+.seq-chip:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(30,111,217,.3)}
+.seq-chip:active{cursor:grabbing;transform:scale(.95)}
+.seq-chip.used{opacity:.3;cursor:default;pointer-events:none}
+.seq-chip.dragging{opacity:.4}
+
+/* SUMMARY */
+.summary{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:32px;text-align:center;margin-top:32px;display:none}
+.summary h2{font-size:26px;font-weight:900;margin-bottom:8px}
+.big-score{font-size:64px;font-weight:900;margin:12px 0;line-height:1}
+.stars-row{font-size:40px;margin:12px 0;display:flex;justify-content:center;gap:6px}
+.next-btn{background:#4ADE80;color:#14532D;border:none;border-radius:12px;padding:16px 36px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:16px}
+
+/* ANIMATIONS */
+@keyframes popIn{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}60%{transform:translateX(6px)}}
+
+/* PHONE */
+@media(max-width:600px){
+  .num-card{width:34px;height:38px;font-size:16px;border-radius:7px;border-width:1.5px}
+  .num-card.card-del{width:42px;font-size:11px}
+  .card-row{gap:5px}
+  .drop-zone{width:36px;height:38px;font-size:15px;border-radius:7px}
+  .word-tile{font-size:12px;padding:5px 8px;border-radius:6px;border-width:1.5px}
+  .word-tiles-row{gap:5px}
+  .word-placed{font-size:12px;padding:5px 8px}
+  .palette{padding:9px 10px}
+  .palette-label{font-size:11px;margin-bottom:6px}
+  .lbl-circle{min-width:28px;height:28px;font-size:14px}
+  .q-item-label{font-size:16px;gap:6px}
+  .num-chip{font-size:17px;padding:2px 7px}
+  .mcq-options{grid-template-columns:1fr}
+  .mcq-opt{font-size:14px;padding:10px 12px}
+  .sec-title{font-size:15px}
+  .sec-sub{font-size:12px}
+  .q-group-title{font-size:11px}
+  .red-digit-num{font-size:18px}
+  .seq-num{font-size:14px;padding:5px 8px}
+  .seq-chip{font-size:13px;padding:6px 10px}
+  .seq-drop{min-width:72px;height:40px;font-size:13px}
+  .frac-whole{font-size:18px;padding:4px 8px}
+  .frac-num,.frac-den{font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">D<span class="dash">-DASH</span></div>
+  <div class="lesson-chip">Unit 1 · Lesson 2</div>
+  <div class="hdr-progress">
+    <div class="hdr-bar"><div class="hdr-fill" id="hdrFill"></div></div>
+    <div class="hdr-label" id="hdrLabel">0 / 3 sections complete</div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- OBJECTIVE -->
+<div class="obj-card">
+  <h2>🎯 Learning Objective</h2>
+  <p>Read, write and identify digits in decimal numbers up to thousandths — like 3.275</p>
+</div>
+
+<!-- CONCEPT EXPLANATION -->
+<div class="explain">
+  <h3>📐 Key Concept: Thousandths</h3>
+  <p style="font-size:15px;margin-bottom:4px">We can extend place value one step further past hundredths. The <strong>thousandths</strong> place is the third digit after the decimal point.</p>
+  <div style="margin:14px 0 4px;font-size:14px;color:var(--muted);font-weight:700">Example: <strong style="color:var(--text)">3.275</strong></div>
+  <div class="place-demo">
+    <div class="pd-box pd-units">3</div>
+    <div class="pd-dot">.</div>
+    <div class="pd-box pd-tenths">2</div>
+    <div class="pd-box pd-hundredths">7</div>
+    <div class="pd-box pd-thousandths">5</div>
+  </div>
+  <div class="pd-labels">
+    <span style="color:#065F46;min-width:50px">Units</span>
+    <span style="min-width:22px"></span>
+    <span style="color:#92400E;min-width:50px">Tenths</span>
+    <span style="color:#9D174D;min-width:50px">Hundredths</span>
+    <span style="color:#6B21A8;min-width:66px">Thousandths</span>
+  </div>
+  <div style="margin-top:14px;padding:12px;background:var(--blue-light);border-radius:10px;font-size:14px;line-height:1.8">
+    💡 <strong>3.275</strong>: Units=3 · Tenths=2 (=2/10) · Hundredths=7 (=7/100) · <span style="color:#6B21A8;font-weight:800">Thousandths=5 (=5/1000)</span><br>
+    🔑 <strong>Thousandths = 3 decimal places.</strong> The fraction always has 1000 on the bottom.
+  </div>
+  <div style="margin-top:12px;padding:12px;background:#F3E8FF;border:1.5px solid #D8B4FE;border-radius:10px;font-size:14px">
+    <strong>More examples:</strong><br>
+    7/1000 = <strong>0.007</strong> &nbsp;·&nbsp; 45/1000 = <strong>0.045</strong> &nbsp;·&nbsp; 325/1000 = <strong>0.325</strong> &nbsp;·&nbsp; 12 800/1000 = <strong>12.800</strong>
+  </div>
+</div>
+
+<!-- ═══ Q1: WRITE IN WORDS + IDENTIFY RED DIGIT ═══ -->
+<div class="section" id="s1">
+  <div class="sec-header">
+    <div class="q-badge">1</div>
+    <div style="flex:1">
+      <div class="sec-title">Write each number in words <span class="tag tag-guided">★ Guided a–c</span></div>
+      <div class="sec-sub">Choose the correct words · Then choose the place value of the red digit · Check each card</div>
+    </div>
+    <div class="sec-score" id="s1score"></div>
+  </div>
+  <div class="sec-body" id="q1body"></div>
+</div>
+
+<!-- ═══ Q2: FRACTIONS → DECIMALS ═══ -->
+<div class="section" id="s2">
+  <div class="sec-header">
+    <div class="q-badge">2</div>
+    <div style="flex:1">
+      <div class="sec-title">Write these fractions as decimals <span class="tag tag-guided">★ Guided a–c</span></div>
+      <div class="sec-sub">All fractions have 1000 as denominator → always 3 decimal places. Each group has its own number cards.</div>
+    </div>
+    <div class="sec-score" id="s2score"></div>
+  </div>
+  <div class="sec-body" id="q2body"></div>
+</div>
+
+<!-- ═══ Q3: COUNT IN THOUSANDTHS ═══ -->
+<div class="section" id="s3">
+  <div class="sec-header">
+    <div class="q-badge">3</div>
+    <div style="flex:1">
+      <div class="sec-title">Count in thousandths — write the next two numbers <span class="tag tag-guided">★ Guided a–c</span></div>
+      <div class="sec-sub">Look at the pattern and choose the next two numbers in the sequence</div>
+    </div>
+    <div class="sec-score" id="s3score"></div>
+  </div>
+  <div class="sec-body" id="q3body"></div>
+</div>
+
+<!-- SUMMARY -->
+<div class="summary" id="summary">
+  <div style="font-size:48px">🏆</div>
+  <h2>Lesson 2 Complete!</h2>
+  <div class="big-score" id="finalScore">—</div>
+  <div class="stars-row" id="starsRow"></div>
+  <p id="summaryMsg" style="font-size:16px;opacity:.9;margin-top:6px"></p>
+  <button class="next-btn" onclick="sendPrompt('Start Lesson 3: Multiplying and Dividing by 10 and 100')">Next Lesson: ×÷ by 10 & 100 →</button>
+</div>
+
+</div><!-- /page -->
+<script>
+// ═══════════════════════════════════════════════════
+// GLOBALS
+// ═══════════════════════════════════════════════════
+var G = { dragVal:null, dragType:null, sectionsDone:0, sectionsTotal:3, scores:{} };
+
+// ═══════════════════════════════════════════════════
+// DRAG ENGINE (with counter fix for flash bug)
+// ═══════════════════════════════════════════════════
+function makeDraggable(el, val, type){
+  el.setAttribute('draggable','true');
+  el.addEventListener('dragstart',function(e){
+    G.dragVal=val; G.dragType=type||'card';
+    el.classList.add('dragging');
+    e.dataTransfer.setData('text/plain',String(val));
+  });
+  el.addEventListener('dragend',function(){ el.classList.remove('dragging'); });
+  // Touch
+  var tClone=null,tOX=0,tOY=0;
+  el.addEventListener('touchstart',function(e){
+    var t=e.touches[0],r=el.getBoundingClientRect();
+    tOX=t.clientX-r.left; tOY=t.clientY-r.top;
+    G.dragVal=val; G.dragType=type||'card';
+    tClone=el.cloneNode(true);
+    tClone.style.cssText='position:fixed;z-index:9999;opacity:.85;pointer-events:none;left:'+(t.clientX-tOX)+'px;top:'+(t.clientY-tOY)+'px';
+    document.body.appendChild(tClone);
+  },{passive:true});
+  el.addEventListener('touchmove',function(e){
+    e.preventDefault();
+    var t=e.touches[0];
+    if(tClone){tClone.style.left=(t.clientX-tOX)+'px';tClone.style.top=(t.clientY-tOY)+'px';}
+  },{passive:false});
+  el.addEventListener('touchend',function(e){
+    var t=e.changedTouches[0];
+    if(tClone){document.body.removeChild(tClone);tClone=null;}
+    var target=document.elementFromPoint(t.clientX,t.clientY);
+    if(!target) return;
+    var dz=target.classList.contains('drop-zone')?target:target.closest('.drop-zone');
+    if(dz&&!dz.classList.contains('locked')) applyDrop(dz,G.dragVal);
+    var ws=target.classList.contains('word-slots')?target:target.closest('.word-slots');
+    if(ws&&G.dragType==='word') applyWordDrop(ws,G.dragVal);
+    var sd=target.classList.contains('seq-drop')?target:target.closest('.seq-drop');
+    if(sd&&G.dragType==='seqchip') applySeqDrop(sd,G.dragVal);
+  });
+}
+
+function makeDropZone(el){
+  var dc=0;
+  el.addEventListener('dragenter',function(e){e.preventDefault();dc++;el.classList.add('dragover');});
+  el.addEventListener('dragover',function(e){e.preventDefault();});
+  el.addEventListener('dragleave',function(){dc--;if(dc<=0){dc=0;el.classList.remove('dragover');}});
+  el.addEventListener('drop',function(e){
+    e.preventDefault();dc=0;el.classList.remove('dragover');
+    if(el.classList.contains('locked')) return;
+    applyDrop(el,G.dragVal);
+  });
+}
+
+function applyDrop(el,val){
+  if(val==='DEL'){el.textContent='';el.dataset.placed='';el.className='drop-zone';return;}
+  el.textContent=val; el.dataset.placed=val; el.className='drop-zone filled';
+}
+
+function buildPalette(cid,withDot){
+  var c=document.getElementById(cid); if(!c) return; c.innerHTML='';
+  var vals=['0','1','2','3','4','5','6','7','8','9'];
+  if(withDot) vals.push('.');
+  vals.push('DEL');
+  vals.forEach(function(v){
+    var card=document.createElement('div');
+    card.className='num-card'+(v==='.'?' card-dot':v==='DEL'?' card-del':'');
+    card.textContent=v==='DEL'?'✕ DEL':v;
+    makeDraggable(card,v,'card');
+    c.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// FEEDBACK & SCORING
+// ═══════════════════════════════════════════════════
+function showFB(id,type,msg){
+  var el=typeof id==='string'?document.getElementById(id):id;
+  if(!el) return;
+  el.className='feedback fb-'+type;
+  el.innerHTML=msg;
+  el.style.display='flex';
+}
+
+function markDone(sn,got,tot){
+  if(G.scores[sn]) return;
+  G.scores[sn]={got:got,tot:tot};
+  G.sectionsDone=Object.keys(G.scores).length;
+  var pct=Math.round(G.sectionsDone/G.sectionsTotal*100);
+  document.getElementById('hdrFill').style.width=pct+'%';
+  document.getElementById('hdrLabel').textContent=G.sectionsDone+' / '+G.sectionsTotal+' sections complete';
+  var el=document.getElementById('s'+sn+'score');
+  if(el) el.textContent=got+'/'+tot+' ('+Math.round(got/tot*100)+'%)';
+  if(G.sectionsDone===G.sectionsTotal) showSummary();
+}
+
+// ═══════════════════════════════════════════════════
+// WORD TILES HELPERS
+// Only zero–nine + point — everything else removed
+// ═══════════════════════════════════════════════════
+var ALL_WORDS=['zero','one','two','three','four','five','six','seven','eight','nine','point'];
+
+function buildWordBank(container){
+  var bank=document.createElement('div'); bank.className='word-bank';
+  bank.innerHTML='<div class="word-bank-label">📝 Word tiles — drag into the answer box</div><div class="word-tiles-row"></div>';
+  var row=bank.querySelector('.word-tiles-row');
+  ALL_WORDS.forEach(function(w){
+    var t=document.createElement('div'); t.className='word-tile'; t.textContent=w;
+    makeDraggable(t,w,'word');
+    row.appendChild(t);
+  });
+  container.appendChild(bank);
+}
+
+function buildWordSlotArea(ltr){
+  var sa=document.createElement('div'); sa.className='word-slots'; sa.dataset.ltr=ltr;
+  var dc=0;
+  sa.addEventListener('dragenter',function(e){e.preventDefault();dc++;sa.classList.add('dragover');});
+  sa.addEventListener('dragover',function(e){e.preventDefault();});
+  sa.addEventListener('dragleave',function(){dc--;if(dc<=0){dc=0;sa.classList.remove('dragover');}});
+  sa.addEventListener('drop',function(e){
+    e.preventDefault();dc=0;sa.classList.remove('dragover');
+    if(G.dragType==='word'&&G.dragVal) applyWordDrop(sa,G.dragVal);
+  });
+  return sa;
+}
+
+function applyWordDrop(sa,word){
+  var pill=document.createElement('span'); pill.className='word-placed'; pill.textContent=word;
+  var holdTimer=null;
+
+  // SHORT TAP → remove pill
+  // LONG PRESS ≥ 1 second → highlight red (= red digit answer)
+  function startHold(){
+    if(pill.classList.contains('confirmed-correct')) return;
+    holdTimer=setTimeout(function(){
+      holdTimer=null;
+      // Long press: toggle red highlight, clear others
+      if(pill.classList.contains('highlighted-red')){
+        pill.classList.remove('highlighted-red');
+      } else {
+        sa.querySelectorAll('.word-placed').forEach(function(p){p.classList.remove('highlighted-red');});
+        pill.classList.add('highlighted-red');
+      }
+    },1000);
+  }
+  function endHold(wasMove){
+    if(holdTimer!==null){
+      clearTimeout(holdTimer); holdTimer=null;
+      // Only remove on short-tap (not cancelled by move)
+      if(!wasMove && !pill.classList.contains('confirmed-correct')) sa.removeChild(pill);
+    }
+  }
+
+  pill.addEventListener('mousedown', function(){ startHold(); });
+  pill.addEventListener('mouseup',   function(){ endHold(false); });
+  pill.addEventListener('mouseleave',function(){ if(holdTimer){clearTimeout(holdTimer);holdTimer=null;} });
+
+  pill.addEventListener('touchstart',function(e){ startHold(); },{passive:true});
+  pill.addEventListener('touchend',  function(){ endHold(false); });
+  pill.addEventListener('touchmove', function(){ if(holdTimer){clearTimeout(holdTimer);holdTimer=null;} },{passive:true});
+
+  sa.appendChild(pill);
+}
+
+// ═══════════════════════════════════════════════════
+// Q1 DATA
+// Numbers with one digit coloured red (shown as rdigit in display)
+// ═══════════════════════════════════════════════════
+var Q1_DATA=[
+  {lbl:'a', num:'0.473',  display:'0.47<span class="rdigit">3</span>',
+   words:'zero point four seven three', redWord:'three', guided:true,
+   hint:'Say each decimal digit separately after "point"'},
+  {lbl:'b', num:'5.981',  display:'5.9<span class="rdigit">8</span>1',
+   words:'five point nine eight one',   redWord:'eight', guided:true,
+   hint:'The red digit 8 is in the hundredths place'},
+  {lbl:'c', num:'62.359', display:'62.3<span class="rdigit">5</span>9',
+   words:'sixty-two point three five nine', redWord:'five', guided:true,
+   hint:'62 → "sixty-two", then say each decimal digit'},
+  {lbl:'d', num:'0.702',  display:'0.7<span class="rdigit">0</span>2',
+   words:'zero point seven zero two',   redWord:'zero',
+   hint:'The 0 in hundredths is still said as "zero"'},
+  {lbl:'e', num:'44.008', display:'44.00<span class="rdigit">8</span>',
+   words:'forty-four point zero zero eight', redWord:'eight',
+   hint:'Both zeros must be said — zero zero eight'},
+  {lbl:'f', num:'1.105',  display:'<span class="rdigit">1</span>.105',
+   words:'one point one zero five',     redWord:'one',
+   hint:'The red digit is the units digit — the first "one"'},
+  {lbl:'g', num:'96.283', display:'96.2<span class="rdigit">8</span>3',
+   words:'ninety-six point two eight three', redWord:'eight',
+   hint:'96 → "ninety-six", then say each decimal digit'},
+  {lbl:'h', num:'35.169', display:'35.1<span class="rdigit">6</span>9',
+   words:'thirty-five point one six nine', redWord:'six',
+   hint:'35 → "thirty-five", then say each decimal digit'}
+];
+
+// ═══════════════════════════════════════════════════
+// Q1 DATA — each question has two MCQ parts:
+//   Part 1: choose the number in words (3 options)
+//   Part 2: choose the place value of the red digit (3 options)
+// ═══════════════════════════════════════════════════
+var Q1_DATA=[
+  {lbl:'a', display:'0.47<span class="rdigit">3</span>',
+   words:'zero point four seven three',
+   wordsWrong:['zero point four three seven','zero point three four seven'],
+   redPlace:'thousandths', placeWrong:['tenths','hundredths'],
+   guided:true, hint:'Say each decimal digit separately. The red 3 is the 3rd digit after the point = thousandths.'},
+  {lbl:'b', display:'5.9<span class="rdigit">8</span>1',
+   words:'five point nine eight one',
+   wordsWrong:['five point eight nine one','five point one nine eight'],
+   redPlace:'hundredths', placeWrong:['tenths','thousandths'],
+   guided:true, hint:'The red 8 is the 2nd digit after the point = hundredths.'},
+  {lbl:'c', display:'62.3<span class="rdigit">5</span>9',
+   words:'sixty-two point three five nine',
+   wordsWrong:['sixty-two point five three nine','sixty-two point three nine five'],
+   redPlace:'hundredths', placeWrong:['tenths','thousandths'],
+   guided:true, hint:'62 = "sixty-two". The red 5 is the 2nd digit after the point = hundredths.'},
+  {lbl:'d', display:'0.7<span class="rdigit">0</span>2',
+   words:'zero point seven zero two',
+   wordsWrong:['zero point zero seven two','zero point two zero seven'],
+   redPlace:'hundredths', placeWrong:['tenths','thousandths'],
+   hint:'The red 0 in hundredths is still said as "zero".'},
+  {lbl:'e', display:'44.00<span class="rdigit">8</span>',
+   words:'forty-four point zero zero eight',
+   wordsWrong:['forty-four point eight zero zero','forty-four point zero eight zero'],
+   redPlace:'thousandths', placeWrong:['hundredths','tenths'],
+   hint:'Both zeros must be said. The red 8 is the 3rd digit after the point = thousandths.'},
+  {lbl:'f', display:'<span class="rdigit">1</span>.105',
+   words:'one point one zero five',
+   wordsWrong:['one point zero one five','one point five one zero'],
+   redPlace:'units', placeWrong:['tenths','thousandths'],
+   hint:'The red digit 1 is before the point = units place.'},
+  {lbl:'g', display:'96.2<span class="rdigit">8</span>3',
+   words:'ninety-six point two eight three',
+   wordsWrong:['ninety-six point eight two three','ninety-six point two three eight'],
+   redPlace:'hundredths', placeWrong:['tenths','thousandths'],
+   hint:'96 = "ninety-six". The red 8 is the 2nd digit after the point = hundredths.'},
+  {lbl:'h', display:'35.1<span class="rdigit">6</span>9',
+   words:'thirty-five point one six nine',
+   wordsWrong:['thirty-five point six one nine','thirty-five point nine six one'],
+   redPlace:'hundredths', placeWrong:['tenths','thousandths'],
+   hint:'35 = "thirty-five". The red 6 is the 2nd digit after the point = hundredths.'},
+  {lbl:'i', display:'0.5<span class="rdigit">0</span>2',
+   words:'zero point five zero two',
+   wordsWrong:['zero point zero five two','zero point two five zero'],
+   redPlace:'hundredths', placeWrong:['tenths','thousandths'],
+   bonus:true, hint:'The red 0 is the 2nd digit after the point = hundredths.'}
+];
+
+var q1att={}, q1Results={}, q1sel={};// q1sel[lbl]={words:chosen, place:chosen}
+
+function shuffle(arr){ return arr.slice().sort(function(){return Math.random()-.5;}); }
+
+function buildQ1(){
+  var body=document.getElementById('q1body'); body.innerHTML='';
+
+  Q1_DATA.forEach(function(q){
+    var card=document.createElement('div'); card.className='q-item';
+
+    // ── Card header ──
+    var lbl=document.createElement('div'); lbl.className='q-item-label';
+    lbl.innerHTML='<span class="lbl-circle">'+q.lbl+'</span>'
+      +' <span class="num-chip"><span class="red-digit-num">'+q.display+'</span></span>'
+      +(q.guided?'<span class="tag tag-guided">★ Guided</span>':'')
+      +(q.bonus?'<span class="tag tag-bonus">Bonus</span>':'');
+    card.appendChild(lbl);
+
+    if(q.guided){
+      var gh=document.createElement('div'); gh.className='guided-hint';
+      gh.innerHTML='💡 '+q.hint; card.appendChild(gh);
+    }
+
+    // ── Part 1: words MCQ ──
+    var p1lbl=document.createElement('div');
+    p1lbl.style.cssText='font-size:14px;font-weight:800;color:var(--blue);margin:10px 0 6px';
+    p1lbl.textContent='Part 1 — Choose the correct words:';
+    card.appendChild(p1lbl);
+
+    var wordOpts=shuffle([q.words].concat(q.wordsWrong));
+    var wordGrid=document.createElement('div'); wordGrid.className='mcq-options'; wordGrid.style.gridTemplateColumns='1fr';
+    wordOpts.forEach(function(opt){
+      var btn=document.createElement('div'); btn.className='mcq-opt';
+      btn.textContent=opt; btn.dataset.val=opt; btn.dataset.part='words'; btn.dataset.ltr=q.lbl;
+      btn.addEventListener('click',function(){
+        if(btn.classList.contains('correct')||btn.classList.contains('wrong')) return;
+        wordGrid.querySelectorAll('.mcq-opt').forEach(function(o){o.classList.remove('selected');});
+        btn.classList.add('selected');
+        if(!q1sel[q.lbl]) q1sel[q.lbl]={};
+        q1sel[q.lbl].words=opt;
+      });
+      wordGrid.appendChild(btn);
+    });
+    card.appendChild(wordGrid);
+
+    // ── Part 2: place value MCQ ──
+    var p2lbl=document.createElement('div');
+    p2lbl.style.cssText='font-size:14px;font-weight:800;color:var(--blue);margin:14px 0 6px';
+    p2lbl.innerHTML='Part 2 — The <span style="color:var(--red);font-weight:900">red digit</span> is in the __ place:';
+    card.appendChild(p2lbl);
+
+    var placeOpts=shuffle([q.redPlace].concat(q.placeWrong));
+    var placeGrid=document.createElement('div'); placeGrid.className='mcq-options';
+    placeOpts.forEach(function(opt){
+      var btn=document.createElement('div'); btn.className='mcq-opt';
+      btn.textContent=opt; btn.dataset.val=opt; btn.dataset.part='place'; btn.dataset.ltr=q.lbl;
+      btn.addEventListener('click',function(){
+        if(btn.classList.contains('correct')||btn.classList.contains('wrong')) return;
+        placeGrid.querySelectorAll('.mcq-opt').forEach(function(o){o.classList.remove('selected');});
+        btn.classList.add('selected');
+        if(!q1sel[q.lbl]) q1sel[q.lbl]={};
+        q1sel[q.lbl].place=opt;
+      });
+      placeGrid.appendChild(btn);
+    });
+    card.appendChild(placeGrid);
+
+    // ── Check button ──
+    var cb=document.createElement('button'); cb.className='check-btn';
+    cb.innerHTML='✓ Check '+q.lbl;
+    (function(qq){ cb.onclick=function(){ checkQ1Single(qq); }; })(q);
+    card.appendChild(cb);
+
+    var fb=document.createElement('div'); fb.className='feedback'; fb.id='fbq1_'+q.lbl;
+    card.appendChild(fb);
+    body.appendChild(card);
+  });
+}
+
+function checkQ1Single(q){
+  if(!q1att[q.lbl]) q1att[q.lbl]=0;
+  q1att[q.lbl]++;
+  var att=q1att[q.lbl];
+  var sel=q1sel[q.lbl]||{};
+  var wordsOk = sel.words===q.words;
+  var placeOk = sel.place===q.redPlace;
+  var bothOk  = wordsOk && placeOk;
+
+  // Colour word options
+  var wordBtns=document.querySelectorAll('[data-part="words"][data-ltr="'+q.lbl+'"]');
+  wordBtns.forEach(function(b){
+    if(b.classList.contains('selected')){
+      b.classList.add(wordsOk?'correct':'wrong');
+    }
+    if(!wordsOk && b.dataset.val===q.words) b.classList.add('reveal');
+  });
+  // Colour place options
+  var placeBtns=document.querySelectorAll('[data-part="place"][data-ltr="'+q.lbl+'"]');
+  placeBtns.forEach(function(b){
+    if(b.classList.contains('selected')){
+      b.classList.add(placeOk?'correct':'wrong');
+    }
+    if(!placeOk && b.dataset.val===q.redPlace) b.classList.add('reveal');
+  });
+
+  q1Results[q.lbl]={got:(wordsOk?1:0)+(placeOk?1:0), tot:2};
+  var fb=document.getElementById('fbq1_'+q.lbl);
+
+  if(bothOk){
+    showFB(fb,'correct','🎉 Both correct! Perfect answer for '+q.lbl+'!');
+  } else if(att>=3){
+    // Force reveal if not already selected
+    wordBtns.forEach(function(b){ if(b.dataset.val===q.words) b.classList.add('correct'); });
+    placeBtns.forEach(function(b){ if(b.dataset.val===q.redPlace) b.classList.add('correct'); });
+    showFB(fb,'hint','✅ Answers shown. '+q.hint);
+  } else if(att===2){
+    if(!wordsOk && !placeOk) showFB(fb,'hint','💡 Both parts wrong. Hint: '+q.hint);
+    else if(!wordsOk) showFB(fb,'hint','💡 Words wrong. Hint: '+q.hint);
+    else showFB(fb,'hint','💡 Words correct! Check the place value of the red digit.');
+  } else {
+    if(!sel.words && !sel.place) showFB(fb,'wrong','✗ Please select an answer for both parts.');
+    else if(!sel.words) showFB(fb,'wrong','✗ Please choose the words in Part 1 first.');
+    else if(!sel.place) showFB(fb,'wrong','✗ Please choose the place value in Part 2 first.');
+    else showFB(fb,'wrong','✗ '+(wordsOk?'Words correct but place value wrong.':'Place value correct but words wrong.'));
+  }
+
+  if(Object.keys(q1Results).length>=Q1_DATA.length){
+    var tg=Object.values(q1Results).reduce(function(a,b){return a+b.got;},0);
+    var tt=Object.values(q1Results).reduce(function(a,b){return a+b.tot;},0);
+    markDone(1,tg,tt);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// Q2: FRACTIONS → DECIMALS  (palette per 2, check per 2)
+// ═══════════════════════════════════════════════════
+var Q2_DATA=[
+  {lbl:'a', whole:'',   num:'7',   den:'1000', ans:'0.007',  hint:'7÷1000 = 0.007 (3 decimal places, two zeros)', guided:true},
+  {lbl:'b', whole:'',   num:'90',  den:'1000', ans:'0.090',  hint:'90÷1000 = 0.090 (one leading zero)', guided:true},
+  {lbl:'c', whole:'2',  num:'300', den:'1000', ans:'2.300',  hint:'300÷1000 = 0.300, so the answer is 2.300'},
+  {lbl:'d', whole:'17', num:'1',   den:'1000', ans:'17.001', hint:'1÷1000 = 0.001 (two zeros needed)'},
+  {lbl:'e', whole:'',   num:'450', den:'1000', ans:'0.450',  hint:'450÷1000 = 0.450'},
+  {lbl:'f', whole:'',   num:'525', den:'1000', ans:'0.525',  hint:'525÷1000 = 0.525'},
+  {lbl:'g', whole:'12', num:'800', den:'1000', ans:'12.800', hint:'800÷1000 = 0.800 = 12.800'},
+  {lbl:'h', whole:'68', num:'950', den:'1000', ans:'68.950', hint:'950÷1000 = 0.950 = 68.950'},
+  {lbl:'i', whole:'19', num:'325', den:'1000', ans:'19.325', hint:'325÷1000 = 0.325 = 19.325'},
+  {lbl:'j', whole:'',   num:'45',  den:'1000', ans:'0.045',  hint:'45÷1000 = 0.045 (one leading zero)'},
+  {lbl:'k', whole:'3',  num:'572', den:'1000', ans:'3.572',  hint:'572÷1000 = 0.572 = 3.572'},
+  {lbl:'l', whole:'29', num:'807', den:'1000', ans:'29.807', hint:'807÷1000 = 0.807 = 29.807'}
+];
+
+// Build visual fraction HTML with whole number clearly separated
+function fracHTML(q){
+  if(q.whole){
+    return '<span class="frac-display">'
+      +'<span class="frac-whole">'+q.whole+'</span>'
+      +'<span class="frac-part"><span class="frac-num">'+q.num+'</span><span class="frac-den">'+q.den+'</span></span>'
+      +'</span>';
+  }
+  return '<span class="frac-only">'
+    +'<span class="frac-part"><span class="frac-num">'+q.num+'</span><span class="frac-den">'+q.den+'</span></span>'
+    +'</span>';
+}
+
+var q2att={}, q2Results={};
+
+function buildQ2(){
+  var body=document.getElementById('q2body'); body.innerHTML='';
+  var perGroup=2; // groups of 2
+  for(var g=0;g*perGroup<Q2_DATA.length;g++){
+    var slice=Q2_DATA.slice(g*perGroup,g*perGroup+perGroup);
+    var grpDiv=document.createElement('div'); grpDiv.className='q-group';
+    var title=document.createElement('div'); title.className='q-group-title';
+    title.textContent='Questions '+slice.map(function(d){return d.lbl;}).join(' & ');
+    grpDiv.appendChild(title);
+
+    // Palette per group of 2 — directly above
+    var palId='pal_q2_'+g;
+    var palWrap=document.createElement('div'); palWrap.className='palette';
+    palWrap.innerHTML='<div class="palette-label">🃏 Number Cards for '+slice.map(function(d){return d.lbl;}).join(' & ')+'</div><div class="card-row" id="'+palId+'"></div>';
+    grpDiv.appendChild(palWrap);
+    (function(pid){setTimeout(function(){buildPalette(pid,true);},20);})(palId);
+
+    slice.forEach(function(q){
+      var item=document.createElement('div'); item.className='q-item';
+      var lbl=document.createElement('div'); lbl.className='q-item-label';
+      lbl.innerHTML='<span class="lbl-circle">'+q.lbl+'</span> '
+        +fracHTML(q)+' ='
+        +(q.guided?'<span class="tag tag-guided">★ Guided</span>':'');
+      item.appendChild(lbl);
+      if(q.guided){
+        var gh=document.createElement('div'); gh.className='guided-hint';
+        gh.innerHTML='💡 '+q.hint; item.appendChild(gh);
+      }
+      var srow=document.createElement('div'); srow.className='slots-row';
+      var ansStr=q.ans.toString();
+      for(var ci=0;ci<ansStr.length;ci++){
+        var ch=ansStr[ci];
+        var dz=document.createElement('div'); dz.className='drop-zone';
+        dz.dataset.ans=ch; dz.dataset.q='q2'; dz.dataset.qid=q.lbl; dz.dataset.ci=ci;
+        if(ch==='.'){dz.textContent='.';dz.dataset.placed='.';dz.classList.add('locked');}
+        else makeDropZone(dz);
+        srow.appendChild(dz);
+      }
+      srow.appendChild(Object.assign(document.createElement('span'),{className:'slot-hint',textContent:'← drag here. ✕ DEL to remove.'}));
+      item.appendChild(srow);
+      if(!q.guided){
+        var hd=document.createElement('div'); hd.className='guided-hint'; hd.style.display='none';
+        hd.id='hint_q2_'+q.lbl; hd.innerHTML='💡 '+q.hint; item.appendChild(hd);
+      }
+      grpDiv.appendChild(item);
+    });
+
+    var cb=document.createElement('button'); cb.className='check-btn';
+    cb.innerHTML='✓ Check '+slice.map(function(d){return d.lbl;}).join(' & ');
+    (function(sl,gIdx){cb.onclick=function(){checkQ2Group(sl,gIdx);};})(slice,g);
+    grpDiv.appendChild(cb);
+    var fb=document.createElement('div'); fb.className='feedback'; fb.id='fbq2_'+g;
+    grpDiv.appendChild(fb);
+    body.appendChild(grpDiv);
+  }
+}
+
+function checkQ2Group(slice,g){
+  if(!q2att[g]) q2att[g]=0;
+  q2att[g]++;
+  var correct=0,total=0;
+  slice.forEach(function(q){
+    var zones=document.querySelectorAll('[data-q="q2"][data-qid="'+q.lbl+'"]:not(.locked)');
+    var allOk=true;
+    zones.forEach(function(z){
+      total++;
+      if((z.dataset.placed||'')===z.dataset.ans){z.className='drop-zone correct';correct++;}
+      else{z.className='drop-zone wrong';allOk=false;}
+    });
+    if(!allOk){
+      var hel=document.getElementById('hint_q2_'+q.lbl);
+      if(hel) hel.style.display='block';
+    }
+  });
+  var fb=document.getElementById('fbq2_'+g);
+  q2Results[g]={got:correct,tot:total};
+  if(correct===total){
+    showFB(fb,'correct','🎉 '+correct+'/'+total+' correct! Remember: /1000 always gives 3 decimal places.');
+  } else if(q2att[g]>=3){
+    slice.forEach(function(q){
+      var zones=document.querySelectorAll('[data-q="q2"][data-qid="'+q.lbl+'"]:not(.locked)');
+      zones.forEach(function(z){z.textContent=z.dataset.ans;z.dataset.placed=z.dataset.ans;z.className='drop-zone correct';});
+    });
+    showFB(fb,'hint','✅ Answers shown. Key rule: /1000 → always 3 decimal places. Use 0 to fill gaps.');
+  } else if(q2att[g]===2){
+    showFB(fb,'hint','💡 Count the digits after the dot — must always be exactly 3 for /1000.');
+  } else {
+    showFB(fb,'wrong','✗ '+(total-correct)+' incorrect. Make sure you have 3 digits after the decimal point.');
+  }
+  if(Object.keys(q2Results).length>=6){
+    var tg=Object.values(q2Results).reduce(function(a,b){return a+b.got;},0);
+    var tt=Object.values(q2Results).reduce(function(a,b){return a+b.tot;},0);
+    markDone(2,tg,tt);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// Q3: COUNT IN THOUSANDTHS — drag chip bank into sequence
+// 6 chips shown (2 correct + 4 distractors), groups of 2
+// ═══════════════════════════════════════════════════
+var Q3_DATA=[
+  {lbl:'a', seq:['82.311','82.312','82.313','82.314'], next:['82.315','82.316'],
+   dist:['82.317','82.310','82.320','82.214'],
+   guided:true, hint:'Each step adds 0.001. After 82.314 → 82.315 → 82.316'},
+  {lbl:'b', seq:['40.059','40.060','40.061','40.062'], next:['40.063','40.064'],
+   dist:['40.065','40.053','40.073','40.163'],
+   guided:true, hint:'40.062 + 0.001 = 40.063 · 40.063 + 0.001 = 40.064'},
+  {lbl:'c', seq:['3.275','3.276','3.277','3.278'],     next:['3.279','3.280'],
+   dist:['3.281','3.270','3.289','3.378'],
+   hint:'3.278 + 0.001 = 3.279 · 3.279 + 0.001 = 3.280'},
+  {lbl:'d', seq:['16.026','16.027','16.028','16.029'], next:['16.030','16.031'],
+   dist:['16.032','16.020','16.039','16.130'],
+   hint:'16.029 + 0.001 = 16.030 — digits roll over'},
+  {lbl:'e', seq:['0.097','0.098','0.099','0.100'],     next:['0.101','0.102'],
+   dist:['0.103','0.090','0.200','0.111'],
+   hint:'0.100 + 0.001 = 0.101 · 0.101 + 0.001 = 0.102'},
+  {lbl:'f', seq:['5.118','5.119','5.120','5.121'],     next:['5.122','5.123'],
+   dist:['5.124','5.110','5.222','5.021'],
+   bonus:true, hint:'5.121 + 0.001 = 5.122 · 5.122 + 0.001 = 5.123'}
+];
+
+var q3att={}, q3Results={};
+
+function buildSeqDrop(ltr, pos){
+  var dz=document.createElement('div'); dz.className='seq-drop';
+  dz.dataset.ltr=ltr; dz.dataset.pos=pos; dz.textContent='?';
+  var dc=0;
+  dz.addEventListener('dragenter',function(e){e.preventDefault();dc++;dz.classList.add('dragover');});
+  dz.addEventListener('dragover',function(e){e.preventDefault();});
+  dz.addEventListener('dragleave',function(){dc--;if(dc<=0){dc=0;dz.classList.remove('dragover');}});
+  dz.addEventListener('drop',function(e){
+    e.preventDefault();dc=0;dz.classList.remove('dragover');
+    if(G.dragType==='seqchip'&&G.dragVal) applySeqDrop(dz,G.dragVal);
+  });
+  // Click placed number to remove it
+  dz.addEventListener('click',function(){
+    if(dz.dataset.placed&&dz.dataset.placed!==''&&!dz.classList.contains('correct')){
+      var chip=document.querySelector('.seq-chip[data-val="'+dz.dataset.placed+'"][data-ltr="'+ltr+'"]');
+      if(chip) chip.classList.remove('used');
+      dz.textContent='?'; dz.dataset.placed=''; dz.className='seq-drop';
+    }
+  });
+  return dz;
+}
+
+function applySeqDrop(dz,val){
+  var ltr=dz.dataset.ltr;
+  // Un-grey old chip if replacing
+  if(dz.dataset.placed&&dz.dataset.placed!==''){
+    var oc=document.querySelector('.seq-chip[data-val="'+dz.dataset.placed+'"][data-ltr="'+ltr+'"]');
+    if(oc) oc.classList.remove('used');
+  }
+  dz.textContent=val; dz.dataset.placed=val; dz.className='seq-drop filled';
+  // Grey out chip in bank
+  var chip=document.querySelector('.seq-chip[data-val="'+val+'"][data-ltr="'+ltr+'"]');
+  if(chip) chip.classList.add('used');
+}
+
+function buildQ3(){
+  var body=document.getElementById('q3body'); body.innerHTML='';
+  // pairs of 2: [a,b], [c,d], [e,f]
+  var pairs=[[Q3_DATA[0],Q3_DATA[1]],[Q3_DATA[2],Q3_DATA[3]],[Q3_DATA[4],Q3_DATA[5]]];
+
+  pairs.forEach(function(pair,pi){
+    var grpDiv=document.createElement('div'); grpDiv.className='q-group';
+    var title=document.createElement('div'); title.className='q-group-title';
+    title.textContent='Questions '+pair.map(function(d){return d.lbl;}).join(' & ');
+    grpDiv.appendChild(title);
+
+    pair.forEach(function(q){
+      var block=document.createElement('div'); block.className='seq-block';
+      // Label
+      var lbl=document.createElement('div'); lbl.className='q-item-label'; lbl.style.marginBottom='10px';
+      lbl.innerHTML='<span class="lbl-circle">'+q.lbl+'</span> What are the next two numbers?'
+        +(q.guided?'<span class="tag tag-guided">★ Guided</span>':'')
+        +(q.bonus?'<span class="tag tag-bonus">Bonus</span>':'');
+      block.appendChild(lbl);
+      if(q.guided){
+        var gh=document.createElement('div'); gh.className='guided-hint';
+        gh.innerHTML='💡 '+q.hint; block.appendChild(gh);
+      }
+      // Bank of 6 chips (2 correct + 4 distractors, shuffled)
+      var allOpts=q.next.concat(q.dist).sort(function(){return Math.random()-.5;});
+      var bankDiv=document.createElement('div'); bankDiv.className='seq-bank';
+      bankDiv.innerHTML='<div class="seq-bank-label">🃏 Drag the correct two numbers below — click a placed number to remove it</div><div class="seq-chip-row"></div>';
+      var chipRow=bankDiv.querySelector('.seq-chip-row');
+      allOpts.forEach(function(opt){
+        var chip=document.createElement('div'); chip.className='seq-chip';
+        chip.textContent=opt; chip.dataset.val=opt; chip.dataset.ltr=q.lbl;
+        makeDraggable(chip,opt,'seqchip');
+        chipRow.appendChild(chip);
+      });
+      block.appendChild(bankDiv);
+      // Sequence row with 2 drop zones at end
+      var seqRow=document.createElement('div'); seqRow.className='seq-display';
+      q.seq.forEach(function(n){
+        var c=document.createElement('div'); c.className='seq-num'; c.textContent=n;
+        seqRow.appendChild(c);
+        var a=document.createElement('span'); a.className='seq-arrow'; a.textContent='→';
+        seqRow.appendChild(a);
+      });
+      seqRow.appendChild(buildSeqDrop(q.lbl,0));
+      var a2=document.createElement('span'); a2.className='seq-arrow'; a2.textContent='→';
+      seqRow.appendChild(a2);
+      seqRow.appendChild(buildSeqDrop(q.lbl,1));
+      block.appendChild(seqRow);
+      grpDiv.appendChild(block);
+    });
+
+    // Check button per pair
+    var cb=document.createElement('button'); cb.className='check-btn';
+    cb.innerHTML='✓ Check '+pair.map(function(d){return d.lbl;}).join(' & ');
+    (function(pairArr,gIdx){cb.onclick=function(){checkQ3Pair(pairArr,gIdx);};})(pair,pi);
+    grpDiv.appendChild(cb);
+    var fb=document.createElement('div'); fb.className='feedback'; fb.id='fbq3_'+pi;
+    grpDiv.appendChild(fb);
+    body.appendChild(grpDiv);
+  });
+}
+
+function checkQ3Pair(pair,pi){
+  if(!q3att[pi]) q3att[pi]=0;
+  q3att[pi]++;
+  var att=q3att[pi];
+  var correct=0, total=0;
+
+  pair.forEach(function(q){
+    q.next.forEach(function(ans,ni){
+      total++;
+      var dz=document.querySelector('.seq-drop[data-ltr="'+q.lbl+'"][data-pos="'+ni+'"]');
+      if(!dz) return;
+      if((dz.dataset.placed||'')===ans){
+        dz.className='seq-drop correct'; correct++;
+      } else {
+        dz.className='seq-drop wrong';
+        if(att>=3){
+          var ov=dz.dataset.placed;
+          if(ov){var oc=document.querySelector('.seq-chip[data-val="'+ov+'"][data-ltr="'+q.lbl+'"]');if(oc)oc.classList.remove('used');}
+          dz.textContent=ans; dz.dataset.placed=ans; dz.className='seq-drop correct';
+          var cc=document.querySelector('.seq-chip[data-val="'+ans+'"][data-ltr="'+q.lbl+'"]');
+          if(cc) cc.classList.add('used');
+        }
+      }
+    });
+  });
+
+  q3Results[pi]={got:correct,tot:total};
+  var fb=document.getElementById('fbq3_'+pi);
+  if(correct===total){
+    showFB(fb,'correct','🎉 '+correct+'/'+total+' correct! You can count in thousandths!');
+  } else if(att>=3){
+    showFB(fb,'hint','✅ Answers shown. Each step = +0.001. Watch the digits roll over.');
+  } else if(att===2){
+    showFB(fb,'hint','💡 Each step adds exactly 0.001. Check if any digits roll over (9→0).');
+  } else {
+    showFB(fb,'wrong','✗ '+(total-correct)+' incorrect. Look at the pattern — what changes each step?');
+  }
+
+  if(Object.keys(q3Results).length>=3){
+    var tg=Object.values(q3Results).reduce(function(a,b){return a+b.got;},0);
+    var tt=Object.values(q3Results).reduce(function(a,b){return a+b.tot;},0);
+    markDone(3,tg,tt);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// SUMMARY
+// ═══════════════════════════════════════════════════
+function showSummary(){
+  var all=Object.values(G.scores);
+  var tg=all.reduce(function(a,b){return a+b.got;},0);
+  var tt=all.reduce(function(a,b){return a+b.tot;},0);
+  var pct=tt?Math.round(tg/tt*100):0;
+  var s=document.getElementById('summary');
+  s.style.display='block'; s.scrollIntoView({behavior:'smooth'});
+  document.getElementById('finalScore').textContent=pct+'%';
+  var stars=pct>=90?3:pct>=70?2:1;
+  var sh=''; for(var i=0;i<3;i++) sh+='<span style="color:'+(i<stars?'#FBBF24':'rgba(255,255,255,.3)')+'">★</span>';
+  document.getElementById('starsRow').innerHTML=sh;
+  document.getElementById('summaryMsg').textContent=
+    pct>=90?'Fantastic! You mastered thousandths!':
+    pct>=70?'Good job! Review the tricky parts.':
+    'Keep practising — thousandths take practice!';
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+buildQ1();
+buildQ2();
+buildQ3();
+</script>
+</body>
+</html>

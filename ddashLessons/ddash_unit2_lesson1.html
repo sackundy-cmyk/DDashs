@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D-DASH · Unit 2 · Lesson 1: Sequences</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1E6FD9;--blue-dark:#1558B0;--blue-light:#EEF4FF;
+  --green:#16A34A;--green-bg:#DCFCE7;--green-border:#86EFAC;
+  --red:#DC2626;--red-bg:#FEE2E2;--red-border:#FCA5A5;
+  --amber:#D97706;--amber-bg:#FEF3C7;--amber-border:#FCD34D;
+  --bg:#F0F4FF;--border:#C7D7F5;--text:#1E293B;--muted:#64748B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.5}
+
+/* HEADER */
+.header{background:var(--blue);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(30,111,217,.3)}
+.logo{font-size:22px;font-weight:900;letter-spacing:-1px}.logo .dash{color:#93C5FD}
+.lesson-chip{background:rgba(255,255,255,.2);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;white-space:nowrap}
+.hdr-progress{flex:1;margin:0 16px;min-width:0}
+.hdr-bar{height:10px;background:rgba(255,255,255,.25);border-radius:5px;overflow:hidden}
+.hdr-fill{height:100%;background:#4ADE80;border-radius:5px;transition:width .5s ease;width:0%}
+.hdr-label{font-size:12px;margin-top:4px;opacity:.85}
+.page{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+
+/* OBJECTIVE */
+.obj-card{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:20px 24px;margin-bottom:24px}
+.obj-card h2{font-size:13px;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.obj-card p{font-size:18px;font-weight:800}
+
+/* EXPLAIN */
+.explain{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
+.explain h3{font-size:15px;font-weight:800;color:var(--blue);margin-bottom:12px}
+.rule-box{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin:10px 0;font-size:14px;line-height:1.8}
+.rule-box strong{color:var(--blue)}
+.ex-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:10px 14px;background:#F8FAFF;border:1.5px solid var(--border);border-radius:10px;margin:8px 0}
+.ex-pill{background:var(--blue);color:#fff;border-radius:14px;padding:6px 13px;font-size:15px;font-weight:900;white-space:nowrap}
+.ex-pill.blank{background:#fff;color:var(--blue);border:2.5px dashed var(--blue)}
+.ex-arr{font-size:17px;font-weight:900;color:var(--blue)}
+.ex-rule{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:800;color:var(--amber);white-space:nowrap}
+
+/* SECTION */
+.section{background:#fff;border:1.5px solid var(--border);border-radius:16px;margin-bottom:24px}
+.sec-header{background:var(--blue-light);border-bottom:1.5px solid var(--border);padding:16px 20px;display:flex;align-items:flex-start;gap:12px;border-radius:16px 16px 0 0}
+.q-badge{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-title{font-size:17px;font-weight:800}
+.sec-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;margin-left:8px}
+.tag-guided{background:#EDE9FE;color:#5B21B6}
+.tag-bonus{background:#FCE7F3;color:#9D174D}
+.sec-score{margin-left:auto;font-size:13px;font-weight:800;color:var(--green);white-space:nowrap}
+.sec-body{padding:20px}
+
+/* Q GROUP */
+.q-group{background:#F8FAFF;border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid var(--border)}
+.q-group-title{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.q-item{margin-bottom:16px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px}
+.q-item:last-child{margin-bottom:0}
+.guided-hint{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--amber);font-weight:700;margin-bottom:10px}
+.lbl-circle{background:var(--blue);color:#fff;min-width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0}
+.q-label{font-size:15px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* SEQUENCE ROW — chips + slots inline */
+.seq-line{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:10px 12px;background:#F0F7FF;border:1.5px solid var(--border);border-radius:12px;margin-bottom:12px}
+.seq-known{background:var(--blue);color:#fff;border-radius:12px;padding:7px 13px;font-size:15px;font-weight:900;white-space:nowrap}
+.seq-arr{font-size:16px;font-weight:900;color:var(--blue);padding:0 1px}
+
+/* DROP SLOTS (used for both Q1 and Q2 holes) */
+.seq-slot{
+  min-width:88px;height:44px;
+  border:2.5px dashed #93C5FD;
+  background:#fff;border-radius:12px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:900;color:var(--muted);
+  cursor:pointer;transition:all .18s;padding:0 6px;white-space:nowrap;
+}
+.seq-slot.over{border-color:var(--blue);background:var(--blue-light);transform:scale(1.05)}
+.seq-slot.filled{border-style:solid;border-color:var(--blue);background:#EEF4FF;color:var(--blue)}
+.seq-slot.correct{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:solid!important}
+.seq-slot.wrong{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important;border-style:solid!important}
+
+/* OPTIONS BANK */
+.bank-label{font-size:12px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px}
+.bank{display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;min-height:52px}
+.opt{
+  background:#fff;color:var(--blue);
+  border:2.5px solid var(--blue);border-radius:12px;
+  padding:8px 15px;font-size:15px;font-weight:900;
+  cursor:grab;user-select:none;-webkit-user-select:none;
+  transition:transform .12s,box-shadow .12s;white-space:nowrap;
+}
+.opt:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(30,111,217,.25)}
+.opt:active{cursor:grabbing;transform:scale(.95)}
+.opt.used{opacity:.3;cursor:default;pointer-events:none}
+.opt.dragging{opacity:.4}
+
+/* CHECK */
+.check-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:11px 26px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:10px;display:inline-flex;align-items:center;gap:7px;transition:background .15s,transform .1s}
+.check-btn:hover{background:var(--blue-dark)}.check-btn:active{transform:scale(.97)}
+
+/* FEEDBACK */
+.feedback{display:none;padding:11px 15px;border-radius:10px;font-size:14px;font-weight:700;margin-top:8px;align-items:center;gap:8px}
+.fb-correct{background:var(--green-bg);color:var(--green);border:1.5px solid var(--green-border)}
+.fb-wrong{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red-border)}
+.fb-hint{background:var(--amber-bg);color:var(--amber);border:1.5px solid var(--amber-border)}
+
+/* SUMMARY */
+.summary{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:32px;text-align:center;margin-top:32px;display:none}
+.summary h2{font-size:26px;font-weight:900;margin-bottom:8px}
+.big-score{font-size:64px;font-weight:900;margin:12px 0;line-height:1}
+.stars-row{font-size:40px;margin:12px 0;display:flex;justify-content:center;gap:6px}
+.next-btn{background:#4ADE80;color:#14532D;border:none;border-radius:12px;padding:16px 36px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:16px}
+
+@media(max-width:600px){
+  .seq-known,.opt{font-size:12px;padding:5px 8px}
+  .seq-slot{min-width:72px;height:40px;font-size:12px}
+  .sec-title{font-size:15px}.sec-sub{font-size:12px}
+  .lbl-circle{min-width:28px;height:28px;font-size:14px}
+  .q-label{font-size:13px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">D<span class="dash">-DASH</span></div>
+  <div class="lesson-chip">Unit 2 · Lesson 1</div>
+  <div class="hdr-progress">
+    <div class="hdr-bar"><div class="hdr-fill" id="hdrFill"></div></div>
+    <div class="hdr-label" id="hdrLabel">0 / 2 sections complete</div>
+  </div>
+</div>
+
+<div class="page">
+
+<div class="obj-card">
+  <h2>🎯 Learning Objective</h2>
+  <p>Count on and back in large number sequences, and find missing numbers in number patterns</p>
+</div>
+
+<div class="explain">
+  <h3>📐 Key Concept: Sequences</h3>
+  <p style="font-size:15px;margin-bottom:12px">A <strong>sequence</strong> is a list of numbers that follow a rule. Look at neighbouring numbers to find the pattern — then use it to fill in the missing ones.</p>
+  <div class="rule-box">
+    <strong>Find the rule:</strong> Subtract any two neighbouring numbers to find the step size.<br>
+    <strong>Count on:</strong> The numbers get bigger — add the step each time.<br>
+    <strong>Count back:</strong> The numbers get smaller — subtract the step each time.
+  </div>
+  <div style="font-size:13px;font-weight:800;color:var(--blue);margin:10px 0 4px">Example — what comes next?</div>
+  <div class="ex-row">
+    <span class="ex-pill">281 459</span><span class="ex-arr">→</span>
+    <span class="ex-pill">281 460</span><span class="ex-arr">→</span>
+    <span class="ex-pill">281 461</span><span class="ex-arr">→</span>
+    <span class="ex-pill">281 462</span><span class="ex-arr">→</span>
+    <span class="ex-pill blank">?</span><span class="ex-arr">→</span>
+    <span class="ex-pill blank">?</span>
+    <span class="ex-rule">Step = +1 → answers: 281 463, 281 464</span>
+  </div>
+  <div style="font-size:13px;font-weight:800;color:var(--blue);margin:10px 0 4px">Example — find the missing number</div>
+  <div class="ex-row">
+    <span class="ex-pill">389 450</span><span class="ex-arr">→</span>
+    <span class="ex-pill">389 452</span><span class="ex-arr">→</span>
+    <span class="ex-pill blank">?</span><span class="ex-arr">→</span>
+    <span class="ex-pill">389 456</span>
+    <span class="ex-rule">Step = +2 → missing: 389 454</span>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section" id="s1">
+  <div class="sec-header">
+    <div class="q-badge">1</div>
+    <div style="flex:1">
+      <div class="sec-title">Count on or back — write the next two numbers <span class="tag tag-guided">★ Guided a–b</span></div>
+      <div class="sec-sub">Drag 2 correct answers from the 6 options and drop them into the sequence · Check every 2 questions</div>
+    </div>
+    <div class="sec-score" id="s1score"></div>
+  </div>
+  <div class="sec-body" id="q1body"></div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section" id="s2">
+  <div class="sec-header">
+    <div class="q-badge">2</div>
+    <div style="flex:1">
+      <div class="sec-title">Write the missing numbers in each sequence <span class="tag tag-guided">★ Guided a–b</span></div>
+      <div class="sec-sub">Drag the correct numbers from the pool into the gaps in the sequence · Check every 2 questions</div>
+    </div>
+    <div class="sec-score" id="s2score"></div>
+  </div>
+  <div class="sec-body" id="q2body"></div>
+</div>
+
+<div class="summary" id="summary">
+  <div style="font-size:48px">🏆</div>
+  <h2>Lesson 1 Complete!</h2>
+  <div class="big-score" id="finalScore">—</div>
+  <div class="stars-row" id="starsRow"></div>
+  <p id="summaryMsg" style="font-size:16px;opacity:.9;margin-top:6px"></p>
+  <button class="next-btn" onclick="location.reload()">Try Again 🔄</button>
+</div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────
+//  GLOBALS
+// ─────────────────────────────────────────────────────
+var G = { dragSrc: null, sectionsDone: 0, sectionsTotal: 2, scores: {} };
+
+// ─────────────────────────────────────────────────────
+//  Q1 DATA  (4 known numbers shown, 2 slots at end)
+// ─────────────────────────────────────────────────────
+var Q1 = [
+  { lbl:'a', known:['281 459','281 460','281 461','281 462'], ans:['281 463','281 464'],
+    guided:true, hint:'💡 Step = 281 460 − 281 459 = 1. Count on from 281 462.' },
+  { lbl:'b', known:['3 470 034','3 470 033','3 470 032','3 470 031'], ans:['3 470 030','3 470 029'],
+    guided:true, hint:'💡 Step = 3 470 033 − 3 470 034 = −1. Count back from 3 470 031.' },
+  { lbl:'c', known:['9 407 687','9 407 688','9 407 689','9 407 690'], ans:['9 407 691','9 407 692'] },
+  { lbl:'d', known:['1 034 066','1 034 065','1 034 064','1 034 063'], ans:['1 034 062','1 034 061'] },
+  { lbl:'e', known:['6 418 736','6 418 737','6 418 738','6 418 739'], ans:['6 418 740','6 418 741'] },
+  { lbl:'f', known:['5 230 010','5 230 020','5 230 030','5 230 040'], ans:['5 230 050','5 230 060'], bonus:true,
+    hint:'💡 Bonus! Look at the step between neighbours carefully.' }
+];
+
+// ─────────────────────────────────────────────────────
+//  Q2 DATA  (seq with nulls = gaps, pool of 6 options)
+// ─────────────────────────────────────────────────────
+var Q2 = [
+  { lbl:'a',
+    seq:  ['389 450','389 452',null,null,'389 458','389 460'],
+    ans:  ['389 454','389 456'],
+    pool: ['389 454','389 456','389 462','389 448','389 464','389 450'],
+    guided:true, hint:'💡 Step = 389 452 − 389 450 = 2. Count on by 2 each time.' },
+  { lbl:'b',
+    seq:  ['170 446',null,'170 246','170 146',null,'169 946'],
+    ans:  ['170 346','170 046'],
+    pool: ['170 346','170 046','170 546','169 846','170 146','170 446'],
+    guided:true, hint:'💡 Step = 170 246 − 170 346 = −100. Count back by 100.' },
+  { lbl:'c',
+    seq:  [null,'406 558','407 558',null,'409 558',null],
+    ans:  ['405 558','408 558','410 558'],
+    pool: ['405 558','408 558','410 558','404 558','411 558','406 058'] },
+  { lbl:'d',
+    seq:  ['7 829 965','6 829 965','5 829 965',null,null,null],
+    ans:  ['4 829 965','3 829 965','2 829 965'],
+    pool: ['4 829 965','3 829 965','2 829 965','1 829 965','5 829 965','4 729 965'] },
+  { lbl:'e',
+    seq:  ['9 277 548','9 277 448',null,null,'9 277 148',null],
+    ans:  ['9 277 348','9 277 248','9 277 048'],
+    pool: ['9 277 348','9 277 248','9 277 048','9 277 548','9 276 948','9 277 148'] },
+  { lbl:'f',
+    seq:  ['4 000 570',null,null,null,'4 000 610','4 000 620'],
+    ans:  ['4 000 580','4 000 590','4 000 600'],
+    pool: ['4 000 580','4 000 590','4 000 600','4 000 560','4 000 630','4 000 570'] }
+];
+
+// ─────────────────────────────────────────────────────
+//  DISTRACTOR GENERATOR  (produces 4 wrong options)
+// ─────────────────────────────────────────────────────
+function numVal(s){ return parseInt(s.replace(/ /g,''), 10); }
+function fmtNum(n){
+  var s = String(Math.abs(n)), g = [];
+  while(s.length > 3){ g.unshift(s.slice(-3)); s = s.slice(0,-3); }
+  g.unshift(s);
+  return (n < 0 ? '-' : '') + g.join(' ');
+}
+
+function makeDistractors(ans){
+  var a0 = numVal(ans[0]), a1 = numVal(ans[1]);
+  var seen = {}; seen[a0] = true; seen[a1] = true;
+  var out = [];
+  var tweaks = [1,2,10,100,1000,10000,-1,-2,-10,-100,-1000,-10000];
+  for(var i = 0; i < tweaks.length && out.length < 4; i++){
+    var c0 = a0 + tweaks[i];
+    if(!seen[c0] && c0 > 0){ seen[c0] = true; out.push(fmtNum(c0)); }
+  }
+  for(var j = 0; j < tweaks.length && out.length < 4; j++){
+    var c1 = a1 + tweaks[j];
+    if(!seen[c1] && c1 > 0){ seen[c1] = true; out.push(fmtNum(c1)); }
+  }
+  return out.slice(0, 4);
+}
+
+function shuffle(a){ var b=a.slice(); for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;} return b; }
+
+// ─────────────────────────────────────────────────────
+//  DRAG / DROP ENGINE
+//  Each draggable opt stores its bankId in dataset.bid
+//  Each slot stores its bankId in dataset.bid and correct answer in dataset.ans
+//  dataset.placed = current placed value ('' if empty)
+// ─────────────────────────────────────────────────────
+function makeDraggable(el){
+  el.setAttribute('draggable', 'true');
+  el.addEventListener('dragstart', function(e){
+    if(el.classList.contains('used')) { e.preventDefault(); return; }
+    G.dragSrc = el;
+    e.dataTransfer.setData('text/plain', el.dataset.val);
+    setTimeout(function(){ el.classList.add('dragging'); }, 0);
+  });
+  el.addEventListener('dragend', function(){ el.classList.remove('dragging'); G.dragSrc = null; });
+
+  // ── Touch ──
+  var ghost = null, offX = 0, offY = 0;
+  el.addEventListener('touchstart', function(e){
+    if(el.classList.contains('used')) return;
+    var t = e.touches[0], r = el.getBoundingClientRect();
+    offX = t.clientX - r.left; offY = t.clientY - r.top;
+    G.dragSrc = el;
+    ghost = el.cloneNode(true);
+    ghost.style.cssText = 'position:fixed;z-index:9999;opacity:.8;pointer-events:none;'
+      + 'left:'+(t.clientX-offX)+'px;top:'+(t.clientY-offY)+'px;';
+    document.body.appendChild(ghost);
+  }, {passive:true});
+  el.addEventListener('touchmove', function(e){
+    e.preventDefault();
+    var t = e.touches[0];
+    if(ghost){ ghost.style.left = (t.clientX-offX)+'px'; ghost.style.top = (t.clientY-offY)+'px'; }
+  }, {passive:false});
+  el.addEventListener('touchend', function(e){
+    if(ghost){ document.body.removeChild(ghost); ghost = null; }
+    var t = e.changedTouches[0];
+    var target = document.elementFromPoint(t.clientX, t.clientY);
+    var slot = target && (target.classList.contains('seq-slot') ? target : target.closest('.seq-slot'));
+    if(slot) dropOnSlot(slot, el.dataset.val, el.dataset.bid);
+    G.dragSrc = null;
+  }, {passive:true});
+}
+
+function makeSlot(el){
+  el.addEventListener('dragover', function(e){ e.preventDefault(); el.classList.add('over'); });
+  el.addEventListener('dragleave', function(){ el.classList.remove('over'); });
+  el.addEventListener('drop', function(e){
+    e.preventDefault(); el.classList.remove('over');
+    if(!G.dragSrc) return;
+    dropOnSlot(el, G.dragSrc.dataset.val, G.dragSrc.dataset.bid);
+  });
+  // Click to return placed value to bank
+  el.addEventListener('click', function(){
+    if(el.dataset.placed && !el.classList.contains('correct')){
+      returnToBank(el.dataset.bid, el.dataset.placed);
+      el.dataset.placed = '';
+      el.textContent = '?';
+      el.className = 'seq-slot';
+    }
+  });
+}
+
+function dropOnSlot(slot, val, srcBid){
+  // Only accept chips from the same bank
+  if(slot.dataset.bid !== srcBid) return;
+  // If slot already filled — return old value first
+  if(slot.dataset.placed) returnToBank(slot.dataset.bid, slot.dataset.placed);
+  // Mark source chip used
+  markUsed(srcBid, val, true);
+  slot.dataset.placed = val;
+  slot.textContent = val;
+  slot.classList.remove('over','correct','wrong');
+  slot.className = 'seq-slot filled';
+}
+
+function returnToBank(bid, val){
+  markUsed(bid, val, false);
+}
+
+function markUsed(bid, val, used){
+  var chips = document.querySelectorAll('.opt[data-bid="' + bid + '"]');
+  chips.forEach(function(c){
+    if(c.dataset.val === val){ c.classList.toggle('used', used); }
+  });
+}
+
+// ─────────────────────────────────────────────────────
+//  CHECKING
+// ─────────────────────────────────────────────────────
+function checkSlots(slots, att){
+  var correct = 0, total = slots.length;
+  slots.forEach(function(slot){
+    if(slot.classList.contains('correct')) { correct++; return; }
+    var placed = slot.dataset.placed || '';
+    if(placed === slot.dataset.ans){
+      slot.className = 'seq-slot correct';
+      correct++;
+    } else {
+      slot.className = 'seq-slot' + (placed ? ' wrong' : '');
+      if(att >= 3){
+        slot.textContent = slot.dataset.ans;
+        slot.dataset.placed = slot.dataset.ans;
+        slot.className = 'seq-slot correct';
+        correct++;
+      }
+    }
+  });
+  return { got: correct, tot: total };
+}
+
+// ─────────────────────────────────────────────────────
+//  FEEDBACK & SCORING
+// ─────────────────────────────────────────────────────
+function showFB(fbEl, type, msg){
+  fbEl.className = 'feedback fb-' + type;
+  fbEl.innerHTML = msg;
+  fbEl.style.display = 'flex';
+}
+
+function markDone(sn, got, tot){
+  if(G.scores[sn]) return;
+  G.scores[sn] = { got:got, tot:tot };
+  G.sectionsDone = Object.keys(G.scores).length;
+  var pct = Math.round(G.sectionsDone / G.sectionsTotal * 100);
+  document.getElementById('hdrFill').style.width = pct + '%';
+  document.getElementById('hdrLabel').textContent = G.sectionsDone + ' / ' + G.sectionsTotal + ' sections complete';
+  var sc = document.getElementById('s' + sn + 'score');
+  if(sc) sc.textContent = got + '/' + tot + ' (' + Math.round(got/tot*100) + '%)';
+  if(G.sectionsDone === G.sectionsTotal) showSummary();
+}
+
+// ─────────────────────────────────────────────────────
+//  BUILD Q1
+// ─────────────────────────────────────────────────────
+var q1Att = {}, q1Res = {};
+
+function buildQ1(){
+  var body = document.getElementById('q1body');
+  var perGroup = 2, totalGroups = Math.ceil(Q1.length / perGroup);
+
+  for(var g = 0; g < totalGroups; g++){
+    var slice = Q1.slice(g * perGroup, g * perGroup + perGroup);
+    var grp = div('q-group');
+    var t = div('q-group-title');
+    t.innerHTML = 'Questions ' + slice.map(function(d){ return d.lbl.toUpperCase(); }).join(' &amp; ')
+      + (slice[0].bonus ? ' <span class="tag tag-bonus" style="margin-left:0">★ Bonus</span>' : '');
+    grp.appendChild(t);
+
+    slice.forEach(function(q){
+      var item = div('q-item');
+
+      // Label row
+      var lbl = div('q-label');
+      lbl.innerHTML = '<span class="lbl-circle">' + q.lbl + '</span>'
+        + (q.guided ? ' <span class="tag tag-guided">★ Guided</span>' : '')
+        + (q.bonus  ? ' <span class="tag tag-bonus">Bonus</span>'   : '');
+      item.appendChild(lbl);
+
+      if(q.guided && q.hint){
+        var gh = div('guided-hint'); gh.textContent = q.hint; item.appendChild(gh);
+      }
+
+      // ── Options bank ──
+      var bankId = 'q1_' + q.lbl;
+      var distractors = makeDistractors(q.ans);
+      var opts = shuffle(q.ans.concat(distractors));
+
+      var bl = div('bank-label'); bl.textContent = '🃏 Choose 2 correct answers — drag into the sequence:';
+      item.appendChild(bl);
+      var bank = div('bank');
+      opts.forEach(function(v){
+        var c = div('opt'); c.textContent = v; c.dataset.val = v; c.dataset.bid = bankId;
+        makeDraggable(c);
+        bank.appendChild(c);
+      });
+      item.appendChild(bank);
+
+      // ── Sequence row: known chips then 2 slots ──
+      var seqLine = div('seq-line');
+      q.known.forEach(function(k, i){
+        var chip = div('seq-known'); chip.textContent = k; seqLine.appendChild(chip);
+        var arr = span('seq-arr'); arr.textContent = '→'; seqLine.appendChild(arr);
+      });
+      // Two answer slots
+      q.ans.forEach(function(a, idx){
+        var slot = div('seq-slot'); slot.textContent = '?';
+        slot.dataset.ans = a; slot.dataset.bid = bankId; slot.dataset.placed = '';
+        makeSlot(slot);
+        seqLine.appendChild(slot);
+        if(idx === 0){
+          var arr2 = span('seq-arr'); arr2.textContent = '→'; seqLine.appendChild(arr2);
+        }
+      });
+      item.appendChild(seqLine);
+      grp.appendChild(item);
+    });
+
+    // Check button + feedback
+    var fbId = 'fb_q1_' + g;
+    var cb = checkBtn('✓ Check ' + slice.map(function(d){ return d.lbl.toUpperCase(); }).join(' & '));
+    var fbEl = div('feedback'); fbEl.id = fbId;
+
+    (function(sl, gIdx, fb){
+      cb.onclick = function(){
+        if(!q1Att[gIdx]) q1Att[gIdx] = 0;
+        q1Att[gIdx]++;
+        var att = q1Att[gIdx];
+        var got = 0, tot = 0;
+        sl.forEach(function(q){
+          var bid = 'q1_' + q.lbl;
+          var slots = Array.from(document.querySelectorAll('.seq-slot[data-bid="' + bid + '"]'));
+          var r = checkSlots(slots, att);
+          got += r.got; tot += r.tot;
+        });
+        q1Res[gIdx] = { got:got, tot:tot };
+        if(got === tot)      showFB(fb, 'correct', '🎉 ' + got + '/' + tot + ' correct! Great sequencing!');
+        else if(att >= 3)   showFB(fb, 'hint',    '✅ Correct answers revealed. Subtract neighbours to find the step.');
+        else if(att === 2)  showFB(fb, 'hint',    '💡 ' + got + '/' + tot + ' correct. Find the step size, then apply it twice.');
+        else                showFB(fb, 'wrong',   '✗ ' + (tot - got) + ' wrong. Check the direction of the sequence.');
+        // check section complete
+        if(Object.keys(q1Res).length >= Math.ceil(Q1.length/2)){
+          var tg = Object.values(q1Res).reduce(function(a,b){return a+b.got;},0);
+          var tt = Object.values(q1Res).reduce(function(a,b){return a+b.tot;},0);
+          markDone(1, tg, tt);
+        }
+      };
+    })(slice, g, fbEl);
+
+    grp.appendChild(cb);
+    grp.appendChild(fbEl);
+    body.appendChild(grp);
+  }
+}
+
+// ─────────────────────────────────────────────────────
+//  BUILD Q2
+// ─────────────────────────────────────────────────────
+var q2Att = {}, q2Res = {};
+
+function buildQ2(){
+  var body = document.getElementById('q2body');
+  var perGroup = 2, totalGroups = Math.ceil(Q2.length / perGroup);
+
+  for(var g = 0; g < totalGroups; g++){
+    var slice = Q2.slice(g * perGroup, g * perGroup + perGroup);
+    var grp = div('q-group');
+    var t = div('q-group-title');
+    t.innerHTML = 'Questions ' + slice.map(function(d){ return d.lbl.toUpperCase(); }).join(' &amp; ');
+    grp.appendChild(t);
+
+    slice.forEach(function(q){
+      var item = div('q-item');
+      var bankId = 'q2_' + q.lbl;
+
+      // Label
+      var lbl = div('q-label');
+      lbl.innerHTML = '<span class="lbl-circle">' + q.lbl + '</span>'
+        + (q.guided ? ' <span class="tag tag-guided">★ Guided</span>' : '');
+      item.appendChild(lbl);
+
+      if(q.guided && q.hint){
+        var gh = div('guided-hint'); gh.textContent = q.hint; item.appendChild(gh);
+      }
+
+      // ── Pool bank ──
+      var bl = div('bank-label'); bl.textContent = '🃏 Drag the correct numbers into the gaps:';
+      item.appendChild(bl);
+      var bank = div('bank');
+      shuffle(q.pool).forEach(function(v){
+        var c = div('opt'); c.textContent = v; c.dataset.val = v; c.dataset.bid = bankId;
+        makeDraggable(c);
+        bank.appendChild(c);
+      });
+      item.appendChild(bank);
+
+      // ── Sequence with gaps inline ──
+      var seqLine = div('seq-line');
+      var holeIdx = 0;
+      q.seq.forEach(function(v, i){
+        if(i > 0){ var arr = span('seq-arr'); arr.textContent = '→'; seqLine.appendChild(arr); }
+        if(v === null){
+          var slot = div('seq-slot'); slot.textContent = '?';
+          slot.dataset.ans = q.ans[holeIdx];
+          slot.dataset.bid = bankId;
+          slot.dataset.placed = '';
+          makeSlot(slot);
+          seqLine.appendChild(slot);
+          holeIdx++;
+        } else {
+          var fixed = div('seq-known'); fixed.textContent = v; seqLine.appendChild(fixed);
+        }
+      });
+      item.appendChild(seqLine);
+      grp.appendChild(item);
+    });
+
+    // Check button + feedback
+    var fbId = 'fb_q2_' + g;
+    var cb = checkBtn('✓ Check ' + slice.map(function(d){ return d.lbl.toUpperCase(); }).join(' & '));
+    var fbEl = div('feedback'); fbEl.id = fbId;
+
+    (function(sl, gIdx, fb){
+      cb.onclick = function(){
+        if(!q2Att[gIdx]) q2Att[gIdx] = 0;
+        q2Att[gIdx]++;
+        var att = q2Att[gIdx];
+        var got = 0, tot = 0;
+        sl.forEach(function(q){
+          var bid = 'q2_' + q.lbl;
+          var slots = Array.from(document.querySelectorAll('.seq-slot[data-bid="' + bid + '"]'));
+          var r = checkSlots(slots, att);
+          got += r.got; tot += r.tot;
+        });
+        q2Res[gIdx] = { got:got, tot:tot };
+        if(got === tot)      showFB(fb, 'correct', '🎉 ' + got + '/' + tot + ' correct! All gaps filled perfectly!');
+        else if(att >= 3)   showFB(fb, 'hint',    '✅ Correct answers revealed. Find the step, then fill each gap.');
+        else if(att === 2)  showFB(fb, 'hint',    '💡 ' + got + '/' + tot + ' correct. Use the known numbers around each gap to find the step.');
+        else                showFB(fb, 'wrong',   '✗ ' + (tot - got) + ' wrong. Subtract two neighbours to find the step size.');
+        // section complete?
+        if(Object.keys(q2Res).length >= Math.ceil(Q2.length/2)){
+          var tg = Object.values(q2Res).reduce(function(a,b){return a+b.got;},0);
+          var tt = Object.values(q2Res).reduce(function(a,b){return a+b.tot;},0);
+          markDone(2, tg, tt);
+        }
+      };
+    })(slice, g, fbEl);
+
+    grp.appendChild(cb);
+    grp.appendChild(fbEl);
+    body.appendChild(grp);
+  }
+}
+
+// ─────────────────────────────────────────────────────
+//  SUMMARY
+// ─────────────────────────────────────────────────────
+function showSummary(){
+  var all = Object.values(G.scores);
+  var tg = all.reduce(function(a,b){return a+b.got;},0);
+  var tt = all.reduce(function(a,b){return a+b.tot;},0);
+  var pct = tt ? Math.round(tg/tt*100) : 0;
+  var s = document.getElementById('summary');
+  s.style.display = 'block'; s.scrollIntoView({behavior:'smooth'});
+  document.getElementById('finalScore').textContent = pct + '%';
+  var stars = pct>=90?3:pct>=70?2:1;
+  var sh=''; for(var i=0;i<3;i++) sh+='<span style="color:'+(i<stars?'#FBBF24':'rgba(255,255,255,.3)')+'">★</span>';
+  document.getElementById('starsRow').innerHTML = sh;
+  document.getElementById('summaryMsg').textContent =
+    pct>=90 ? 'Excellent! You can spot and continue number sequences perfectly!' :
+    pct>=70 ? 'Good work! Review any sequences you found tricky.' :
+    'Keep practising — find the step size first, then count on or back!';
+}
+
+// ─────────────────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────────────────
+function div(cls){ var e=document.createElement('div'); if(cls) e.className=cls; return e; }
+function span(cls){ var e=document.createElement('span'); if(cls) e.className=cls; return e; }
+function checkBtn(label){
+  var b=document.createElement('button'); b.className='check-btn'; b.innerHTML=label; return b;
+}
+
+// ─────────────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────────────
+buildQ1();
+buildQ2();
+</script>
+</body>
+</html>

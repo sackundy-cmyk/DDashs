@@ -1,0 +1,61 @@
+{
+  "units": [
+    {
+      "id": 1,
+      "title": "Decimals",
+      "colour": "#1E6FD9",
+      "lessons": [
+        { "id": 1, "title": "Place Value in Decimals",      "slug": "place-value" },
+        { "id": 2, "title": "Thousandths",                  "slug": "thousandths" },
+        { "id": 3, "title": "Multiply & Divide by 10/100", "slug": "multiply-divide" },
+        { "id": 4, "title": "Rounding Decimals",            "slug": "rounding" }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Algebra & Patterns",
+      "colour": "#7C3AED",
+      "lessons": [
+        { "id": 1, "title": "Sequences",          "slug": "sequences" },
+        { "id": 2, "title": "Negative Numbers",     "slug": "negative-numbers" },
+        { "id": 3, "title": "Function Machines",  "slug": "function-machines" },
+        { "id": 4, "title": "Patterns & Formulae","slug": "patterns-formulae" },
+        { "id": 5, "title": "Equations",          "slug": "equations" }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Multiples, Factors & Primes",
+      "colour": "#16A34A",
+      "lessons": [
+        { "id": 1, "title": "Rules of Divisibility","slug": "divisibility" },
+        { "id": 2, "title": "Multiples & LCM",      "slug": "multiples" },
+        { "id": 3, "title": "Factors & HCF",         "slug": "factors" },
+        { "id": 4, "title": "Prime & Square Numbers","slug": "prime-square" }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Addition & Subtraction",
+      "colour": "#DC2626",
+      "lessons": [
+        { "id": 1, "title": "Brackets & Order of Operations", "slug": "brackets-order" },
+        { "id": 2, "title": "More Brackets",                  "slug": "more-brackets"  },
+        { "id": 3, "title": "Inverse Operations",             "slug": "inverse-ops"    },
+        { "id": 4, "title": "Mental Addition & Subtraction",  "slug": "mental-add-sub" },
+        { "id": 5, "title": "Large Numbers",                  "slug": "large-numbers"  },
+        { "id": 6, "title": "Decimal Tenths — Part 1",        "slug": "decimal-tenths-1" },
+        { "id": 7, "title": "Decimal Tenths — Part 2",        "slug": "decimal-tenths-2" },
+        { "id": 8, "title": "Decimal Hundredths",             "slug": "decimal-hundredths" }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Mental & Written Calculations",
+      "colour": "#D97706",
+      "lessons": [
+        { "id": 1, "title": "Brackets", "slug": "brackets" }
+      ]
+    }
+  ]
+}

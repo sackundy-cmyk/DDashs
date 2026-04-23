@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D-DASH · Unit 2 · Lesson 2: Negative Numbers</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1E6FD9;--blue-dark:#1558B0;--blue-light:#EEF4FF;
+  --green:#16A34A;--green-bg:#DCFCE7;--green-border:#86EFAC;
+  --red:#DC2626;--red-bg:#FEE2E2;--red-border:#FCA5A5;
+  --amber:#D97706;--amber-bg:#FEF3C7;--amber-border:#FCD34D;
+  --purple:#7C3AED;--purple-bg:#EDE9FE;--purple-border:#C4B5FD;
+  --bg:#F0F4FF;--border:#C7D7F5;--text:#1E293B;--muted:#64748B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.5}
+
+/* HEADER */
+.header{background:var(--blue);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(30,111,217,.3)}
+.logo{font-size:22px;font-weight:900;letter-spacing:-1px}.logo .dash{color:#93C5FD}
+.lesson-chip{background:rgba(255,255,255,.2);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;white-space:nowrap}
+.hdr-progress{flex:1;margin:0 16px;min-width:0}
+.hdr-bar{height:10px;background:rgba(255,255,255,.25);border-radius:5px;overflow:hidden}
+.hdr-fill{height:100%;background:#4ADE80;border-radius:5px;transition:width .5s ease;width:0%}
+.hdr-label{font-size:12px;margin-top:4px;opacity:.85}
+.page{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+
+/* OBJECTIVE */
+.obj-card{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:20px 24px;margin-bottom:24px}
+.obj-card h2{font-size:13px;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.obj-card p{font-size:18px;font-weight:800}
+
+/* EXPLAIN */
+.explain{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
+.explain h3{font-size:15px;font-weight:800;color:var(--blue);margin-bottom:10px}
+.rule-box{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin:10px 0;font-size:14px;line-height:1.8}
+.rule-box strong{color:var(--blue)}
+
+/* SECTION */
+.section{background:#fff;border:1.5px solid var(--border);border-radius:16px;margin-bottom:24px}
+.sec-header{background:var(--blue-light);border-bottom:1.5px solid var(--border);padding:16px 20px;display:flex;align-items:flex-start;gap:12px;border-radius:16px 16px 0 0}
+.q-badge{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-title{font-size:17px;font-weight:800}
+.sec-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;margin-left:8px}
+.tag-guided{background:#EDE9FE;color:#5B21B6}
+.sec-score{margin-left:auto;font-size:13px;font-weight:800;color:var(--green);white-space:nowrap}
+.sec-body{padding:20px}
+
+/* Q GROUP */
+.q-group{background:#F8FAFF;border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid var(--border)}
+.q-group-title{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+.q-item{margin-bottom:14px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px}
+.q-item:last-child{margin-bottom:0}
+.guided-hint{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--amber);font-weight:700;margin-bottom:10px}
+.lbl-circle{background:var(--blue);color:#fff;min-width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0}
+.q-label{font-size:15px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* ═══════════════════════════════════
+   NUMBER LINE COMPONENT
+═══════════════════════════════════ */
+.nl-wrap{position:relative;width:100%;margin:16px 0 8px;padding:0 16px}
+
+/* Arrow label above */
+.nl-arrow-labels{position:relative;height:48px;margin-bottom:0}
+.nl-arrow-lbl{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%)}
+.nl-arrow-letter{font-size:13px;font-weight:900;color:var(--blue);margin-bottom:2px}
+.nl-arrow-icon{width:2px;height:22px;background:var(--green);position:relative}
+.nl-arrow-icon::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--green)}
+
+/* The number line track */
+.nl-track-wrap{position:relative;height:40px;display:flex;align-items:center}
+.nl-track{position:absolute;left:0;right:0;height:4px;background:#334155;border-radius:2px}
+/* Left arrowhead */
+.nl-track::before{content:'';position:absolute;left:-8px;top:50%;transform:translateY(-50%);border-top:6px solid transparent;border-bottom:6px solid transparent;border-right:10px solid #334155}
+/* Right arrowhead */
+.nl-track::after{content:'';position:absolute;right:-8px;top:50%;transform:translateY(-50%);border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid #334155}
+
+/* Tick marks */
+.nl-tick{position:absolute;width:2px;background:#334155;transform:translateX(-50%)}
+.nl-tick.major{height:18px;top:50%;margin-top:-9px}
+.nl-tick.minor{height:10px;top:50%;margin-top:-5px}
+
+/* Tick labels below */
+.nl-tick-labels{position:relative;height:28px;margin-top:2px}
+.nl-tick-label{position:absolute;transform:translateX(-50%);font-size:12px;font-weight:800;color:#334155;white-space:nowrap}
+
+/* ═══════════════════════════════════
+   MCQ OPTIONS
+═══════════════════════════════════ */
+.mcq-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.mcq-opt{
+  background:#fff;color:var(--blue);
+  border:2.5px solid var(--blue);border-radius:10px;
+  padding:8px 18px;font-size:15px;font-weight:900;
+  cursor:pointer;transition:all .15s;user-select:none;
+}
+.mcq-opt:hover{background:var(--blue-light);transform:translateY(-1px)}
+.mcq-opt.selected{background:var(--blue);color:#fff}
+.mcq-opt.correct{background:var(--green-bg)!important;color:var(--green)!important;border-color:var(--green)!important}
+.mcq-opt.wrong{background:var(--red-bg)!important;color:var(--red)!important;border-color:var(--red)!important}
+.mcq-opt.reveal{background:var(--green-bg)!important;color:var(--green)!important;border-color:var(--green)!important;border-style:dashed!important}
+
+/* CHECK / FEEDBACK */
+.check-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:11px 26px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:12px;display:inline-flex;align-items:center;gap:7px;transition:background .15s,transform .1s}
+.check-btn:hover{background:var(--blue-dark)}.check-btn:active{transform:scale(.97)}
+.feedback{display:none;padding:11px 15px;border-radius:10px;font-size:14px;font-weight:700;margin-top:10px;align-items:center;gap:8px}
+.fb-correct{background:var(--green-bg);color:var(--green);border:1.5px solid var(--green-border)}
+.fb-wrong{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red-border)}
+.fb-hint{background:var(--amber-bg);color:var(--amber);border:1.5px solid var(--amber-border)}
+
+/* ═══════════════════════════════════
+   TEMPERATURE DRAG-DROP (Q2)
+═══════════════════════════════════ */
+.temp-bank{display:flex;flex-wrap:wrap;gap:10px;padding:14px 16px;background:var(--blue-light);border:1.5px solid var(--border);border-radius:12px;margin-bottom:16px;min-height:64px}
+.temp-card{
+  background:#fff;color:var(--blue);
+  border:2.5px solid var(--blue);border-radius:12px;
+  padding:10px 18px;font-size:17px;font-weight:900;
+  cursor:grab;user-select:none;-webkit-user-select:none;
+  transition:transform .12s,box-shadow .12s;white-space:nowrap;
+}
+.temp-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(30,111,217,.25)}
+.temp-card:active{cursor:grabbing}
+.temp-card.used{opacity:.3;cursor:default;pointer-events:none}
+.temp-card.dragging{opacity:.4}
+
+.order-track{display:flex;align-items:flex-end;gap:0;padding:16px 10px 10px;background:#F0F7FF;border:1.5px solid var(--border);border-radius:12px;overflow-x:auto}
+.order-col{display:flex;flex-direction:column;align-items:center;flex:1;min-width:80px}
+.order-col-label{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px;text-align:center}
+.order-slot{
+  width:100%;min-width:80px;height:54px;
+  border:2.5px dashed #93C5FD;background:#fff;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:900;color:var(--muted);
+  cursor:pointer;transition:all .18s;padding:4px;text-align:center;
+}
+.order-slot.over{border-color:var(--blue);background:var(--blue-light);transform:scale(1.04)}
+.order-slot.filled{border-style:solid;border-color:var(--blue);background:#EEF4FF;color:var(--blue)}
+.order-slot.correct{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:solid!important}
+.order-slot.wrong{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important;border-style:solid!important}
+.order-arrow{font-size:20px;font-weight:900;color:var(--blue);padding:0 4px;flex-shrink:0;align-self:center;padding-bottom:10px}
+
+.order-ends{display:flex;justify-content:space-between;padding:4px 8px 0;font-size:12px;font-weight:800;color:var(--muted)}
+
+/* SUMMARY */
+.summary{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:32px;text-align:center;margin-top:32px;display:none}
+.summary h2{font-size:26px;font-weight:900;margin-bottom:8px}
+.big-score{font-size:64px;font-weight:900;margin:12px 0;line-height:1}
+.stars-row{font-size:40px;margin:12px 0;display:flex;justify-content:center;gap:6px}
+.next-btn{background:#4ADE80;color:#14532D;border:none;border-radius:12px;padding:16px 36px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:16px}
+
+@media(max-width:600px){
+  .mcq-opt{font-size:13px;padding:7px 12px}
+  .temp-card{font-size:14px;padding:8px 12px}
+  .order-slot{height:46px;font-size:13px;min-width:64px}
+  .sec-title{font-size:15px}.sec-sub{font-size:12px}
+  .nl-tick-label{font-size:10px}
+  .nl-arrow-letter{font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">D<span class="dash">-DASH</span></div>
+  <div class="lesson-chip">Unit 2 · Lesson 2</div>
+  <div class="hdr-progress">
+    <div class="hdr-bar"><div class="hdr-fill" id="hdrFill"></div></div>
+    <div class="hdr-label" id="hdrLabel">0 / 2 sections complete</div>
+  </div>
+</div>
+
+<div class="page">
+
+<div class="obj-card">
+  <h2>🎯 Learning Objective</h2>
+  <p>Read negative numbers on number lines and order positive and negative temperatures</p>
+</div>
+
+<div class="explain">
+  <h3>📐 Key Concept: Negative Numbers</h3>
+  <p style="font-size:15px;margin-bottom:12px">Numbers less than zero are called <strong>negative numbers</strong>. They are written with a minus sign, like <strong>−5</strong> or <strong>−12</strong>.</p>
+  <div class="rule-box">
+    <strong>On a number line:</strong> negative numbers sit to the <strong>left of zero</strong>. The further left, the smaller the number.<br>
+    <strong>−10 is smaller than −2</strong> — because −10 is further from zero.<br>
+    <strong>Ordering temperatures:</strong> −11°C is colder (lower) than −4°C, which is colder than 0°C.
+  </div>
+</div>
+
+<!-- SECTION 1: Number Lines -->
+<div class="section" id="s1">
+  <div class="sec-header">
+    <div class="q-badge">1</div>
+    <div style="flex:1">
+      <div class="sec-title">Write the number that each arrow points to <span class="tag tag-guided">★ Guided a–c</span></div>
+      <div class="sec-sub">Choose the correct value from 4 options for each arrow · Each number line has its own Check button</div>
+    </div>
+    <div class="sec-score" id="s1score"></div>
+  </div>
+  <div class="sec-body" id="q1body"></div>
+</div>
+
+<!-- SECTION 2: Temperatures -->
+<div class="section" id="s2">
+  <div class="sec-header">
+    <div class="q-badge">2</div>
+    <div style="flex:1">
+      <div class="sec-title">Write these temperatures in order — start with the lowest</div>
+      <div class="sec-sub">Drag the temperature cards into order from coldest (left) to warmest (right)</div>
+    </div>
+    <div class="sec-score" id="s2score"></div>
+  </div>
+  <div class="sec-body" id="q2body"></div>
+</div>
+
+<div class="summary" id="summary">
+  <div style="font-size:48px">🏆</div>
+  <h2>Lesson 2 Complete!</h2>
+  <div class="big-score" id="finalScore">—</div>
+  <div class="stars-row" id="starsRow"></div>
+  <p id="summaryMsg" style="font-size:16px;opacity:.9;margin-top:6px"></p>
+  <button class="next-btn" onclick="location.reload()">Try Again 🔄</button>
+</div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────
+//  GLOBALS
+// ─────────────────────────────────────────────────────
+var G = { dragSrc:null, sectionsDone:0, sectionsTotal:2, scores:{} };
+
+// ─────────────────────────────────────────────────────
+//  NUMBER LINE DATA
+//  Each line: min, max, step (for tick spacing), majorEvery, labels
+//  Each arrow: letter, value, hint
+// ─────────────────────────────────────────────────────
+var LINES = [
+  {
+    id: 'L1',
+    min: -10, max: 0, tickStep: 1, labelEvery: 1,
+    arrows: [
+      { lbl:'a', val:-8, guided:true,  hint:'💡 Count the tick marks from −10 towards 0. Each tick = 1.' },
+      { lbl:'b', val:-4, guided:true,  hint:'💡 Start at 0 and count left. Each step = 1.' },
+      { lbl:'c', val:-1, guided:true,  hint:'💡 This arrow is very close to 0. Count carefully.' }
+    ]
+  },
+  {
+    id: 'L2',
+    min: -20, max: 0, tickStep: 2, labelEvery: 2,
+    arrows: [
+      { lbl:'d', val:-14 },
+      { lbl:'e', val:-8  },
+      { lbl:'f', val:-2  }
+    ]
+  },
+  {
+    id: 'L3',
+    min: -100, max: 0, tickStep: 10, labelEvery: 10,
+    arrows: [
+      { lbl:'g', val:-90 },
+      { lbl:'h', val:-50 },
+      { lbl:'i', val:-30 }
+    ]
+  }
+];
+
+// ─────────────────────────────────────────────────────
+//  MCQ DISTRACTOR GENERATOR
+// ─────────────────────────────────────────────────────
+function makeOpts(val, min, max, step){
+  var seen = {}; seen[val] = true;
+  var wrongs = [];
+  // Offer neighbours at ±step and ±2*step
+  var tweaks = [-step, step, -2*step, 2*step, -3*step, 3*step];
+  tweaks.forEach(function(t){
+    var w = val + t;
+    if(!seen[w] && w >= min && w <= max){ seen[w]=true; wrongs.push(w); }
+  });
+  // If not enough, fill with anything in range
+  for(var v=min; v<=max && wrongs.length<3; v+=step){
+    if(!seen[v]){ seen[v]=true; wrongs.push(v); }
+  }
+  var opts = [val].concat(wrongs.slice(0,3));
+  return shuffle(opts);
+}
+
+function shuffle(a){ var b=a.slice(); for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;} return b; }
+
+// ─────────────────────────────────────────────────────
+//  DRAW NUMBER LINE  (returns SVG-like DOM element)
+// ─────────────────────────────────────────────────────
+function drawNumberLine(lineData){
+  var min = lineData.min, max = lineData.max;
+  var range = max - min;
+  var step = lineData.tickStep;
+  var labelEvery = lineData.labelEvery;
+
+  // Container
+  var wrap = el('div', 'nl-wrap');
+
+  // ── Arrow labels row ──
+  var lblRow = el('div', 'nl-arrow-labels');
+  lineData.arrows.forEach(function(arrow){
+    var pct = (arrow.val - min) / range * 100;
+    var lbl = el('div', 'nl-arrow-lbl');
+    lbl.style.left = pct + '%';
+    var letter = el('div', 'nl-arrow-letter'); letter.textContent = arrow.lbl;
+    var icon = el('div', 'nl-arrow-icon');
+    lbl.appendChild(letter); lbl.appendChild(icon);
+    lblRow.appendChild(lbl);
+  });
+  wrap.appendChild(lblRow);
+
+  // ── Track ──
+  var trackWrap = el('div', 'nl-track-wrap');
+  var track = el('div', 'nl-track');
+
+  // Draw ticks
+  for(var v = min; v <= max; v += step){
+    var pct = (v - min) / range * 100;
+    var tick = el('div', 'nl-tick major');
+    tick.style.left = pct + '%';
+    track.appendChild(tick);
+  }
+  trackWrap.appendChild(track);
+  wrap.appendChild(trackWrap);
+
+  // ── Tick labels ──
+  var labelsRow = el('div', 'nl-tick-labels');
+  for(var v2 = min; v2 <= max; v2 += (step * labelEvery)){
+    var pct2 = (v2 - min) / range * 100;
+    var lbl2 = el('div', 'nl-tick-label');
+    lbl2.style.left = pct2 + '%';
+    lbl2.textContent = v2;
+    labelsRow.appendChild(lbl2);
+  }
+  wrap.appendChild(labelsRow);
+
+  return wrap;
+}
+
+// ─────────────────────────────────────────────────────
+//  BUILD Q1 (Number Lines)
+// ─────────────────────────────────────────────────────
+var q1Att = {}, q1Res = {};
+
+function buildQ1(){
+  var body = document.getElementById('q1body');
+
+  LINES.forEach(function(line, li){
+    var grp = el('div', 'q-group');
+
+    // Group title
+    var t = el('div', 'q-group-title');
+    t.textContent = 'Number Line ' + (li+1) + '  ·  Questions '
+      + line.arrows.map(function(a){ return a.lbl.toUpperCase(); }).join(', ');
+    grp.appendChild(t);
+
+    // Draw the shared number line for this group
+    var nlEl = drawNumberLine(line);
+    grp.appendChild(nlEl);
+
+    // One MCQ item per arrow
+    line.arrows.forEach(function(arrow){
+      var item = el('div', 'q-item');
+
+      var lbl = el('div', 'q-label');
+      lbl.innerHTML = '<span class="lbl-circle">' + arrow.lbl + '</span>'
+        + (arrow.guided ? ' <span class="tag tag-guided">★ Guided</span>' : '')
+        + '<span style="font-size:14px;color:var(--muted);font-weight:700;margin-left:4px">Arrow <strong style="color:var(--blue)">'
+        + arrow.lbl.toUpperCase() + '</strong> points to …</span>';
+      item.appendChild(lbl);
+
+      if(arrow.guided && arrow.hint){
+        var gh = el('div', 'guided-hint'); gh.textContent = arrow.hint; item.appendChild(gh);
+      }
+
+      // MCQ options
+      var opts = makeOpts(arrow.val, line.min, line.max, line.tickStep);
+      var mcqRow = el('div', 'mcq-row');
+      opts.forEach(function(v){
+        var btn = el('div', 'mcq-opt');
+        btn.textContent = v;
+        btn.dataset.val = String(v);
+        btn.dataset.ans = String(arrow.val);
+        btn.dataset.ltr = arrow.lbl;
+        btn.dataset.lid = line.id;
+        btn.addEventListener('click', function(){
+          if(btn.classList.contains('correct') || btn.classList.contains('wrong')) return;
+          // Deselect siblings in same arrow group
+          mcqRow.querySelectorAll('.mcq-opt').forEach(function(o){ o.classList.remove('selected'); });
+          btn.classList.add('selected');
+        });
+        mcqRow.appendChild(btn);
+      });
+      item.appendChild(mcqRow);
+      grp.appendChild(item);
+    });
+
+    // ── Check button for this number line ──
+    var fbId = 'fb_nl_' + li;
+    var cb = checkBtn('✓ Check ' + line.arrows.map(function(a){ return a.lbl.toUpperCase(); }).join(', '));
+    var fbEl = el('div', 'feedback'); fbEl.id = fbId;
+
+    (function(lineRef, gIdx, fb){
+      cb.onclick = function(){
+        if(!q1Att[gIdx]) q1Att[gIdx] = 0;
+        q1Att[gIdx]++;
+        var att = q1Att[gIdx];
+        var got = 0, tot = 0;
+
+        lineRef.arrows.forEach(function(arrow){
+          tot++;
+          var opts = document.querySelectorAll('.mcq-opt[data-ltr="' + arrow.lbl + '"][data-lid="' + lineRef.id + '"]');
+          var selected = null;
+          opts.forEach(function(o){ if(o.classList.contains('selected')) selected = o; });
+
+          if(selected && selected.dataset.val === selected.dataset.ans){
+            selected.classList.remove('selected');
+            selected.classList.add('correct');
+            got++;
+          } else {
+            if(selected){ selected.classList.remove('selected'); selected.classList.add('wrong'); }
+            if(att >= 3){
+              opts.forEach(function(o){
+                if(o.dataset.val === o.dataset.ans){ o.classList.add('reveal'); }
+              });
+              got++; // count as done after 3 attempts
+            }
+          }
+        });
+
+        q1Res[gIdx] = { got:got, tot:tot };
+
+        var realGot = 0;
+        lineRef.arrows.forEach(function(arrow){
+          var opts = document.querySelectorAll('.mcq-opt[data-ltr="' + arrow.lbl + '"][data-lid="' + lineRef.id + '"]');
+          opts.forEach(function(o){ if(o.classList.contains('correct')) realGot++; });
+        });
+
+        if(got === tot)     showFB(fb,'correct','🎉 ' + got + '/' + tot + ' correct! Great number line reading!');
+        else if(att >= 3)  showFB(fb,'hint',   '✅ Correct answers revealed. Count each tick carefully from the nearest label.');
+        else if(att === 2) showFB(fb,'hint',   '💡 ' + got + '/' + tot + ' correct. Count the tick marks step by step from a known number.');
+        else               showFB(fb,'wrong',  '✗ ' + (tot-got) + ' wrong. Look at the scale — how much does each tick represent?');
+
+        // Check if all 3 line groups done → section complete
+        if(Object.keys(q1Res).length >= LINES.length){
+          var tg = Object.values(q1Res).reduce(function(a,b){return a+b.got;},0);
+          var tt = Object.values(q1Res).reduce(function(a,b){return a+b.tot;},0);
+          markDone(1, tg, tt);
+        }
+      };
+    })(line, li, fbEl);
+
+    grp.appendChild(cb);
+    grp.appendChild(fbEl);
+    body.appendChild(grp);
+  });
+}
+
+// ─────────────────────────────────────────────────────
+//  BUILD Q2 (Temperature ordering)
+// ─────────────────────────────────────────────────────
+var TEMPS = [
+  { val: 8.5,  label: '8.5°C'  },
+  { val: 6,    label: '6°C'    },
+  { val: -8,   label: '−8°C'   },
+  { val: -4,   label: '−4°C'   },
+  { val: -11,  label: '−11°C'  },
+  { val: 1.5,  label: '1.5°C'  }
+];
+// Correct order (lowest → highest)
+var TEMP_ORDER = [-11, -8, -4, 1.5, 6, 8.5];
+var TEMP_LABELS = { 8.5:'8.5°C', 6:'6°C', '-8':'−8°C', '-4':'−4°C', '-11':'−11°C', 1.5:'1.5°C' };
+function tempLabel(v){ return TEMP_LABELS[String(v)] || v + '°C'; }
+
+var q2Att = 0;
+
+function buildQ2(){
+  var body = document.getElementById('q2body');
+
+  // Bank
+  var bankLbl = el('div',''); bankLbl.style.cssText='font-size:12px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px';
+  bankLbl.textContent = '🌡️ Drag the temperature cards into the correct order below:';
+  body.appendChild(bankLbl);
+
+  var bank = el('div','temp-bank'); bank.id = 'tempBank';
+  shuffle(TEMPS).forEach(function(t){
+    var card = el('div','temp-card');
+    card.textContent = t.label; card.dataset.val = String(t.val);
+    makeTempDraggable(card);
+    bank.appendChild(card);
+  });
+  body.appendChild(bank);
+
+  // Order slots row
+  var trackWrap = el('div','');
+  trackWrap.style.cssText = 'overflow-x:auto';
+
+  var track = el('div','order-track'); track.id = 'tempTrack';
+  for(var i = 0; i < 6; i++){
+    if(i > 0){
+      var arr = el('div','order-arrow'); arr.textContent = '<'; arr.innerHTML = '&#8249;';
+      track.appendChild(arr);
+    }
+    var col = el('div','order-col');
+    var colLbl = el('div','order-col-label');
+    colLbl.textContent = i === 0 ? '❄️ Lowest' : i === 5 ? '☀️ Highest' : (i+1) + '';
+    col.appendChild(colLbl);
+    var slot = el('div','order-slot');
+    slot.textContent = '?'; slot.dataset.pos = String(i);
+    slot.dataset.ans = String(TEMP_ORDER[i]);
+    slot.dataset.placed = '';
+    makeTempSlot(slot);
+    col.appendChild(slot);
+    track.appendChild(col);
+  }
+  trackWrap.appendChild(track);
+  body.appendChild(trackWrap);
+
+  // Check button
+  var fbEl = el('div','feedback'); fbEl.id = 'fb_temps';
+  var cb = checkBtn('✓ Check Order');
+  cb.style.marginTop = '14px';
+  cb.onclick = function(){
+    q2Att++;
+    var slots = document.querySelectorAll('#tempTrack .order-slot');
+    var got = 0, tot = slots.length;
+    slots.forEach(function(slot){
+      if(slot.classList.contains('correct')){ got++; return; }
+      var placed = slot.dataset.placed;
+      if(placed && parseFloat(placed) === parseFloat(slot.dataset.ans)){
+        slot.className = 'order-slot correct'; got++;
+      } else {
+        slot.className = 'order-slot' + (placed ? ' wrong' : '');
+        if(q2Att >= 3){
+          var correctVal = slot.dataset.ans;
+          var correctLbl = tempLabel(correctVal);
+          slot.textContent = correctLbl;
+          slot.dataset.placed = correctVal;
+          slot.className = 'order-slot correct';
+          got++;
+        }
+      }
+    });
+    if(got === tot)     showFB(fbEl,'correct','🎉 ' + got + '/' + tot + ' correct! Perfect temperature ordering!');
+    else if(q2Att>=3)  showFB(fbEl,'hint',   '✅ Correct order shown. Remember: more negative = colder = lower.');
+    else if(q2Att===2) showFB(fbEl,'hint',   '💡 ' + got + '/' + tot + ' correct. Negative temperatures are below zero — −11 is colder than −4.');
+    else               showFB(fbEl,'wrong',  '✗ ' + (tot-got) + ' in the wrong position. Start by finding the most negative temperature.');
+    markDone(2, got, tot);
+  };
+  body.appendChild(cb);
+  body.appendChild(fbEl);
+}
+
+// ─────────────────────────────────────────────────────
+//  TEMP DRAG ENGINE
+// ─────────────────────────────────────────────────────
+function makeTempDraggable(card){
+  card.setAttribute('draggable','true');
+  card.addEventListener('dragstart',function(e){
+    G.dragSrc = card;
+    e.dataTransfer.setData('text/plain', card.dataset.val);
+    setTimeout(function(){ card.classList.add('dragging'); },0);
+  });
+  card.addEventListener('dragend',function(){ card.classList.remove('dragging'); G.dragSrc=null; });
+
+  // Touch
+  var ghost=null, offX=0, offY=0;
+  card.addEventListener('touchstart',function(e){
+    if(card.classList.contains('used')) return;
+    var t=e.touches[0], r=card.getBoundingClientRect();
+    offX=t.clientX-r.left; offY=t.clientY-r.top;
+    G.dragSrc=card;
+    ghost=card.cloneNode(true);
+    ghost.style.cssText='position:fixed;z-index:9999;opacity:.8;pointer-events:none;left:'+(t.clientX-offX)+'px;top:'+(t.clientY-offY)+'px';
+    document.body.appendChild(ghost);
+  },{passive:true});
+  card.addEventListener('touchmove',function(e){
+    e.preventDefault();
+    var t=e.touches[0];
+    if(ghost){ghost.style.left=(t.clientX-offX)+'px';ghost.style.top=(t.clientY-offY)+'px';}
+  },{passive:false});
+  card.addEventListener('touchend',function(e){
+    if(ghost){document.body.removeChild(ghost);ghost=null;}
+    var t=e.changedTouches[0];
+    var target=document.elementFromPoint(t.clientX,t.clientY);
+    var slot=target&&(target.classList.contains('order-slot')?target:target.closest('.order-slot'));
+    if(slot) dropTempOnSlot(slot, G.dragSrc);
+    G.dragSrc=null;
+  },{passive:true});
+}
+
+function makeTempSlot(slot){
+  slot.addEventListener('dragover',function(e){ e.preventDefault(); slot.classList.add('over'); });
+  slot.addEventListener('dragleave',function(){ slot.classList.remove('over'); });
+  slot.addEventListener('drop',function(e){
+    e.preventDefault(); slot.classList.remove('over');
+    if(G.dragSrc) dropTempOnSlot(slot, G.dragSrc);
+  });
+  slot.addEventListener('click',function(){
+    if(slot.dataset.placed && !slot.classList.contains('correct')){
+      returnTempToBank(slot.dataset.placed);
+      slot.dataset.placed=''; slot.textContent='?'; slot.className='order-slot';
+    }
+  });
+}
+
+function dropTempOnSlot(slot, srcCard){
+  if(!srcCard) return;
+  var val = srcCard.dataset.val;
+  // If this slot already has something — return it
+  if(slot.dataset.placed) returnTempToBank(slot.dataset.placed);
+  // Mark src card used
+  markTempUsed(val, true);
+  slot.dataset.placed = val;
+  slot.textContent = tempLabel(val);
+  slot.classList.remove('over','correct','wrong');
+  slot.className = 'order-slot filled';
+}
+
+function returnTempToBank(val){
+  markTempUsed(val, false);
+}
+
+function markTempUsed(val, used){
+  var cards = document.querySelectorAll('#tempBank .temp-card');
+  cards.forEach(function(c){ if(c.dataset.val === val) c.classList.toggle('used', used); });
+}
+
+// ─────────────────────────────────────────────────────
+//  FEEDBACK & SCORING
+// ─────────────────────────────────────────────────────
+function showFB(fbEl, type, msg){
+  fbEl.className = 'feedback fb-' + type;
+  fbEl.innerHTML = msg;
+  fbEl.style.display = 'flex';
+}
+
+function markDone(sn, got, tot){
+  if(G.scores[sn] && G.scores[sn].final) return;
+  G.scores[sn] = { got:got, tot:tot, final: got===tot };
+  // Only lock section if perfect or 3rd attempt
+  if(sn === 1){
+    // Always update s1 until all 9 answered
+    var tg = Object.values(q1Res).reduce(function(a,b){return a+b.got;},0);
+    var tt = Object.values(q1Res).reduce(function(a,b){return a+b.tot;},0);
+    G.scores[1] = { got:tg, tot:tt };
+  }
+  G.sectionsDone = Object.keys(G.scores).length;
+  var pct = Math.round(G.sectionsDone / G.sectionsTotal * 100);
+  document.getElementById('hdrFill').style.width = pct + '%';
+  document.getElementById('hdrLabel').textContent = G.sectionsDone + ' / ' + G.sectionsTotal + ' sections complete';
+  var sc = document.getElementById('s' + sn + 'score');
+  if(sc) sc.textContent = got + '/' + tot + ' (' + Math.round(got/tot*100) + '%)';
+  if(G.sectionsDone === G.sectionsTotal) showSummary();
+}
+
+// ─────────────────────────────────────────────────────
+//  SUMMARY
+// ─────────────────────────────────────────────────────
+function showSummary(){
+  var all = Object.values(G.scores);
+  var tg = all.reduce(function(a,b){return a+b.got;},0);
+  var tt = all.reduce(function(a,b){return a+b.tot;},0);
+  var pct = tt ? Math.round(tg/tt*100) : 0;
+  var s = document.getElementById('summary');
+  s.style.display='block'; s.scrollIntoView({behavior:'smooth'});
+  document.getElementById('finalScore').textContent = pct + '%';
+  var stars = pct>=90?3:pct>=70?2:1;
+  var sh=''; for(var i=0;i<3;i++) sh+='<span style="color:'+(i<stars?'#FBBF24':'rgba(255,255,255,.3)')+'">★</span>';
+  document.getElementById('starsRow').innerHTML = sh;
+  document.getElementById('summaryMsg').textContent =
+    pct>=90 ? 'Excellent! You can read negative numbers and order temperatures perfectly!' :
+    pct>=70 ? 'Good work! Double-check the number line tick sizes.' :
+    'Keep practising — count each tick from the nearest labelled number!';
+}
+
+// ─────────────────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────────────────
+function el(tag, cls){ var e=document.createElement(tag||'div'); if(cls) e.className=cls; return e; }
+function checkBtn(label){
+  var b=document.createElement('button'); b.className='check-btn'; b.innerHTML=label; return b;
+}
+
+// ─────────────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────────────
+buildQ1();
+buildQ2();
+</script>
+</body>
+</html>

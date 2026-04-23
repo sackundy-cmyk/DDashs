@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D-DASH · Lesson 3: ×÷ by 10 and 100</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1E6FD9;--blue-dark:#1558B0;--blue-light:#EEF4FF;
+  --green:#16A34A;--green-bg:#DCFCE7;--green-border:#86EFAC;
+  --red:#DC2626;--red-bg:#FEE2E2;--red-border:#FCA5A5;
+  --amber:#D97706;--amber-bg:#FEF3C7;--amber-border:#FCD34D;
+  --purple:#7C3AED;--bg:#F0F4FF;--card:#fff;
+  --border:#C7D7F5;--text:#1E293B;--muted:#64748B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.5}
+.header{background:var(--blue);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(30,111,217,.3)}
+.logo{font-size:22px;font-weight:900;letter-spacing:-1px}.logo .dash{color:#93C5FD}
+.lesson-chip{background:rgba(255,255,255,.2);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;white-space:nowrap}
+.hdr-progress{flex:1;margin:0 16px;min-width:0}
+.hdr-bar{height:10px;background:rgba(255,255,255,.25);border-radius:5px;overflow:hidden}
+.hdr-fill{height:100%;background:#4ADE80;border-radius:5px;transition:width .5s ease;width:0%}
+.hdr-label{font-size:12px;margin-top:4px;opacity:.85}
+.page{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+.obj-card{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:20px 24px;margin-bottom:24px}
+.obj-card h2{font-size:13px;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.obj-card p{font-size:18px;font-weight:800}
+.explain{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
+.explain h3{font-size:15px;font-weight:800;color:var(--blue);margin-bottom:12px}
+.shift-demo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0}
+.shift-num{font-size:20px;font-weight:900;background:#EEF4FF;border:1.5px solid var(--border);border-radius:10px;padding:8px 16px;letter-spacing:1px}
+.shift-op{font-size:20px;font-weight:900;color:var(--blue)}
+.shift-arrow{font-size:24px;color:var(--blue)}
+.shift-result{font-size:20px;font-weight:900;background:var(--green-bg);border:1.5px solid var(--green-border);border-radius:10px;padding:8px 16px;color:var(--green);letter-spacing:1px}
+.rule-box{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin:10px 0;font-size:14px}
+.rule-box strong{color:var(--blue)}
+.section{background:#fff;border:1.5px solid var(--border);border-radius:16px;margin-bottom:24px}
+.sec-header{background:var(--blue-light);border-bottom:1.5px solid var(--border);padding:16px 20px;display:flex;align-items:flex-start;gap:12px;border-radius:16px 16px 0 0}
+.q-badge{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-title{font-size:17px;font-weight:800}
+.sec-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;margin-left:8px}
+.tag-guided{background:#EDE9FE;color:#5B21B6}
+.tag-indep{background:#E0F2FE;color:#0369A1}
+.tag-mcq{background:#FEF3C7;color:#92400E}
+.tag-drag{background:#DCFCE7;color:#166534}
+.sec-score{margin-left:auto;font-size:13px;font-weight:800;color:var(--green);white-space:nowrap}
+.sec-body{padding:20px}
+/* PALETTE */
+.palette{background:var(--blue-light);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.palette-label{font-size:12px;font-weight:800;color:var(--blue);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.card-row{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.num-card{width:46px;height:50px;border-radius:10px;background:var(--blue);color:#fff;font-size:21px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:grab;user-select:none;border:2px solid var(--blue-dark);transition:transform .1s,box-shadow .1s;flex-shrink:0;-webkit-user-select:none}
+.num-card:hover{transform:translateY(-3px) scale(1.06);box-shadow:0 6px 16px rgba(30,111,217,.35)}
+.num-card:active{cursor:grabbing;transform:scale(.95)}
+.num-card.card-dot{background:var(--purple);border-color:#5B21B6}
+.num-card.card-del{background:var(--red);border-color:#B91C1C;font-size:13px;font-weight:900;width:54px}
+/* DROP ZONES */
+.drop-zone{width:50px;height:50px;border-radius:10px;border:2.5px dashed var(--border);background:#F8FAFF;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:var(--muted);transition:all .2s}
+.drop-zone.dragover{border-color:var(--blue);background:var(--blue-light);transform:scale(1.08)}
+.drop-zone.filled{border-style:solid;border-color:var(--blue);background:#EEF4FF;color:var(--blue)}
+.drop-zone.correct{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:solid!important}
+.drop-zone.wrong{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important;border-style:solid!important}
+.drop-zone.locked{background:#F1F5F9;border-style:solid;border-color:#CBD5E1;color:#475569;cursor:default}
+/* DIGIT CARDS in concept explanation */
+.digit-cards{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.dc{display:flex;align-items:center;justify-content:center;min-width:40px;height:44px;border-radius:8px;font-size:22px;font-weight:900;border:2px solid}
+.dc-num{background:#EEF4FF;color:#1E40AF;border-color:#93C5FD}
+.dc-dot{background:#DC2626;color:#fff;border-color:#B91C1C;min-width:28px}
+.dc-res{background:#DCFCE7;color:#166534;border-color:#86EFAC}
+.dc-dot-res{background:#DC2626;color:#fff;border-color:#B91C1C;min-width:28px}
+.demo-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0;padding:12px;background:#F8FAFF;border-radius:10px;border:1px solid var(--border)}
+.q-group{background:#F8FAFF;border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid var(--border)}
+.q-group-title{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.q-item{margin-bottom:14px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px}
+.q-item:last-child{margin-bottom:0}
+.guided-hint{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--amber);font-weight:700;margin-bottom:8px}
+.num-chip{display:inline-flex;align-items:center;justify-content:center;background:#DBEAFE;color:#1E40AF;border:1.5px solid #93C3FD;border-radius:8px;padding:2px 10px;font-size:20px;font-weight:900;line-height:1.3;vertical-align:middle;margin:0 3px}
+.op-chip{display:inline-flex;align-items:center;justify-content:center;background:#EDE9FE;color:#5B21B6;border:1.5px solid #C4B5FD;border-radius:8px;padding:2px 10px;font-size:18px;font-weight:900;vertical-align:middle;margin:0 3px}
+.lbl-circle{background:var(--blue);color:#fff;min-width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0}
+.q-item-label{font-size:17px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.slots-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.slot-hint{font-size:12px;color:var(--muted);margin-left:6px}
+/* MCQ */
+.mcq-options{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px}
+.mcq-opt{padding:12px 14px;border:2.5px solid var(--border);border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;background:#fff;text-align:center;transition:all .15s;user-select:none}
+.mcq-opt:hover{border-color:var(--blue);background:var(--blue-light)}
+.mcq-opt.selected{border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
+.mcq-opt.correct{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important}
+.mcq-opt.wrong{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important}
+.mcq-opt.reveal{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important}
+/* CLOUD DISPLAY for Q3 */
+.cloud-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:12px;background:#F0F9FF;border-radius:10px;border:1.5px solid #BAE6FD}
+.cloud-num{font-size:20px;font-weight:900;color:#0369A1}
+.cloud-arrow{font-size:22px;color:#0284C7;font-weight:900}
+.cloud-box{width:60px;height:38px;background:#fff;border:2px dashed #0284C7;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#94A3B8;font-weight:700}
+.cloud-result{font-size:20px;font-weight:900;color:#0369A1}
+/* CHECK BTN */
+.check-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:10px;display:inline-flex;align-items:center;gap:7px;transition:background .2s,transform .1s}
+.check-btn:hover{background:var(--blue-dark)}.check-btn:active{transform:scale(.97)}
+/* FEEDBACK */
+.feedback{display:none;padding:11px 15px;border-radius:10px;font-size:14px;font-weight:700;margin-top:8px;align-items:center;gap:8px}
+.fb-correct{background:var(--green-bg);color:var(--green);border:1.5px solid var(--green-border)}
+.fb-wrong{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red-border)}
+.fb-hint{background:var(--amber-bg);color:var(--amber);border:1.5px solid var(--amber-border)}
+/* SUMMARY */
+.summary{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:32px;text-align:center;margin-top:32px;display:none}
+.summary h2{font-size:26px;font-weight:900;margin-bottom:8px}
+.big-score{font-size:64px;font-weight:900;margin:12px 0;line-height:1}
+.stars-row{font-size:40px;margin:12px 0;display:flex;justify-content:center;gap:6px}
+.next-btn{background:#4ADE80;color:#14532D;border:none;border-radius:12px;padding:16px 36px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:16px}
+@media(max-width:600px){
+  .num-card{width:34px;height:38px;font-size:16px;border-radius:7px;border-width:1.5px}
+  .num-card.card-del{width:42px;font-size:11px}.card-row{gap:5px}
+  .drop-zone{width:36px;height:38px;font-size:15px;border-radius:7px}
+  .palette{padding:9px 10px}.palette-label{font-size:11px;margin-bottom:6px}
+  .lbl-circle{min-width:28px;height:28px;font-size:14px}
+  .q-item-label{font-size:16px;gap:6px}
+  .num-chip{font-size:17px;padding:2px 7px}
+  .mcq-options{grid-template-columns:1fr}
+  .mcq-opt{font-size:14px;padding:10px 12px}
+  .sec-title{font-size:15px}.sec-sub{font-size:12px}
+  .cloud-num,.cloud-result{font-size:16px}
+  .shift-num,.shift-result{font-size:16px;padding:6px 10px}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">D<span class="dash">-DASH</span></div>
+  <div class="lesson-chip">Unit 1 · Lesson 3</div>
+  <div class="hdr-progress">
+    <div class="hdr-bar"><div class="hdr-fill" id="hdrFill"></div></div>
+    <div class="hdr-label" id="hdrLabel">0 / 4 sections complete</div>
+  </div>
+</div>
+<div class="page">
+
+<div class="obj-card">
+  <h2>🎯 Learning Objective</h2>
+  <p>Multiply and divide decimal numbers by 10 and 100 — understanding digit place-value shifts</p>
+</div>
+
+<!-- CONCEPT EXPLANATION -->
+<div class="explain">
+  <h3>📐 Key Concept: Multiplying & Dividing by 10 and 100</h3>
+  <p style="font-size:15px;margin-bottom:14px">When you multiply or divide by 10 or 100, each <strong>digit shifts</strong> left or right. The <span style="color:#DC2626;font-weight:800">decimal point</span> (in red) marks the boundary — watch how it appears to move!</p>
+
+  <div class="rule-box"><strong>× 10</strong> → digits shift <strong>1 place LEFT</strong> (number gets bigger)</div>
+  <div class="demo-row">
+    <div class="digit-cards">
+      <div class="dc dc-num">4</div><div class="dc dc-dot">.</div><div class="dc dc-num">1</div><div class="dc dc-num">3</div>
+    </div>
+    <div class="shift-op">× 10</div>
+    <div class="shift-arrow">→</div>
+    <div class="digit-cards">
+      <div class="dc dc-res">4</div><div class="dc dc-res">1</div><div class="dc dc-dot-res">.</div><div class="dc dc-res">3</div>
+    </div>
+  </div>
+
+  <div class="rule-box"><strong>× 100</strong> → digits shift <strong>2 places LEFT</strong> (number gets bigger)</div>
+  <div class="demo-row">
+    <div class="digit-cards">
+      <div class="dc dc-num">4</div><div class="dc dc-dot">.</div><div class="dc dc-num">1</div><div class="dc dc-num">3</div>
+    </div>
+    <div class="shift-op">× 100</div>
+    <div class="shift-arrow">→</div>
+    <div class="digit-cards">
+      <div class="dc dc-res">4</div><div class="dc dc-res">1</div><div class="dc dc-res">3</div>
+    </div>
+    <span style="font-size:13px;color:var(--muted);font-style:italic">dot moves off the end</span>
+  </div>
+
+  <div class="rule-box"><strong>÷ 10</strong> → digits shift <strong>1 place RIGHT</strong> (number gets smaller)</div>
+  <div class="demo-row">
+    <div class="digit-cards">
+      <div class="dc dc-num">4</div><div class="dc dc-num">1</div><div class="dc dc-dot">.</div><div class="dc dc-num">3</div>
+    </div>
+    <div class="shift-op">÷ 10</div>
+    <div class="shift-arrow">→</div>
+    <div class="digit-cards">
+      <div class="dc dc-res">4</div><div class="dc dc-dot-res">.</div><div class="dc dc-res">1</div><div class="dc dc-res">3</div>
+    </div>
+  </div>
+
+  <div class="rule-box"><strong>÷ 100</strong> → digits shift <strong>2 places RIGHT</strong> (number gets smaller)</div>
+  <div class="demo-row">
+    <div class="digit-cards">
+      <div class="dc dc-num">4</div><div class="dc dc-num">1</div><div class="dc dc-num">3</div>
+    </div>
+    <div class="shift-op">÷ 100</div>
+    <div class="shift-arrow">→</div>
+    <div class="digit-cards">
+      <div class="dc dc-res">4</div><div class="dc dc-dot-res">.</div><div class="dc dc-res">1</div><div class="dc dc-res">3</div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;padding:12px;background:#F3E8FF;border:1.5px solid #D8B4FE;border-radius:10px;font-size:14px">
+    💡 <strong>Quick check:</strong> Multiplying makes numbers bigger. Dividing makes numbers smaller.<br>
+    × 10 = 1 shift · × 100 = 2 shifts · ÷ 10 = 1 shift · ÷ 100 = 2 shifts
+  </div>
+</div>
+
+<!-- Q1 -->
+<div class="section" id="s1">
+  <div class="sec-header">
+    <div class="q-badge">1</div>
+    <div style="flex:1">
+      <div class="sec-title">Answer these — multiply <span class="tag tag-guided">★ Guided a–b</span></div>
+      <div class="sec-sub">a–f: Choose the correct answer (MCQ) &nbsp;·&nbsp; g–l: Drag number cards to build the answer</div>
+    </div>
+    <div class="sec-score" id="s1score"></div>
+  </div>
+  <div class="sec-body" id="q1body"></div>
+</div>
+
+<!-- Q2 -->
+<div class="section" id="s2">
+  <div class="sec-header">
+    <div class="q-badge">2</div>
+    <div style="flex:1">
+      <div class="sec-title">Answer these — divide <span class="tag tag-guided">★ Guided a–b</span></div>
+      <div class="sec-sub">a–f: Choose the correct answer (MCQ) &nbsp;·&nbsp; g–l: Drag number cards to build the answer</div>
+    </div>
+    <div class="sec-score" id="s2score"></div>
+  </div>
+  <div class="sec-body" id="q2body"></div>
+</div>
+
+<!-- Q3 -->
+<div class="section" id="s3">
+  <div class="sec-header">
+    <div class="q-badge">3</div>
+    <div style="flex:1">
+      <div class="sec-title">Copy and complete — find the missing operation <span class="tag tag-guided">★ Guided a–b</span></div>
+      <div class="sec-sub">Choose ×10, ×100, ÷10 or ÷100 for the missing step in each pair</div>
+    </div>
+    <div class="sec-score" id="s3score"></div>
+  </div>
+  <div class="sec-body" id="q3body"></div>
+</div>
+
+<!-- Q4 -->
+<div class="section" id="s4">
+  <div class="sec-header">
+    <div class="q-badge">4</div>
+    <div style="flex:1">
+      <div class="sec-title">Answer these word problems <span class="tag tag-guided">★ Guided a–b</span></div>
+      <div class="sec-sub">Read each problem carefully and choose the correct answer</div>
+    </div>
+    <div class="sec-score" id="s4score"></div>
+  </div>
+  <div class="sec-body" id="q4body"></div>
+</div>
+
+<div class="summary" id="summary">
+  <div style="font-size:48px">🏆</div>
+  <h2>Lesson 3 Complete!</h2>
+  <div class="big-score" id="finalScore">—</div>
+  <div class="stars-row" id="starsRow"></div>
+  <p id="summaryMsg" style="font-size:16px;opacity:.9;margin-top:6px"></p>
+  <button class="next-btn" onclick="sendPrompt('Start Lesson 4: Comparing and Ordering Decimals')">Next Lesson: Comparing & Ordering →</button>
+</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// GLOBALS
+// ═══════════════════════════════════════════════════
+var G={dragVal:null,dragType:null,sectionsDone:0,sectionsTotal:4,scores:{}};
+
+// ═══════════════════════════════════════════════════
+// DRAG ENGINE
+// ═══════════════════════════════════════════════════
+function makeDraggable(el,val,type){
+  el.setAttribute('draggable','true');
+  el.addEventListener('dragstart',function(e){G.dragVal=val;G.dragType=type||'card';el.classList.add('dragging');e.dataTransfer.setData('text/plain',String(val));});
+  el.addEventListener('dragend',function(){el.classList.remove('dragging');});
+  var tc=null,tx=0,ty=0;
+  el.addEventListener('touchstart',function(e){var t=e.touches[0],r=el.getBoundingClientRect();tx=t.clientX-r.left;ty=t.clientY-r.top;G.dragVal=val;G.dragType=type||'card';tc=el.cloneNode(true);tc.style.cssText='position:fixed;z-index:9999;opacity:.85;pointer-events:none;left:'+(t.clientX-tx)+'px;top:'+(t.clientY-ty)+'px';document.body.appendChild(tc);},{passive:true});
+  el.addEventListener('touchmove',function(e){e.preventDefault();var t=e.touches[0];if(tc){tc.style.left=(t.clientX-tx)+'px';tc.style.top=(t.clientY-ty)+'px';}},{passive:false});
+  el.addEventListener('touchend',function(e){var t=e.changedTouches[0];if(tc){document.body.removeChild(tc);tc=null;}var tg=document.elementFromPoint(t.clientX,t.clientY);if(!tg)return;var dz=tg.classList.contains('drop-zone')?tg:tg.closest('.drop-zone');if(dz&&!dz.classList.contains('locked'))applyDrop(dz,G.dragVal);});
+}
+function makeDropZone(el){
+  var dc=0;
+  el.addEventListener('dragenter',function(e){e.preventDefault();dc++;el.classList.add('dragover');});
+  el.addEventListener('dragover',function(e){e.preventDefault();});
+  el.addEventListener('dragleave',function(){dc--;if(dc<=0){dc=0;el.classList.remove('dragover');}});
+  el.addEventListener('drop',function(e){e.preventDefault();dc=0;el.classList.remove('dragover');if(el.classList.contains('locked'))return;applyDrop(el,G.dragVal);});
+}
+function applyDrop(el,val){
+  if(val==='DEL'){el.textContent='';el.dataset.placed='';el.className='drop-zone';return;}
+  el.textContent=val;el.dataset.placed=val;el.className='drop-zone filled';
+}
+function buildPalette(cid,withDot){
+  var c=document.getElementById(cid);if(!c)return;c.innerHTML='';
+  var vals=['0','1','2','3','4','5','6','7','8','9'];
+  if(withDot)vals.push('.');
+  vals.push('DEL');
+  vals.forEach(function(v){
+    var card=document.createElement('div');
+    card.className='num-card'+(v==='.'?' card-dot':v==='DEL'?' card-del':'');
+    card.textContent=v==='DEL'?'✕ DEL':v;
+    makeDraggable(card,v,'card');
+    c.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// FEEDBACK & SCORING
+// ═══════════════════════════════════════════════════
+function showFB(id,type,msg){
+  var el=typeof id==='string'?document.getElementById(id):id;
+  if(!el)return;el.className='feedback fb-'+type;el.innerHTML=msg;el.style.display='flex';
+}
+function markDone(sn,got,tot){
+  if(G.scores[sn])return;G.scores[sn]={got:got,tot:tot};
+  G.sectionsDone=Object.keys(G.scores).length;
+  var pct=Math.round(G.sectionsDone/G.sectionsTotal*100);
+  document.getElementById('hdrFill').style.width=pct+'%';
+  document.getElementById('hdrLabel').textContent=G.sectionsDone+' / '+G.sectionsTotal+' sections complete';
+  var el=document.getElementById('s'+sn+'score');
+  if(el)el.textContent=got+'/'+tot+' ('+Math.round(got/tot*100)+'%)';
+  if(G.sectionsDone===G.sectionsTotal)showSummary();
+}
+
+// ═══════════════════════════════════════════════════
+// MCQ HELPERS
+// ═══════════════════════════════════════════════════
+function shuffle(arr){return arr.slice().sort(function(){return Math.random()-.5;});}
+
+// Generate 3 wrong numerical answers close to correct
+function wrongNums(correct){
+  var v=parseFloat(correct);
+  var candidates=[];
+  // multiply/divide by wrong factor, add/subtract small amount
+  [10,100,0.1,0.01].forEach(function(f){
+    var w=parseFloat((v*f).toPrecision(6));
+    if(String(w)!==String(correct)&&candidates.indexOf(String(w))<0) candidates.push(String(w));
+  });
+  [0.1,-0.1,1,-1].forEach(function(d){
+    var w=parseFloat((v+d).toPrecision(6));
+    if(String(w)!==String(correct)&&candidates.indexOf(String(w))<0) candidates.push(String(w));
+  });
+  // shuffle and pick 3
+  candidates=shuffle(candidates);
+  // ensure 3 unique wrongs
+  while(candidates.length<3) candidates.push(parseFloat((v+candidates.length).toPrecision(4)).toString());
+  return candidates.slice(0,3);
+}
+
+function buildMCQItem(q, container, qkey){
+  var item=document.createElement('div'); item.className='q-item';
+  var lbl=document.createElement('div'); lbl.className='q-item-label';
+  lbl.innerHTML='<span class="lbl-circle">'+q.lbl+'</span>'
+    +' <span class="num-chip">'+q.question+'</span> ='
+    +(q.guided?'<span class="tag tag-guided">★ Guided</span>':'');
+  item.appendChild(lbl);
+  if(q.guided){
+    var gh=document.createElement('div');gh.className='guided-hint';
+    gh.innerHTML='💡 '+q.hint;item.appendChild(gh);
+  }
+  var opts=shuffle([String(q.ans)].concat(wrongNums(q.ans)));
+  var grid=document.createElement('div');grid.className='mcq-options';
+  opts.forEach(function(opt){
+    var btn=document.createElement('div');btn.className='mcq-opt';
+    btn.textContent=opt;btn.dataset.val=opt;btn.dataset.correct=String(q.ans);
+    btn.dataset.q=qkey;btn.dataset.ltr=q.lbl;
+    btn.addEventListener('click',function(){
+      if(btn.classList.contains('correct')||btn.classList.contains('wrong'))return;
+      grid.querySelectorAll('.mcq-opt').forEach(function(o){o.classList.remove('selected');});
+      btn.classList.add('selected');
+    });
+    grid.appendChild(btn);
+  });
+  item.appendChild(grid);
+  container.appendChild(item);
+}
+
+function buildDragItem(q, container, qkey){
+  var item=document.createElement('div'); item.className='q-item';
+  var lbl=document.createElement('div'); lbl.className='q-item-label';
+  lbl.innerHTML='<span class="lbl-circle">'+q.lbl+'</span>'
+    +' <span class="num-chip">'+q.question+'</span> =';
+  item.appendChild(lbl);
+  var srow=document.createElement('div');srow.className='slots-row';
+  var ansStr=String(q.ans);
+  for(var ci=0;ci<ansStr.length;ci++){
+    var ch=ansStr[ci];
+    var dz=document.createElement('div');dz.className='drop-zone';
+    dz.dataset.ans=ch;dz.dataset.q=qkey;dz.dataset.qid=q.lbl;dz.dataset.ci=ci;
+    makeDropZone(dz); // ALL boxes droppable — dot included
+    srow.appendChild(dz);
+  }
+  srow.appendChild(Object.assign(document.createElement('span'),{className:'slot-hint',textContent:'← drag digits and dot. ✕ DEL removes.'}));
+  item.appendChild(srow);
+  if(!q.guided){
+    var hd=document.createElement('div');hd.className='guided-hint';hd.style.display='none';
+    hd.id='hint_'+qkey+'_'+q.lbl;hd.innerHTML='💡 '+q.hint;item.appendChild(hd);
+  }
+  container.appendChild(item);
+}
+
+// Generic check for MCQ group
+function checkMCQGroup(slice,qkey,g,att,attObj,resObj,sectionNum,totalGroups,fbId){
+  var correct=0,total=0;
+  slice.forEach(function(q){
+    total++;
+    var opts=document.querySelectorAll('[data-q="'+qkey+'"][data-ltr="'+q.lbl+'"]');
+    var sel=null;
+    opts.forEach(function(o){if(o.classList.contains('selected'))sel=o;});
+    if(!sel)return;
+    if(sel.dataset.val===String(q.ans)){sel.classList.add('correct');correct++;}
+    else{sel.classList.add('wrong');opts.forEach(function(o){if(o.dataset.val===String(q.ans))o.classList.add('reveal');});}
+  });
+  resObj[g]={got:correct,tot:total};
+  var fb=document.getElementById(fbId);
+  if(correct===total){showFB(fb,'correct','🎉 '+correct+'/'+total+' correct!');}
+  else if(att>=3){showFB(fb,'hint','✅ Correct answers revealed in green.');}
+  else if(att===2){showFB(fb,'hint','💡 '+correct+'/'+total+' correct. Check: ×10 shifts 1 left, ÷10 shifts 1 right.');}
+  else{showFB(fb,'wrong','✗ '+(total-correct)+' incorrect. Try again!');}
+  checkSectionDone(resObj,totalGroups,sectionNum);
+}
+
+// Generic check for drag group
+function checkDragGroup(slice,qkey,g,att,attObj,resObj,sectionNum,totalGroups,fbId){
+  var correct=0,total=0;
+  slice.forEach(function(q){
+    var zones=document.querySelectorAll('[data-q="'+qkey+'"][data-qid="'+q.lbl+'"]');
+    var allOk=true;
+    zones.forEach(function(z){
+      total++;
+      if((z.dataset.placed||'')===z.dataset.ans){z.className='drop-zone correct';correct++;}
+      else{z.className='drop-zone wrong';allOk=false;}
+    });
+    if(!allOk&&att>=2){var hel=document.getElementById('hint_'+qkey+'_'+q.lbl);if(hel)hel.style.display='block';}
+    if(!allOk&&att>=3){
+      zones.forEach(function(z){z.textContent=z.dataset.ans;z.dataset.placed=z.dataset.ans;z.className='drop-zone correct';});
+    }
+  });
+  resObj[g]={got:correct,tot:total};
+  var fb=document.getElementById(fbId);
+  if(correct===total){showFB(fb,'correct','🎉 '+correct+'/'+total+' correct!');}
+  else if(att>=3){showFB(fb,'hint','✅ Answers filled in.');}
+  else if(att===2){showFB(fb,'hint','💡 '+correct+'/'+total+' correct. Hint shown above.');}
+  else{showFB(fb,'wrong','✗ '+(total-correct)+' incorrect. Check each digit.');}
+  checkSectionDone(resObj,totalGroups,sectionNum);
+}
+
+function checkSectionDone(resObj,totalGroups,sectionNum){
+  if(Object.keys(resObj).length>=totalGroups){
+    var tg=Object.values(resObj).reduce(function(a,b){return a+b.got;},0);
+    var tt=Object.values(resObj).reduce(function(a,b){return a+b.tot;},0);
+    markDone(sectionNum,tg,tt);
+  }
+}
+
+// Build a section: first half MCQ, second half drag
+function buildMixedSection(bodyId, data, qkey, sectionNum, totalGroups, resObj, attObj){
+  var body=document.getElementById(bodyId); body.innerHTML='';
+  var half=Math.floor(data.length/2); // first 6 MCQ, last 6 drag
+  var perGroup=2;
+
+  // MCQ groups
+  for(var g=0;g*perGroup<half;g++){
+    var slice=data.slice(g*perGroup,g*perGroup+perGroup);
+    var grpDiv=document.createElement('div');grpDiv.className='q-group';
+    var title=document.createElement('div');title.className='q-group-title';
+    title.innerHTML='Questions '+slice.map(function(d){return d.lbl;}).join(' & ')+' <span class="tag tag-mcq" style="margin-left:0;vertical-align:middle">MCQ</span>';
+    grpDiv.appendChild(title);
+    slice.forEach(function(q){buildMCQItem(q,grpDiv,qkey);});
+    var cb=document.createElement('button');cb.className='check-btn';
+    cb.innerHTML='✓ Check '+slice.map(function(d){return d.lbl;}).join(' & ');
+    var fbId='fb_'+qkey+'_'+g;
+    (function(sl,gIdx,fid){
+      cb.onclick=function(){
+        if(!attObj[gIdx])attObj[gIdx]=0;attObj[gIdx]++;
+        checkMCQGroup(sl,qkey,gIdx,attObj[gIdx],attObj,resObj,sectionNum,totalGroups,fid);
+      };
+    })(slice,g,fbId);
+    grpDiv.appendChild(cb);
+    var fb=document.createElement('div');fb.className='feedback';fb.id=fbId;grpDiv.appendChild(fb);
+    body.appendChild(grpDiv);
+  }
+
+  // Drag groups (second half)
+  var dragStart=Math.floor(half/perGroup); // group index offset
+  for(var g2=0;g2*perGroup<half;g2++){
+    var slice2=data.slice(half+g2*perGroup,half+g2*perGroup+perGroup);
+    var grpDiv2=document.createElement('div');grpDiv2.className='q-group';
+    var title2=document.createElement('div');title2.className='q-group-title';
+    title2.innerHTML='Questions '+slice2.map(function(d){return d.lbl;}).join(' & ')+' <span class="tag tag-drag" style="margin-left:0;vertical-align:middle">Drag & Drop</span>';
+    grpDiv2.appendChild(title2);
+    // Palette per drag group
+    var palId='pal_'+qkey+'_'+g2;
+    var palWrap=document.createElement('div');palWrap.className='palette';
+    palWrap.innerHTML='<div class="palette-label">🃏 Number Cards for '+slice2.map(function(d){return d.lbl;}).join(' & ')+'</div><div class="card-row" id="'+palId+'"></div>';
+    grpDiv2.appendChild(palWrap);
+    (function(pid){setTimeout(function(){buildPalette(pid,true);},20);})(palId);
+    slice2.forEach(function(q){buildDragItem(q,grpDiv2,qkey);});
+    var cb2=document.createElement('button');cb2.className='check-btn';
+    cb2.innerHTML='✓ Check '+slice2.map(function(d){return d.lbl;}).join(' & ');
+    var gIdx2=dragStart+g2;
+    var fbId2='fb_'+qkey+'_'+gIdx2;
+    (function(sl2,gi2,fid2){
+      cb2.onclick=function(){
+        if(!attObj[gi2])attObj[gi2]=0;attObj[gi2]++;
+        checkDragGroup(sl2,qkey,gi2,attObj[gi2],attObj,resObj,sectionNum,totalGroups,fid2);
+      };
+    })(slice2,gIdx2,fbId2);
+    grpDiv2.appendChild(cb2);
+    var fb2=document.createElement('div');fb2.className='feedback';fb2.id=fbId2;grpDiv2.appendChild(fb2);
+    body.appendChild(grpDiv2);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// Q1 DATA: MULTIPLY
+// ═══════════════════════════════════════════════════
+var Q1_DATA=[
+  {lbl:'a',question:'0.413 × 10',ans:4.13, guided:true, hint:'×10 shifts digits 1 place left: 0.413 → 4.13'},
+  {lbl:'b',question:'9.281 × 10',ans:92.81,guided:true, hint:'×10: 9.281 → 92.81'},
+  {lbl:'c',question:'5.116 × 10',ans:51.16,hint:'×10: move decimal 1 right'},
+  {lbl:'d',question:'0.522 × 10',ans:5.22, hint:'×10: 0.522 → 5.22'},
+  {lbl:'e',question:'1.017 × 10',ans:10.17,hint:'×10: 1.017 → 10.17'},
+  {lbl:'f',question:'6.305 × 10',ans:63.05,hint:'×10: 6.305 → 63.05'},
+  {lbl:'g',question:'1.602 × 100',ans:160.2,hint:'×100 shifts 2 places left: 1.602 → 160.2'},
+  {lbl:'h',question:'15.925 × 100',ans:1592.5,hint:'×100: 15.925 → 1592.5'},
+  {lbl:'i',question:'34.007 × 100',ans:3400.7,hint:'×100: 34.007 → 3400.7'},
+  {lbl:'j',question:'0.632 × 100',ans:63.2,hint:'×100: 0.632 → 63.2'},
+  {lbl:'k',question:'1.052 × 100',ans:105.2,hint:'×100: 1.052 → 105.2'},
+  {lbl:'l',question:'86.927 × 100',ans:8692.7,hint:'×100: 86.927 → 8692.7'}
+];
+var q1att={},q1res={};
+
+// ═══════════════════════════════════════════════════
+// Q2 DATA: DIVIDE
+// ═══════════════════════════════════════════════════
+var Q2_DATA=[
+  {lbl:'a',question:'14.6 ÷ 10',ans:1.46,  guided:true, hint:'÷10 shifts digits 1 place right: 14.6 → 1.46'},
+  {lbl:'b',question:'81.7 ÷ 10',ans:8.17,  guided:true, hint:'÷10: 81.7 → 8.17'},
+  {lbl:'c',question:'4.35 ÷ 10', ans:0.435,hint:'÷10: 4.35 → 0.435'},
+  {lbl:'d',question:'0.6 ÷ 10',  ans:0.06, hint:'÷10: 0.6 → 0.06'},
+  {lbl:'e',question:'4.31 ÷ 10', ans:0.431,hint:'÷10: 4.31 → 0.431'},
+  {lbl:'f',question:'8.25 ÷ 10', ans:0.825,hint:'÷10: 8.25 → 0.825'},
+  {lbl:'g',question:'3.4 ÷ 100', ans:0.034,hint:'÷100 shifts 2 places right: 3.4 → 0.034'},
+  {lbl:'h',question:'18.2 ÷ 100',ans:0.182,hint:'÷100: 18.2 → 0.182'},
+  {lbl:'i',question:'7.5 ÷ 100', ans:0.075,hint:'÷100: 7.5 → 0.075'},
+  {lbl:'j',question:'34.6 ÷ 100',ans:0.346,hint:'÷100: 34.6 → 0.346'},
+  {lbl:'k',question:'1.8 ÷ 100', ans:0.018,hint:'÷100: 1.8 → 0.018'},
+  {lbl:'l',question:'0.4 ÷ 100', ans:0.004,hint:'÷100: 0.4 → 0.004'}
+];
+var q2att={},q2res={};
+
+// ═══════════════════════════════════════════════════
+// Q3 DATA: FIND MISSING OPERATION (MCQ)
+// ═══════════════════════════════════════════════════
+var Q3_DATA=[
+  {lbl:'a',from:'3.2',  to:'0.032',  ans:'÷100', guided:true, hint:'3.2 ÷ 100 = 0.032 (2 places right)'},
+  {lbl:'b',from:'6.213',to:'621.3',  ans:'×100', guided:true, hint:'6.213 × 100 = 621.3 (2 places left)'},
+  {lbl:'c',from:'45.382',to:'453.82',ans:'×10',  hint:'45.382 × 10 = 453.82 (1 place left)'},
+  {lbl:'d',from:'8.271',to:'827.1',  ans:'×100', hint:'8.271 × 100 = 827.1 (2 places left)'},
+  {lbl:'e',from:'0.006',to:'0.6',    ans:'×100', hint:'0.006 × 100 = 0.6 (2 places left)'},
+  {lbl:'f',from:'14.8', to:'0.148',  ans:'÷100', hint:'14.8 ÷ 100 = 0.148 (2 places right)'},
+  {lbl:'g',from:'27.385',to:'2738.5',ans:'×100', hint:'27.385 × 100 = 2738.5 (2 places left)'},
+  {lbl:'h',from:'8.07', to:'0.807',  ans:'÷10',  hint:'8.07 ÷ 10 = 0.807 (1 place right)'}
+];
+var Q3_OPTS=['×10','×100','÷10','÷100'];
+var q3att={},q3res={};
+
+// ═══════════════════════════════════════════════════
+// Q4 DATA: WORD PROBLEMS (MCQ)
+// ═══════════════════════════════════════════════════
+var Q4_DATA=[
+  {lbl:'a',question:'What number does 4.145 have to be multiplied by to get 414.5?',ans:100,guided:true,hint:'4.145 × 100 = 414.5 (2 places left)'},
+  {lbl:'b',question:'What number does 17.1 have to be divided by to get 0.171?',ans:100,guided:true,hint:'17.1 ÷ 100 = 0.171 (2 places right)'},
+  {lbl:'c',question:'A number is multiplied by 10 to give 6.15. What is the number?',ans:0.615,hint:'? × 10 = 6.15 → ? = 6.15 ÷ 10 = 0.615'},
+  {lbl:'d',question:'What number divided by 100 gives 0.125?',ans:12.5,hint:'? ÷ 100 = 0.125 → ? = 0.125 × 100 = 12.5'},
+  {lbl:'e',question:'A number is divided by 100 to give 0.041. What is the number?',ans:4.1,hint:'? ÷ 100 = 0.041 → ? = 0.041 × 100 = 4.1'},
+  {lbl:'f',question:'A number is multiplied by 100 to give 34.8. What is the number?',ans:0.348,hint:'? × 100 = 34.8 → ? = 34.8 ÷ 100 = 0.348'},
+  {lbl:'g',question:'What number multiplied by 100 gives 7.8?',ans:0.078,hint:'? × 100 = 7.8 → ? = 7.8 ÷ 100 = 0.078'},
+  {lbl:'h',question:'What number divided by 100 gives 0.399?',ans:39.9,hint:'? ÷ 100 = 0.399 → ? = 0.399 × 100 = 39.9'}
+];
+var q4att={},q4res={};
+
+// ═══════════════════════════════════════════════════
+// BUILD Q3 (all MCQ, groups of 2)
+// ═══════════════════════════════════════════════════
+function buildQ3(){
+  var body=document.getElementById('q3body');body.innerHTML='';
+  var perGroup=2;
+  for(var g=0;g*perGroup<Q3_DATA.length;g++){
+    var slice=Q3_DATA.slice(g*perGroup,g*perGroup+perGroup);
+    var grpDiv=document.createElement('div');grpDiv.className='q-group';
+    var title=document.createElement('div');title.className='q-group-title';
+    title.textContent='Questions '+slice.map(function(d){return d.lbl;}).join(' & ');
+    grpDiv.appendChild(title);
+    slice.forEach(function(q){
+      var item=document.createElement('div');item.className='q-item';
+      var lbl=document.createElement('div');lbl.className='q-item-label';
+      lbl.innerHTML='<span class="lbl-circle">'+q.lbl+'</span>'
+        +(q.guided?'<span class="tag tag-guided">★ Guided</span>':'');
+      item.appendChild(lbl);
+      if(q.guided){
+        var gh=document.createElement('div');gh.className='guided-hint';
+        gh.innerHTML='💡 '+q.hint;item.appendChild(gh);
+      }
+      // Cloud-style display
+      var cloud=document.createElement('div');cloud.className='cloud-row';
+      cloud.innerHTML='<span class="cloud-num">'+q.from+'</span>'
+        +'<span class="cloud-arrow">→</span>'
+        +'<div class="cloud-box">?</div>'
+        +'<span class="cloud-arrow">→</span>'
+        +'<span class="cloud-result">'+q.to+'</span>';
+      item.appendChild(cloud);
+      // MCQ 4 options
+      var grid=document.createElement('div');grid.className='mcq-options';
+      Q3_OPTS.forEach(function(opt){
+        var btn=document.createElement('div');btn.className='mcq-opt';
+        btn.textContent=opt;btn.dataset.val=opt;btn.dataset.correct=q.ans;
+        btn.dataset.q='q3';btn.dataset.ltr=q.lbl;
+        btn.addEventListener('click',function(){
+          if(btn.classList.contains('correct')||btn.classList.contains('wrong'))return;
+          grid.querySelectorAll('.mcq-opt').forEach(function(o){o.classList.remove('selected');});
+          btn.classList.add('selected');
+        });
+        grid.appendChild(btn);
+      });
+      item.appendChild(grid);
+      grpDiv.appendChild(item);
+    });
+    var cb=document.createElement('button');cb.className='check-btn';
+    cb.innerHTML='✓ Check '+slice.map(function(d){return d.lbl;}).join(' & ');
+    var fbId='fb_q3_'+g;
+    (function(sl,gIdx,fid){
+      cb.onclick=function(){
+        if(!q3att[gIdx])q3att[gIdx]=0;q3att[gIdx]++;
+        var att=q3att[gIdx];
+        var correct=0,total=0;
+        sl.forEach(function(q){
+          total++;
+          var opts=document.querySelectorAll('[data-q="q3"][data-ltr="'+q.lbl+'"]');
+          var sel=null;opts.forEach(function(o){if(o.classList.contains('selected'))sel=o;});
+          if(!sel)return;
+          if(sel.dataset.val===q.ans){sel.classList.add('correct');correct++;}
+          else{sel.classList.add('wrong');opts.forEach(function(o){if(o.dataset.val===q.ans)o.classList.add('reveal');});}
+        });
+        q3res[gIdx]={got:correct,tot:total};
+        var fb=document.getElementById(fid);
+        if(correct===total)showFB(fb,'correct','🎉 '+correct+'/'+total+' correct! You found the missing operations!');
+        else if(att>=3)showFB(fb,'hint','✅ Correct answers revealed. ×10=1 shift, ×100=2 shifts, ÷10=1 shift, ÷100=2 shifts.');
+        else if(att===2)showFB(fb,'hint','💡 Compare the two numbers — did they get bigger or smaller? By 10 or 100?');
+        else showFB(fb,'wrong','✗ '+(total-correct)+' wrong. Look at whether the number got bigger (×) or smaller (÷).');
+        checkSectionDone(q3res,4,3);
+      };
+    })(slice,g,fbId);
+    grpDiv.appendChild(cb);
+    var fb=document.createElement('div');fb.className='feedback';fb.id=fbId;grpDiv.appendChild(fb);
+    body.appendChild(grpDiv);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// BUILD Q4 (all MCQ, word problems, groups of 2)
+// ═══════════════════════════════════════════════════
+function buildQ4(){
+  var body=document.getElementById('q4body');body.innerHTML='';
+  var perGroup=2;
+  for(var g=0;g*perGroup<Q4_DATA.length;g++){
+    var slice=Q4_DATA.slice(g*perGroup,g*perGroup+perGroup);
+    var grpDiv=document.createElement('div');grpDiv.className='q-group';
+    var title=document.createElement('div');title.className='q-group-title';
+    title.textContent='Questions '+slice.map(function(d){return d.lbl;}).join(' & ');
+    grpDiv.appendChild(title);
+    slice.forEach(function(q){
+      var item=document.createElement('div');item.className='q-item';
+      var lbl=document.createElement('div');lbl.className='q-item-label';
+      lbl.innerHTML='<span class="lbl-circle">'+q.lbl+'</span>'
+        +(q.guided?'<span class="tag tag-guided">★ Guided</span>':'');
+      item.appendChild(lbl);
+      if(q.guided){
+        var gh=document.createElement('div');gh.className='guided-hint';
+        gh.innerHTML='💡 '+q.hint;item.appendChild(gh);
+      }
+      var qtext=document.createElement('div');
+      qtext.style.cssText='font-size:15px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.6;padding:10px;background:#F8FAFF;border-radius:8px;border:1px solid var(--border)';
+      qtext.textContent=q.question;
+      item.appendChild(qtext);
+      var opts=shuffle([String(q.ans)].concat(wrongNums(q.ans)));
+      var grid=document.createElement('div');grid.className='mcq-options';
+      opts.forEach(function(opt){
+        var btn=document.createElement('div');btn.className='mcq-opt';
+        btn.textContent=opt;btn.dataset.val=opt;btn.dataset.correct=String(q.ans);
+        btn.dataset.q='q4';btn.dataset.ltr=q.lbl;
+        btn.addEventListener('click',function(){
+          if(btn.classList.contains('correct')||btn.classList.contains('wrong'))return;
+          grid.querySelectorAll('.mcq-opt').forEach(function(o){o.classList.remove('selected');});
+          btn.classList.add('selected');
+        });
+        grid.appendChild(btn);
+      });
+      item.appendChild(grid);
+      grpDiv.appendChild(item);
+    });
+    var cb=document.createElement('button');cb.className='check-btn';
+    cb.innerHTML='✓ Check '+slice.map(function(d){return d.lbl;}).join(' & ');
+    var fbId='fb_q4_'+g;
+    (function(sl,gIdx,fid){
+      cb.onclick=function(){
+        if(!q4att[gIdx])q4att[gIdx]=0;q4att[gIdx]++;
+        var att=q4att[gIdx];
+        var correct=0,total=0;
+        sl.forEach(function(q){
+          total++;
+          var opts=document.querySelectorAll('[data-q="q4"][data-ltr="'+q.lbl+'"]');
+          var sel=null;opts.forEach(function(o){if(o.classList.contains('selected'))sel=o;});
+          if(!sel)return;
+          if(sel.dataset.val===String(q.ans)){sel.classList.add('correct');correct++;}
+          else{sel.classList.add('wrong');opts.forEach(function(o){if(o.dataset.val===String(q.ans))o.classList.add('reveal');});}
+        });
+        q4res[gIdx]={got:correct,tot:total};
+        var fb=document.getElementById(fid);
+        if(correct===total)showFB(fb,'correct','🎉 '+correct+'/'+total+' correct!');
+        else if(att>=3)showFB(fb,'hint','✅ Correct answers revealed in green.');
+        else if(att===2)showFB(fb,'hint','💡 Think: are you finding the original number (reverse the operation)?');
+        else showFB(fb,'wrong','✗ '+(total-correct)+' wrong. Re-read the question carefully.');
+        checkSectionDone(q4res,4,4);
+      };
+    })(slice,g,fbId);
+    grpDiv.appendChild(cb);
+    var fb=document.createElement('div');fb.className='feedback';fb.id=fbId;grpDiv.appendChild(fb);
+    body.appendChild(grpDiv);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// SUMMARY
+// ═══════════════════════════════════════════════════
+function showSummary(){
+  var all=Object.values(G.scores);
+  var tg=all.reduce(function(a,b){return a+b.got;},0);
+  var tt=all.reduce(function(a,b){return a+b.tot;},0);
+  var pct=tt?Math.round(tg/tt*100):0;
+  var s=document.getElementById('summary');
+  s.style.display='block';s.scrollIntoView({behavior:'smooth'});
+  document.getElementById('finalScore').textContent=pct+'%';
+  var stars=pct>=90?3:pct>=70?2:1;
+  var sh='';for(var i=0;i<3;i++)sh+='<span style="color:'+(i<stars?'#FBBF24':'rgba(255,255,255,.3)')+'">★</span>';
+  document.getElementById('starsRow').innerHTML=sh;
+  document.getElementById('summaryMsg').textContent=
+    pct>=90?'Fantastic! You mastered ×÷ by 10 and 100!':
+    pct>=70?'Good work! Review the tricky parts.':
+    'Keep practising — you\'re getting there!';
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+// Q1: 6 groups total (3 MCQ + 3 drag)
+buildMixedSection('q1body',Q1_DATA,'q1',1,6,q1res,q1att);
+// Q2: 6 groups total (3 MCQ + 3 drag)
+buildMixedSection('q2body',Q2_DATA,'q2',2,6,q2res,q2att);
+buildQ3();
+buildQ4();
+</script>
+</body>
+</html>

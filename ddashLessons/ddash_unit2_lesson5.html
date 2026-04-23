@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D-DASH · Unit 2 · Lesson 5: Equations</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1E6FD9;--blue-dark:#1558B0;--blue-light:#EEF4FF;
+  --green:#16A34A;--green-bg:#DCFCE7;--green-border:#86EFAC;
+  --red:#DC2626;--red-bg:#FEE2E2;--red-border:#FCA5A5;
+  --amber:#D97706;--amber-bg:#FEF3C7;--amber-border:#FCD34D;
+  --purple:#7C3AED;--purple-bg:#EDE9FE;--purple-border:#C4B5FD;
+  --bg:#F0F4FF;--border:#C7D7F5;--text:#1E293B;--muted:#64748B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);font-size:17px;line-height:1.5}
+
+/* HEADER */
+.header{background:var(--blue);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(30,111,217,.3)}
+.logo{font-size:22px;font-weight:900;letter-spacing:-1px}.logo .dash{color:#93C5FD}
+.lesson-chip{background:rgba(255,255,255,.2);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;white-space:nowrap}
+.hdr-progress{flex:1;margin:0 16px;min-width:0}
+.hdr-bar{height:10px;background:rgba(255,255,255,.25);border-radius:5px;overflow:hidden}
+.hdr-fill{height:100%;background:#4ADE80;border-radius:5px;transition:width .5s ease;width:0%}
+.hdr-label{font-size:12px;margin-top:4px;opacity:.85}
+.page{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+
+/* OBJECTIVE */
+.obj-card{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:20px 24px;margin-bottom:24px}
+.obj-card h2{font-size:13px;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.obj-card p{font-size:19px;font-weight:800}
+
+/* EXPLAIN */
+.explain{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
+.explain h3{font-size:16px;font-weight:800;color:var(--blue);margin-bottom:10px}
+.rule-box{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:13px 16px;margin:10px 0;font-size:15px;line-height:1.9}
+.rule-box strong{color:var(--blue)}
+.step-demo{display:flex;flex-direction:column;gap:8px;padding:12px 16px;background:#F8FAFF;border:1.5px solid var(--border);border-radius:10px;margin:10px 0}
+.step-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.step-num{background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0}
+.step-text{font-size:15px;font-weight:700}
+.eq-chip{background:var(--blue);color:#fff;border-radius:8px;padding:5px 14px;font-size:16px;font-weight:900;white-space:nowrap}
+.eq-chip.amber{background:var(--amber);color:#fff}
+.eq-chip.green{background:var(--green);color:#fff}
+
+/* SECTION */
+.section{background:#fff;border:1.5px solid var(--border);border-radius:16px;margin-bottom:24px}
+.sec-header{background:var(--blue-light);border-bottom:1.5px solid var(--border);padding:16px 20px;display:flex;align-items:flex-start;gap:12px;border-radius:16px 16px 0 0}
+.q-badge{width:38px;height:38px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-title{font-size:17px;font-weight:800}
+.sec-sub{font-size:14px;color:var(--muted);margin-top:3px}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;margin-left:8px}
+.tag-guided{background:#EDE9FE;color:#5B21B6}
+.tag-step{background:#E0F2FE;color:#0369A1}
+.sec-score{margin-left:auto;font-size:14px;font-weight:800;color:var(--green);white-space:nowrap}
+.sec-body{padding:20px}
+
+/* Q GROUP */
+.q-group{background:#F8FAFF;border-radius:14px;padding:18px;margin-bottom:18px;border:1px solid var(--border)}
+.q-group-title{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+
+/* Q CARD */
+.q-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px}
+.q-card:last-child{margin-bottom:0}
+.q-label{font-size:16px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.lbl-circle{background:var(--blue);color:#fff;min-width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;flex-shrink:0}
+.guided-hint{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--amber);font-weight:700;margin-bottom:12px}
+
+/* EQUATION DISPLAY */
+.eq-display{font-size:22px;font-weight:900;color:#1E293B;background:#F0F7FF;border:2px solid var(--border);border-radius:12px;padding:12px 20px;margin-bottom:14px;display:inline-block;letter-spacing:.3px}
+.eq-var{color:var(--purple);background:var(--purple-bg);border-radius:6px;padding:0 6px}
+
+/* STEP PANELS */
+.step-panel{border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.step-panel-1{background:#F0F7FF;border:1.5px solid var(--border)}
+.step-panel-2{background:#F0FDF4;border:1.5px solid var(--green-border)}
+.step-label{font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.step-label-1{color:var(--blue)}
+.step-label-2{color:var(--green)}
+.step-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0}
+.dot-1{background:var(--blue)}
+.dot-2{background:var(--green)}
+
+/* MCQ for steps */
+.mcq-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:6px}
+.mcq-opt{background:#fff;color:var(--blue);border:2.5px solid var(--blue);border-radius:10px;padding:10px 18px;font-size:17px;font-weight:900;cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap}
+.mcq-opt:hover{background:var(--blue-light);transform:translateY(-1px)}
+.mcq-opt.selected{background:var(--blue);color:#fff}
+.mcq-opt.correct{background:var(--green-bg)!important;color:var(--green)!important;border-color:var(--green)!important}
+.mcq-opt.wrong{background:var(--red-bg)!important;color:var(--red)!important;border-color:var(--red)!important}
+.mcq-opt.reveal{background:var(--green-bg)!important;color:var(--green)!important;border-color:var(--green)!important;border-style:dashed!important}
+.mcq-opt:disabled,.mcq-opt.locked{pointer-events:none;opacity:.6}
+
+/* DRAG & DROP — number cards + answer slot */
+.drag-area{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:8px}
+.card-bank-inline{display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;flex:1;min-width:180px}
+.num-card{background:#fff;color:var(--blue);border:2.5px solid var(--blue);border-radius:10px;padding:10px 18px;font-size:18px;font-weight:900;cursor:grab;user-select:none;-webkit-user-select:none;transition:transform .12s,box-shadow .12s;white-space:nowrap}
+.num-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(30,111,217,.25)}
+.num-card:active{cursor:grabbing}
+.num-card.used{opacity:.28;cursor:default;pointer-events:none}
+.num-card.dragging{opacity:.4}
+
+.ans-slot-wrap{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ans-slot-label{font-size:16px;font-weight:900;color:var(--text)}
+.ans-slot{width:72px;height:52px;border:2.5px dashed #93C5FD;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:var(--muted);cursor:pointer;transition:all .18s}
+.ans-slot.over{border-color:var(--blue);background:var(--blue-light);transform:scale(1.06)}
+.ans-slot.filled{border-style:solid;border-color:var(--blue);background:#EEF4FF;color:var(--blue)}
+.ans-slot.correct{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important;border-style:solid!important}
+.ans-slot.wrong{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important;border-style:solid!important}
+
+/* CHECK / FEEDBACK */
+.check-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:14px;display:inline-flex;align-items:center;gap:7px;transition:background .15s,transform .1s}
+.check-btn:hover{background:var(--blue-dark)}.check-btn:active{transform:scale(.97)}
+.feedback{display:none;padding:12px 16px;border-radius:10px;font-size:15px;font-weight:700;margin-top:10px;align-items:center;gap:8px}
+.fb-correct{background:var(--green-bg);color:var(--green);border:1.5px solid var(--green-border)}
+.fb-wrong{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red-border)}
+.fb-hint{background:var(--amber-bg);color:var(--amber);border:1.5px solid var(--amber-border)}
+
+/* SUMMARY */
+.summary{background:linear-gradient(135deg,#1558B0,#1E6FD9);color:#fff;border-radius:16px;padding:32px;text-align:center;margin-top:32px;display:none}
+.summary h2{font-size:26px;font-weight:900;margin-bottom:8px}
+.big-score{font-size:64px;font-weight:900;margin:12px 0;line-height:1}
+.stars-row{font-size:40px;margin:12px 0;display:flex;justify-content:center;gap:6px}
+.next-btn{background:#4ADE80;color:#14532D;border:none;border-radius:12px;padding:16px 36px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:16px}
+
+@media(max-width:580px){
+  .eq-display{font-size:18px;padding:10px 14px}
+  .mcq-opt{font-size:15px;padding:8px 12px}
+  .num-card{font-size:16px;padding:8px 13px}
+  .ans-slot{width:60px;height:46px;font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">D<span class="dash">-DASH</span></div>
+  <div class="lesson-chip">Unit 2 · Lesson 5</div>
+  <div class="hdr-progress">
+    <div class="hdr-bar"><div class="hdr-fill" id="hdrFill"></div></div>
+    <div class="hdr-label" id="hdrLabel">0 / 3 sections complete</div>
+  </div>
+</div>
+
+<div class="page">
+
+<div class="obj-card">
+  <h2>🎯 Learning Objective</h2>
+  <p>Solve one-step and two-step equations using inverse operations</p>
+</div>
+
+<div class="explain">
+  <h3>📐 Key Concept: Solving Equations</h3>
+  <p style="font-size:15px;margin-bottom:12px">To solve an equation, use the <strong>inverse (opposite) operation</strong> to isolate the unknown.</p>
+  <div class="rule-box">
+    <strong>Inverse operations:</strong><br>
+    + and − are inverses &nbsp;·&nbsp; × and ÷ are inverses<br>
+    <strong>One step:</strong> n + 5 = 12 → n = 12 − 5 = <strong>7</strong><br>
+    <strong>Two steps:</strong> 3n + 2 = 14 → first 14 − 2 = 12, then 12 ÷ 3 = <strong>4</strong>
+  </div>
+  <div class="step-demo">
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-text">Identify the inverse operation &nbsp;</div>
+      <span class="eq-chip">n + 9 = 12</span>
+      <span style="font-size:15px;color:var(--muted)">→ inverse is</span>
+      <span class="eq-chip amber">12 − 9</span>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-text">Calculate the answer &nbsp;</div>
+      <span class="eq-chip green">n = 3</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ SECTION 1 ══════════════════════ -->
+<div class="section" id="s1">
+  <div class="sec-header">
+    <div class="q-badge">1</div>
+    <div style="flex:1">
+      <div class="sec-title">Read and answer these <span class="tag tag-guided">★ Guided a</span></div>
+      <div class="sec-sub">Read each word problem and choose the correct answer from 4 options · Each question has its own Check button</div>
+    </div>
+    <div class="sec-score" id="s1score"></div>
+  </div>
+  <div class="sec-body" id="q1body"></div>
+</div>
+
+<!-- ══════════════════════ SECTION 2 ══════════════════════ -->
+<div class="section" id="s2">
+  <div class="sec-header">
+    <div class="q-badge">2</div>
+    <div style="flex:1">
+      <div class="sec-title">Write the value of each symbol or letter <span class="tag tag-guided">★ Guided a</span></div>
+      <div class="sec-sub">Step 1: choose the inverse operation · Step 2: drag the answer · Each question has its own Check button</div>
+    </div>
+    <div class="sec-score" id="s2score"></div>
+  </div>
+  <div class="sec-body" id="q2body"></div>
+</div>
+
+<!-- ══════════════════════ SECTION 3 ══════════════════════ -->
+<div class="section" id="s3">
+  <div class="sec-header">
+    <div class="q-badge">3</div>
+    <div style="flex:1">
+      <div class="sec-title">Work out the value of each letter <span class="tag tag-guided">★ Guided a</span></div>
+      <div class="sec-sub">Step 1: choose the result after the first operation · Step 2: drag the final answer · Check every 2 questions</div>
+    </div>
+    <div class="sec-score" id="s3score"></div>
+  </div>
+  <div class="sec-body" id="q3body"></div>
+</div>
+
+<div class="summary" id="summary">
+  <div style="font-size:48px">🏆</div>
+  <h2>Lesson 5 Complete!</h2>
+  <div class="big-score" id="finalScore">—</div>
+  <div class="stars-row" id="starsRow"></div>
+  <p id="summaryMsg" style="font-size:16px;opacity:.9;margin-top:6px"></p>
+  <button class="next-btn" onclick="location.reload()">Try Again 🔄</button>
+</div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  GLOBALS
+// ══════════════════════════════════════════
+var G = { dragSrc:null, sectionsDone:0, sectionsTotal:3, scores:{} };
+
+// ══════════════════════════════════════════
+//  Q1 DATA — word problems, MCQ final answer
+// ══════════════════════════════════════════
+var Q1 = [
+  { lbl:'a', q:'What number when added to 9 gives 12?',   ans:3,  guided:true, hint:'💡 Think: ? + 9 = 12. What do you add to 9 to make 12?' },
+  { lbl:'b', q:'What number subtract 8 gives 7?',          ans:15 },
+  { lbl:'c', q:'What number multiplied by 6 gives 30?',    ans:5  },
+  { lbl:'d', q:'What multiplied by 4 gives 32?',           ans:8  },
+  { lbl:'e', q:'What subtract 7 gives 12?',                ans:19 },
+  { lbl:'f', q:'What added to 3 gives 11?',                ans:8  },
+  { lbl:'g', q:'What multiplied by 4 gives 16?',           ans:4  },
+  { lbl:'h', q:'What added to 5 gives 14?',                ans:9  }
+];
+
+// ══════════════════════════════════════════
+//  Q2 DATA — one-step equations
+//  invOpts: [correct, wrong1, wrong2]  (full expression strings)
+//  ans: numeric final answer
+//  ansLabel: display string for variable
+// ══════════════════════════════════════════
+var Q2 = [
+  { lbl:'a', eq:'16 + ☆ = 23',  varLabel:'☆',
+    invOpts:['23 − 16','23 + 16','16 + 23'], invAns:'23 − 16', ans:7,
+    guided:true, hint:'💡 The inverse of + is −. To find ☆, subtract 16 from 23.' },
+  { lbl:'b', eq:'□ − 8 = 7',    varLabel:'□',
+    invOpts:['7 + 8','8 − 7','7 − 8'],       invAns:'7 + 8',   ans:15 },
+  { lbl:'c', eq:'9 × ◇ = 36',   varLabel:'◇',
+    invOpts:['36 ÷ 9','36 × 9','9 ÷ 36'],    invAns:'36 ÷ 9',  ans:4 },
+  { lbl:'d', eq:'△ ÷ 6 = 3',    varLabel:'△',
+    invOpts:['3 × 6','6 ÷ 3','3 ÷ 6'],       invAns:'3 × 6',   ans:18 },
+  { lbl:'e', eq:'y + 22 = 38',   varLabel:'y',
+    invOpts:['38 − 22','38 + 22','22 − 38'],  invAns:'38 − 22', ans:16 },
+  { lbl:'f', eq:'40 − b = 15',   varLabel:'b',
+    invOpts:['40 − 15','40 + 15','15 − 40'],  invAns:'40 − 15', ans:25 },
+  { lbl:'g', eq:'7n = 35',        varLabel:'n',
+    invOpts:['35 ÷ 7','35 × 7','7 ÷ 35'],    invAns:'35 ÷ 7',  ans:5 },
+  { lbl:'h', eq:'27 ÷ t = 3',    varLabel:'t',
+    invOpts:['27 ÷ 3','27 × 3','3 ÷ 27'],    invAns:'27 ÷ 3',  ans:9 }
+];
+
+// ══════════════════════════════════════════
+//  Q3 DATA — two-step equations
+//  step1Opts: MCQ options for intermediate result [correct, w1, w2, w3]
+//  step1Ans: correct intermediate value (after undoing +/−)
+//  step1Label: what the intermediate equation looks like
+//  ans: final answer
+// ══════════════════════════════════════════
+var Q3 = [
+  { lbl:'a', eq:'5e + 8 = 28', varLabel:'e',
+    step1Label:'28 − 8 = ?', step1Opts:[20,36,4,13], step1Ans:20,
+    step2Label:'20 ÷ 5 = ?', ans:4,
+    guided:true, hint:'💡 Two steps: first undo the +8 (subtract 8 from both sides), then undo the ×5.' },
+  { lbl:'b', eq:'4h − 12 = 12', varLabel:'h',
+    step1Label:'12 + 12 = ?', step1Opts:[24,0,4,20], step1Ans:24,
+    step2Label:'24 ÷ 4 = ?',  ans:6 },
+  { lbl:'c', eq:'26 − 3p = 5',  varLabel:'p',
+    step1Label:'26 − 5 = ?',  step1Opts:[21,31,15,8], step1Ans:21,
+    step2Label:'21 ÷ 3 = ?',  ans:7 },
+  { lbl:'d', eq:'2r + 5 = 23',  varLabel:'r',
+    step1Label:'23 − 5 = ?',  step1Opts:[18,28,9,11], step1Ans:18,
+    step2Label:'18 ÷ 2 = ?',  ans:9 },
+  { lbl:'e', eq:'7v − 11 = 10', varLabel:'v',
+    step1Label:'10 + 11 = ?', step1Opts:[21,1,14,17], step1Ans:21,
+    step2Label:'21 ÷ 7 = ?',  ans:3 },
+  { lbl:'f', eq:'4w + 9 = 49',  varLabel:'w',
+    step1Label:'49 − 9 = ?',  step1Opts:[40,58,13,36], step1Ans:40,
+    step2Label:'40 ÷ 4 = ?',  ans:10 }
+];
+
+// ══════════════════════════════════════════
+//  DRAG ENGINE
+// ══════════════════════════════════════════
+function makeDraggable(card){
+  card.setAttribute('draggable','true');
+  card.addEventListener('dragstart',function(e){
+    if(card.classList.contains('used')){e.preventDefault();return;}
+    G.dragSrc=card;
+    e.dataTransfer.setData('text/plain',card.dataset.val);
+    setTimeout(function(){card.classList.add('dragging');},0);
+  });
+  card.addEventListener('dragend',function(){card.classList.remove('dragging');G.dragSrc=null;});
+  var ghost=null,offX=0,offY=0;
+  card.addEventListener('touchstart',function(e){
+    if(card.classList.contains('used'))return;
+    var t=e.touches[0],r=card.getBoundingClientRect();
+    offX=t.clientX-r.left;offY=t.clientY-r.top;
+    G.dragSrc=card;
+    ghost=card.cloneNode(true);
+    ghost.style.cssText='position:fixed;z-index:9999;opacity:.8;pointer-events:none;left:'+(t.clientX-offX)+'px;top:'+(t.clientY-offY)+'px';
+    document.body.appendChild(ghost);
+  },{passive:true});
+  card.addEventListener('touchmove',function(e){
+    e.preventDefault();
+    var t=e.touches[0];
+    if(ghost){ghost.style.left=(t.clientX-offX)+'px';ghost.style.top=(t.clientY-offY)+'px';}
+  },{passive:false});
+  card.addEventListener('touchend',function(e){
+    if(ghost){document.body.removeChild(ghost);ghost=null;}
+    var t=e.changedTouches[0];
+    var el=document.elementFromPoint(t.clientX,t.clientY);
+    var slot=el&&(el.classList.contains('ans-slot')?el:el.closest('.ans-slot'));
+    if(slot&&G.dragSrc)dropOnSlot(slot,G.dragSrc);
+    G.dragSrc=null;
+  },{passive:true});
+}
+
+function makeSlot(slot){
+  slot.addEventListener('dragover',function(e){e.preventDefault();slot.classList.add('over');});
+  slot.addEventListener('dragleave',function(){slot.classList.remove('over');});
+  slot.addEventListener('drop',function(e){
+    e.preventDefault();slot.classList.remove('over');
+    if(G.dragSrc)dropOnSlot(slot,G.dragSrc);
+  });
+  slot.addEventListener('click',function(){
+    if(slot.dataset.placed&&!slot.classList.contains('correct')){
+      returnCard(slot.dataset.bid,slot.dataset.placed);
+      slot.dataset.placed='';slot.textContent='?';slot.className='ans-slot';
+    }
+  });
+}
+
+function dropOnSlot(slot,srcCard){
+  var val=srcCard.dataset.val,bid=srcCard.dataset.bid;
+  if(slot.dataset.bid!==bid)return;
+  if(slot.dataset.placed)returnCard(slot.dataset.bid,slot.dataset.placed);
+  markCard(bid,val,true);
+  slot.dataset.placed=val;slot.textContent=val;
+  slot.classList.remove('over','correct','wrong');slot.className='ans-slot filled';
+}
+function returnCard(bid,val){markCard(bid,val,false);}
+function markCard(bid,val,used){
+  document.querySelectorAll('.num-card[data-bid="'+bid+'"]').forEach(function(c){
+    if(c.dataset.val===val){
+      if(used&&!c.classList.contains('used'))c.classList.add('used');
+      if(!used)c.classList.remove('used');
+    }
+  });
+}
+
+// ══════════════════════════════════════════
+//  DISTRACTOR GENERATOR
+// ══════════════════════════════════════════
+function wrongNums(ans){
+  var seen={};seen[ans]=true;
+  var tweaks=[-1,1,-2,2,-3,3,5,-5,10,-10];
+  var out=[];
+  for(var i=0;i<tweaks.length&&out.length<3;i++){
+    var w=ans+tweaks[i];
+    if(w>0&&!seen[w]){seen[w]=true;out.push(w);}
+  }
+  return out.slice(0,3);
+}
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+
+// ══════════════════════════════════════════
+//  BUILD Q1
+// ══════════════════════════════════════════
+var q1Att={},q1Res={};
+
+function buildQ1(){
+  var body=document.getElementById('q1body');
+  Q1.forEach(function(q,qi){
+    var grp=mk('div','q-group');
+    var t=mk('div','q-group-title');t.textContent='Question '+q.lbl.toUpperCase();grp.appendChild(t);
+
+    var card=mk('div','q-card');
+    var lbl=mk('div','q-label');
+    lbl.innerHTML='<span class="lbl-circle">'+q.lbl+'</span>'+(q.guided?' <span class="tag tag-guided">★ Guided</span>':'');
+    card.appendChild(lbl);
+    if(q.guided&&q.hint){var gh=mk('div','guided-hint');gh.textContent=q.hint;card.appendChild(gh);}
+
+    // Question text
+    var qt=mk('div','');qt.style.cssText='font-size:18px;font-weight:800;margin-bottom:14px;color:var(--text)';
+    qt.textContent=q.q; card.appendChild(qt);
+
+    // MCQ
+    var opts=shuffle([q.ans].concat(wrongNums(q.ans)));
+    var mcqRow=mk('div','mcq-row');
+    opts.forEach(function(v){
+      var btn=mk('div','mcq-opt');
+      btn.textContent=v;btn.dataset.val=String(v);btn.dataset.ans=String(q.ans);btn.dataset.ltr=q.lbl+'_q1';
+      btn.addEventListener('click',function(){
+        if(btn.classList.contains('correct')||btn.classList.contains('wrong'))return;
+        mcqRow.querySelectorAll('.mcq-opt').forEach(function(o){o.classList.remove('selected');});
+        btn.classList.add('selected');
+      });
+      mcqRow.appendChild(btn);
+    });
+    card.appendChild(mcqRow);
+
+    var fbId='fb_q1_'+qi;
+    var cb=checkBtn('✓ Check '+q.lbl.toUpperCase());
+    var fbEl=mk('div','feedback');fbEl.id=fbId;
+
+    (function(qRef,gIdx,fb){
+      cb.onclick=function(){
+        if(!q1Att[gIdx])q1Att[gIdx]=0;q1Att[gIdx]++;
+        var att=q1Att[gIdx];
+        var opts=document.querySelectorAll('.mcq-opt[data-ltr="'+qRef.lbl+'_q1"]');
+        var sel=null;opts.forEach(function(o){if(o.classList.contains('selected'))sel=o;});
+        var ok=sel&&sel.dataset.val===sel.dataset.ans;
+        if(ok){sel.classList.remove('selected');sel.classList.add('correct');q1Res[gIdx]=true;}
+        else{
+          if(sel){sel.classList.remove('selected');sel.classList.add('wrong');}
+          if(att>=3){opts.forEach(function(o){if(o.dataset.val===o.dataset.ans)o.classList.add('reveal');});q1Res[gIdx]=false;}
+        }
+        if(ok)            showFB(fb,'correct','🎉 Correct! The answer is <strong>'+qRef.ans+'</strong>');
+        else if(att>=3)   showFB(fb,'hint','✅ Answer revealed: <strong>'+qRef.ans+'</strong>. '+qRef.q);
+        else if(att===2)  showFB(fb,'hint','💡 Not quite. Write it as an equation first, then use the inverse operation.');
+        else              showFB(fb,'wrong','✗ Not correct. Think about which operation is being used.');
+        updateHeader();
+        if(Object.keys(q1Res).length>=Q1.length){
+          var tg=Object.values(q1Res).filter(Boolean).length;
+          markDone(1,tg,Q1.length);
+        }
+      };
+    })(q,qi,fbEl);
+
+    card.appendChild(cb);card.appendChild(fbEl);
+    grp.appendChild(card);
+    body.appendChild(grp);
+  });
+}
+
+// ══════════════════════════════════════════
+//  BUILD Q2
+// ══════════════════════════════════════════
+var q2Att={},q2Res={};
+
+function buildQ2(){
+  var body=document.getElementById('q2body');
+  Q2.forEach(function(q,qi){
+    var grp=mk('div','q-group');
+    var t=mk('div','q-group-title');t.textContent='Question '+q.lbl.toUpperCase();grp.appendChild(t);
+
+    var card=mk('div','q-card');
+    var lbl=mk('div','q-label');
+    lbl.innerHTML='<span class="lbl-circle">'+q.lbl+'</span>'+(q.guided?' <span class="tag tag-guided">★ Guided</span>':'');
+    card.appendChild(lbl);
+    if(q.guided&&q.hint){var gh=mk('div','guided-hint');gh.textContent=q.hint;card.appendChild(gh);}
+
+    // Equation display
+    var eqD=mk('div','eq-display');eqD.textContent=q.eq;card.appendChild(eqD);
+
+    // STEP 1 — inverse operation MCQ
+    var p1=mk('div','step-panel step-panel-1');
+    var sl1=mk('div','step-label step-label-1');
+    sl1.innerHTML='<div class="step-dot dot-1">1</div> What is the inverse operation?';
+    p1.appendChild(sl1);
+    var invRow=mk('div','mcq-row');
+    shuffle(q.invOpts).forEach(function(opt){
+      var btn=mk('div','mcq-opt');
+      btn.textContent=opt;btn.dataset.val=opt;btn.dataset.ans=q.invAns;btn.dataset.step='inv_'+q.lbl;
+      btn.addEventListener('click',function(){
+        if(btn.classList.contains('correct')||btn.classList.contains('wrong'))return;
+        invRow.querySelectorAll('.mcq-opt').forEach(function(o){o.classList.remove('selected');});
+        btn.classList.add('selected');
+      });
+      invRow.appendChild(btn);
+    });
+    p1.appendChild(invRow);
+    card.appendChild(p1);
+
+    // STEP 2 — drag & drop final answer
+    var p2=mk('div','step-panel step-panel-2');
+    var sl2=mk('div','step-label step-label-2');
+    sl2.innerHTML='<div class="step-dot dot-2">2</div> Drag the answer: <strong style="margin-left:6px">'+q.varLabel+' =</strong>';
+    p2.appendChild(sl2);
+
+    var bankId='q2_'+q.lbl;
+    var dragArea=mk('div','drag-area');
+    var bank=mk('div','card-bank-inline');bank.dataset.bid=bankId;
+    var cardVals=shuffle([q.ans].concat(wrongNums(q.ans)));
+    cardVals.forEach(function(v){
+      var c=mk('div','num-card');c.textContent=v;c.dataset.val=String(v);c.dataset.bid=bankId;
+      makeDraggable(c);bank.appendChild(c);
+    });
+    dragArea.appendChild(bank);
+
+    var slotWrap=mk('div','ans-slot-wrap');
+    var slotLbl=mk('span','');slotLbl.style.cssText='font-size:18px;font-weight:900';slotLbl.textContent=q.varLabel+' =';
+    var slot=mk('div','ans-slot');slot.textContent='?';slot.dataset.ans=String(q.ans);slot.dataset.bid=bankId;slot.dataset.placed='';
+    makeSlot(slot);
+    slotWrap.appendChild(slotLbl);slotWrap.appendChild(slot);
+    dragArea.appendChild(slotWrap);
+    p2.appendChild(dragArea);
+    card.appendChild(p2);
+
+    // Check button
+    var fbId='fb_q2_'+qi;
+    var cb=checkBtn('✓ Check '+q.lbl.toUpperCase());
+    var fbEl=mk('div','feedback');fbEl.id=fbId;
+
+    (function(qRef,gIdx,fb){
+      cb.onclick=function(){
+        if(!q2Att[gIdx])q2Att[gIdx]=0;q2Att[gIdx]++;
+        var att=q2Att[gIdx];
+        var got=0,tot=2;
+
+        // Check step 1
+        var invOpts=document.querySelectorAll('.mcq-opt[data-step="inv_'+qRef.lbl+'"]');
+        var invSel=null;invOpts.forEach(function(o){if(o.classList.contains('selected'))invSel=o;});
+        var step1ok=invSel&&invSel.dataset.val===invSel.dataset.ans;
+        if(step1ok){invSel.classList.remove('selected');invSel.classList.add('correct');got++;}
+        else{
+          if(invSel){invSel.classList.remove('selected');invSel.classList.add('wrong');}
+          if(att>=3){invOpts.forEach(function(o){if(o.dataset.val===o.dataset.ans)o.classList.add('reveal');});got++;}
+        }
+
+        // Check step 2
+        var slotEl=document.querySelector('.ans-slot[data-bid="q2_'+qRef.lbl+'"]');
+        var step2ok=slotEl&&slotEl.dataset.placed===slotEl.dataset.ans;
+        if(slotEl&&!slotEl.classList.contains('correct')){
+          if(step2ok){slotEl.className='ans-slot correct';got++;}
+          else{
+            slotEl.className='ans-slot'+(slotEl.dataset.placed?' wrong':'');
+            if(att>=3){slotEl.textContent=slotEl.dataset.ans;slotEl.dataset.placed=slotEl.dataset.ans;slotEl.className='ans-slot correct';got++;}
+          }
+        } else if(slotEl&&slotEl.classList.contains('correct')) got++;
+
+        q2Res[gIdx]={got:got,tot:tot};
+        if(got===tot)   showFB(fb,'correct','🎉 Both steps correct! '+qRef.varLabel+' = <strong>'+qRef.ans+'</strong>');
+        else if(att>=3) showFB(fb,'hint','✅ Answers revealed. Inverse of + is −, inverse of × is ÷.');
+        else if(att===2)showFB(fb,'hint','💡 '+got+'/2 correct. Check the inverse operation first, then calculate.');
+        else            showFB(fb,'wrong','✗ Not both correct. Identify the operation in the equation, then reverse it.');
+
+        updateHeader();
+        if(Object.keys(q2Res).length>=Q2.length){
+          var tg=Object.values(q2Res).reduce(function(a,b){return a+b.got;},0);
+          var tt=Object.values(q2Res).reduce(function(a,b){return a+b.tot;},0);
+          markDone(2,tg,tt);
+        }
+      };
+    })(q,qi,fbEl);
+
+    card.appendChild(cb);card.appendChild(fbEl);
+    grp.appendChild(card);
+    body.appendChild(grp);
+  });
+}
+
+// ══════════════════════════════════════════
+//  BUILD Q3
+// ══════════════════════════════════════════
+var q3Att={},q3Res={};
+
+function buildQ3(){
+  var body=document.getElementById('q3body');
+  var perGroup=2,totalGroups=Math.ceil(Q3.length/perGroup);
+
+  for(var g=0;g<totalGroups;g++){
+    var slice=Q3.slice(g*perGroup,g*perGroup+perGroup);
+    var grp=mk('div','q-group');
+    var t=mk('div','q-group-title');
+    t.textContent='Questions '+slice.map(function(d){return d.lbl.toUpperCase();}).join(' & ');
+    grp.appendChild(t);
+
+    slice.forEach(function(q){
+      var card=mk('div','q-card');
+      var lbl=mk('div','q-label');
+      lbl.innerHTML='<span class="lbl-circle">'+q.lbl+'</span>'+(q.guided?' <span class="tag tag-guided">★ Guided</span>':'');
+      card.appendChild(lbl);
+      if(q.guided&&q.hint){var gh=mk('div','guided-hint');gh.textContent=q.hint;card.appendChild(gh);}
+
+      var eqD=mk('div','eq-display');eqD.textContent=q.eq;card.appendChild(eqD);
+
+      // STEP 1 — MCQ intermediate result
+      var p1=mk('div','step-panel step-panel-1');
+      var sl1=mk('div','step-label step-label-1');
+      sl1.innerHTML='<div class="step-dot dot-1">1</div> <span style="font-size:14px">'+q.step1Label+'</span>';
+      p1.appendChild(sl1);
+      var s1opts=shuffle(q.step1Opts.slice());
+      var s1row=mk('div','mcq-row');
+      s1opts.forEach(function(v){
+        var btn=mk('div','mcq-opt');
+        btn.textContent=v;btn.dataset.val=String(v);btn.dataset.ans=String(q.step1Ans);btn.dataset.step='s1_'+q.lbl;
+        btn.addEventListener('click',function(){
+          if(btn.classList.contains('correct')||btn.classList.contains('wrong'))return;
+          s1row.querySelectorAll('.mcq-opt').forEach(function(o){o.classList.remove('selected');});
+          btn.classList.add('selected');
+        });
+        s1row.appendChild(btn);
+      });
+      p1.appendChild(s1row);
+      card.appendChild(p1);
+
+      // STEP 2 — drag & drop final answer
+      var p2=mk('div','step-panel step-panel-2');
+      var sl2=mk('div','step-label step-label-2');
+      sl2.innerHTML='<div class="step-dot dot-2">2</div> <span style="font-size:14px">'+q.step2Label+'</span> &nbsp; Drag the answer:';
+      p2.appendChild(sl2);
+
+      var bankId='q3_'+q.lbl;
+      var dragArea=mk('div','drag-area');
+      var bank=mk('div','card-bank-inline');bank.dataset.bid=bankId;
+      var cardVals=shuffle([q.ans].concat(wrongNums(q.ans)));
+      cardVals.forEach(function(v){
+        var c=mk('div','num-card');c.textContent=v;c.dataset.val=String(v);c.dataset.bid=bankId;
+        makeDraggable(c);bank.appendChild(c);
+      });
+      dragArea.appendChild(bank);
+
+      var slotWrap=mk('div','ans-slot-wrap');
+      var slotLbl=mk('span','');slotLbl.style.cssText='font-size:18px;font-weight:900';slotLbl.textContent=q.varLabel+' =';
+      var slot=mk('div','ans-slot');slot.textContent='?';slot.dataset.ans=String(q.ans);slot.dataset.bid=bankId;slot.dataset.placed='';
+      makeSlot(slot);
+      slotWrap.appendChild(slotLbl);slotWrap.appendChild(slot);
+      dragArea.appendChild(slotWrap);
+      p2.appendChild(dragArea);
+      card.appendChild(p2);
+      grp.appendChild(card);
+    });
+
+    // Check button per pair
+    var fbId='fb_q3_'+g;
+    var cb=checkBtn('✓ Check '+slice.map(function(d){return d.lbl.toUpperCase();}).join(' & '));
+    var fbEl=mk('div','feedback');fbEl.id=fbId;
+
+    (function(sl,gIdx,fb){
+      cb.onclick=function(){
+        if(!q3Att[gIdx])q3Att[gIdx]=0;q3Att[gIdx]++;
+        var att=q3Att[gIdx];
+        var got=0,tot=sl.length*2;
+
+        sl.forEach(function(q){
+          // Step 1
+          var s1opts=document.querySelectorAll('.mcq-opt[data-step="s1_'+q.lbl+'"]');
+          var s1sel=null;s1opts.forEach(function(o){if(o.classList.contains('selected'))s1sel=o;});
+          var s1ok=s1sel&&s1sel.dataset.val===s1sel.dataset.ans;
+          if(s1ok){s1sel.classList.remove('selected');s1sel.classList.add('correct');got++;}
+          else{
+            if(s1sel){s1sel.classList.remove('selected');s1sel.classList.add('wrong');}
+            if(att>=3){s1opts.forEach(function(o){if(o.dataset.val===o.dataset.ans)o.classList.add('reveal');});got++;}
+          }
+          // Step 2
+          var slotEl=document.querySelector('.ans-slot[data-bid="q3_'+q.lbl+'"]');
+          if(slotEl&&slotEl.classList.contains('correct')){got++;return;}
+          var s2ok=slotEl&&slotEl.dataset.placed===slotEl.dataset.ans;
+          if(slotEl){
+            if(s2ok){slotEl.className='ans-slot correct';got++;}
+            else{
+              slotEl.className='ans-slot'+(slotEl.dataset.placed?' wrong':'');
+              if(att>=3){slotEl.textContent=slotEl.dataset.ans;slotEl.dataset.placed=slotEl.dataset.ans;slotEl.className='ans-slot correct';got++;}
+            }
+          }
+        });
+
+        q3Res[gIdx]={got:got,tot:tot};
+        if(got===tot)   showFB(fb,'correct','🎉 '+got+'/'+tot+' correct! Both steps solved perfectly!');
+        else if(att>=3) showFB(fb,'hint','✅ Answers revealed. Remember: undo + or − first, then undo × or ÷.');
+        else if(att===2)showFB(fb,'hint','💡 '+got+'/'+tot+' correct. Step 1: deal with the + or − first. Step 2: deal with the × or ÷.');
+        else            showFB(fb,'wrong','✗ '+(tot-got)+' wrong. Work through each step carefully.');
+
+        updateHeader();
+        if(Object.keys(q3Res).length>=Math.ceil(Q3.length/2)){
+          var tg=Object.values(q3Res).reduce(function(a,b){return a+b.got;},0);
+          var tt=Object.values(q3Res).reduce(function(a,b){return a+b.tot;},0);
+          markDone(3,tg,tt);
+        }
+      };
+    })(slice,g,fbEl);
+
+    grp.appendChild(cb);grp.appendChild(fbEl);
+    body.appendChild(grp);
+  }
+}
+
+// ══════════════════════════════════════════
+//  SCORING & SUMMARY
+// ══════════════════════════════════════════
+function updateHeader(){
+  var done=Object.keys(G.scores).length;
+  var pct=Math.round(done/G.sectionsTotal*100);
+  document.getElementById('hdrFill').style.width=pct+'%';
+  document.getElementById('hdrLabel').textContent=done+' / '+G.sectionsTotal+' sections complete';
+}
+
+function showFB(el,type,msg){el.className='feedback fb-'+type;el.innerHTML=msg;el.style.display='flex';}
+
+function markDone(sn,got,tot){
+  if(G.scores[sn])return;
+  G.scores[sn]={got:got,tot:tot};
+  G.sectionsDone=Object.keys(G.scores).length;
+  updateHeader();
+  var sc=document.getElementById('s'+sn+'score');
+  if(sc)sc.textContent=got+'/'+tot+' ('+Math.round(got/tot*100)+'%)';
+  if(G.sectionsDone===G.sectionsTotal)showSummary();
+}
+
+function showSummary(){
+  var all=Object.values(G.scores);
+  var tg=all.reduce(function(a,b){return a+b.got;},0);
+  var tt=all.reduce(function(a,b){return a+b.tot;},0);
+  var pct=tt?Math.round(tg/tt*100):0;
+  var s=document.getElementById('summary');
+  s.style.display='block';s.scrollIntoView({behavior:'smooth'});
+  document.getElementById('finalScore').textContent=pct+'%';
+  var stars=pct>=90?3:pct>=70?2:1;
+  var sh='';for(var i=0;i<3;i++)sh+='<span style="color:'+(i<stars?'#FBBF24':'rgba(255,255,255,.3)')+'">★</span>';
+  document.getElementById('starsRow').innerHTML=sh;
+  document.getElementById('summaryMsg').textContent=
+    pct>=90?'Excellent! You can solve equations using inverse operations perfectly!':
+    pct>=70?'Good work! Review any steps where you needed hints.':
+    'Keep practising — always identify the inverse operation first!';
+}
+
+function mk(tag,cls){var e=document.createElement(tag||'div');if(cls)e.className=cls;return e;}
+function checkBtn(label){var b=document.createElement('button');b.className='check-btn';b.innerHTML=label;return b;}
+
+// INIT
+buildQ1();
+buildQ2();
+buildQ3();
+</script>
+</body>
+</html>
