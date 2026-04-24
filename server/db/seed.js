@@ -161,7 +161,7 @@ async function seed() {
 
   // ── 3. Class Lessons ─────────────────────────────────────────
 
-  // Class 1: Grade 5 Mathematics — all 14 real lessons
+  // Class 1: Grade 5 Mathematics — all 22 real lessons
   const grade5Lessons = [
     // Unit 1 — Decimals
     { unit: 1, num: 1, title: 'Place Value in Decimals' },
@@ -179,6 +179,15 @@ async function seed() {
     { unit: 3, num: 2, title: 'Multiples & LCM' },
     { unit: 3, num: 3, title: 'Factors & HCF' },
     { unit: 3, num: 4, title: 'Prime & Square Numbers' },
+    // Unit 4 — Addition & Subtraction
+    { unit: 4, num: 1, title: 'Brackets & Order of Operations' },
+    { unit: 4, num: 2, title: 'More Brackets' },
+    { unit: 4, num: 3, title: 'Inverse Operations' },
+    { unit: 4, num: 4, title: 'Mental Addition & Subtraction' },
+    { unit: 4, num: 5, title: 'Large Numbers' },
+    { unit: 4, num: 6, title: 'Decimal Tenths — Part 1' },
+    { unit: 4, num: 7, title: 'Decimal Tenths — Part 2' },
+    { unit: 4, num: 8, title: 'Decimal Hundredths' },
     // Unit 5 — Calculations
     { unit: 5, num: 1, title: 'Brackets' },
   ];
