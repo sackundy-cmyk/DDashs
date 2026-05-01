@@ -88,7 +88,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* ── Teachers + Classes overview ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'flex-start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16, alignItems: 'flex-start' }}>
           {/* Teachers */}
           <div className={s.card} style={{ marginBottom: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>

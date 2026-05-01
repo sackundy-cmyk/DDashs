@@ -198,13 +198,41 @@
   position: sticky;
   top: 0;
   z-index: 50;
+  gap: 12px;
 }
 
+.titleArea {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.hamburger {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1.5px solid #E2E8F0;
+  background: #FFFFFF;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #475569;
+  flex-shrink: 0;
+}
+
+.hamburger:hover { background: #F8FAFC; }
+
 .pageTitle {
-  font-size: 18px;
+  font-size: var(--font-h1);
   font-weight: 800;
   letter-spacing: -0.03em;
   color: #0F172A;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .topBarRight {
@@ -264,6 +292,25 @@
 .pageBody {
   padding: 24px 28px;
   flex: 1;
+}
+
+/* ── Drawer backdrop (mobile) ─────────────────────────────── */
+.drawerBackdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  z-index: 90;
+}
+
+/* ── User-name hiding utility ─────────────────────────────── */
+.hideOnSmall { display: inline; }
+
+/* Hide bell + chevron text on phones to save room */
+@media (max-width: 480px) {
+  .topBarName { display: none; }
+  .topBar { padding: 0 16px; }
+  .pageBody { padding: 16px 16px; }
 }
 
 /* ── Stats cards row ───────────────────────────────────────── */
@@ -396,8 +443,63 @@
   gap: 14px;
 }
 
-/* ── Responsive ────────────────────────────────────────────── */
+/* ── Tables: convert grid-rows to stacked cards on phones ──── */
+.respTable {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.respRow {
+  display: grid;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+
+.respRow:hover { background: #F8FAFC; }
+
+@media (max-width: 768px) {
+  .respRow {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 6px;
+    padding: 14px;
+    border: 1px solid #EEF2F7;
+    background: #FFFFFF;
+  }
+  .respRow > * { width: 100%; text-align: left !important; }
+  .respHeader { display: none !important; }
+  .respCell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .respCell::before {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #64748B;
+    flex-shrink: 0;
+  }
+}
+
+/* ── Responsive shell ──────────────────────────────────────── */
 @media (max-width: 900px) {
-  .sidebar  { display: none; }
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.22s ease;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    z-index: 110;
+  }
+  .sidebarOpen {
+    transform: translateX(0);
+  }
   .mainArea { margin-left: 0; }
+  .hamburger { display: inline-flex; }
+  .drawerBackdrop.drawerBackdropOpen { display: block; }
 }

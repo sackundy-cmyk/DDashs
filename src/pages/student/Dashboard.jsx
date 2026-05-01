@@ -133,6 +133,7 @@ export default function StudentDashboard() {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 16,
+          flexWrap: 'wrap',
         }}>
           {/* Dot pattern */}
           <svg style={{ position: 'absolute', inset: 0, opacity: 0.1, pointerEvents: 'none' }} width="100%" height="100%">
@@ -197,7 +198,7 @@ export default function StudentDashboard() {
         </div>
 
         {/* ── Continue + Recent activity ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
           {/* Continue learning */}
           <div className={s.card} style={{ marginBottom: 0 }}>
             <div className={s.cardTitle}>Continue Learning</div>

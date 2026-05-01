@@ -13,7 +13,9 @@ import Login   from './pages/Login.jsx';
 
 // ── Student pages (lazy) ─────────────────────────────────────
 const StudentDashboard = lazy(() => import('./pages/student/Dashboard.jsx'));
-const StudentClasses   = lazy(() => import('./pages/student/Classes.jsx'));
+const StudentClasses     = lazy(() => import('./pages/student/Classes.jsx'));
+const StudentClassDetail = lazy(() => import('./pages/student/ClassDetail.jsx'));
+const StudentUnitDetail  = lazy(() => import('./pages/student/UnitDetail.jsx'));
 
 // ── Teacher pages (lazy) ─────────────────────────────────────
 const TeacherDashboard = lazy(() => import('./pages/teacher/Dashboard.jsx'));
@@ -128,6 +130,12 @@ export default function App() {
           } />
           <Route path="/student/classes" element={
             <ProtectedRoute roles={['student']}><StudentClasses /></ProtectedRoute>
+          } />
+          <Route path="/student/classes/:classId" element={
+            <ProtectedRoute roles={['student']}><StudentClassDetail /></ProtectedRoute>
+          } />
+          <Route path="/student/classes/:classId/unit/:unit" element={
+            <ProtectedRoute roles={['student']}><StudentUnitDetail /></ProtectedRoute>
           } />
           <Route path="/student/lesson/:unitId/:lessonId" element={
             <ProtectedRoute roles={['student']}><DashboardLayout><LessonRoute /></DashboardLayout></ProtectedRoute>

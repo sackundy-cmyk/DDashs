@@ -2,6 +2,7 @@
 //  DashboardLayout.jsx — enhanced shell (sidebar + topbar)
 // ============================================================
 
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import Breadcrumbs from './Breadcrumbs.jsx';
@@ -44,7 +45,7 @@ const ROLE_AVATAR_BG = {
 
 // ── Sidebar ───────────────────────────────────────────────────
 
-function Sidebar({ user, role }) {
+function Sidebar({ user, role, isOpen, onClose }) {
   const { logout } = useAuth();
   const navigate   = useNavigate();
   const navItems   = NAV_MAP[role] || [];
@@ -53,7 +54,7 @@ function Sidebar({ user, role }) {
   const avatarBg = ROLE_AVATAR_BG[role] || '#1E6FD9';
 
   return (
-    <nav className={s.sidebar}>
+    <nav className={`${s.sidebar} ${isOpen ? s.sidebarOpen : ''}`} onClick={onClose}>
       {/* Logo */}
       <div className={s.logoArea}>
         <div className={s.logoIcon}>
@@ -126,14 +127,19 @@ const PAGE_TITLES = {
   '/admin/settings':    'Settings',
 };
 
-function TopBar({ user, role }) {
+function TopBar({ user, role, onHamburger }) {
   const location = useLocation();
   const title = PAGE_TITLES[location.pathname] || 'D-Dash';
   const avatarBg = ROLE_AVATAR_BG[role] || '#1E6FD9';
 
   return (
     <header className={s.topBar}>
-      <span className={s.pageTitle}>{title}</span>
+      <div className={s.titleArea}>
+        <button className={s.hamburger} onClick={onHamburger} aria-label="Open menu">
+          <Icon name="menu" size={20} color="currentColor" />
+        </button>
+        <span className={s.pageTitle}>{title}</span>
+      </div>
       <div className={s.topBarRight}>
         <button className={s.bellBtn} aria-label="Notifications">
           <Icon name="bell" size={16} color="currentColor" />
@@ -153,12 +159,21 @@ function TopBar({ user, role }) {
 
 export default function DashboardLayout({ children }) {
   const { user, role } = useAuth();
+  const location = useLocation();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Close drawer on route change so navigating doesn't leave it hanging open
+  useEffect(() => { setDrawerOpen(false); }, [location.pathname]);
 
   return (
     <div className={s.app}>
-      <Sidebar user={user} role={role} />
+      <Sidebar user={user} role={role} isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
+      <div
+        className={`${s.drawerBackdrop} ${drawerOpen ? s.drawerBackdropOpen : ''}`}
+        onClick={() => setDrawerOpen(false)}
+      />
       <div className={s.mainArea}>
-        <TopBar user={user} role={role} />
+        <TopBar user={user} role={role} onHamburger={() => setDrawerOpen(true)} />
         <Breadcrumbs />
         <main className={s.pageBody}>
           {children}

@@ -66,4 +66,17 @@
   /* ── Component sizing ── */
   --lbl-circle-size: 40px;
   --q-badge-size:    40px;
+
+  /* ── Responsive breakpoints ── */
+  --bp-sm: 480px;    /* phone */
+  --bp-md: 768px;    /* tablet portrait */
+  --bp-lg: 1024px;   /* tablet landscape / small laptop */
+  --bp-xl: 1280px;   /* desktop */
+
+  /* ── Responsive type scale (clamp = scales fluidly between min and max) ── */
+  --font-h1:    clamp(20px, 3.2vw, 28px);
+  --font-h2:    clamp(16px, 2.4vw, 20px);
+  --font-h3:    clamp(14px, 2vw,   16px);
+  --font-body:  clamp(14px, 1.8vw, 15px);
+  --font-small: clamp(12px, 1.5vw, 13px);
 }

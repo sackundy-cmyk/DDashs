@@ -18,6 +18,17 @@ import reportsRouter  from './routes/reports.js';
 import notesRouter    from './routes/notes.js';
 import { startWeeklyCron } from './lib/weeklyJob.js';
 
+// ── JWT secret guard ─────────────────────────────────────────
+// In production we refuse to boot without a real secret so we never silently
+// fall back to the dev default in routes/auth.js. In test/dev a default is OK.
+if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET environment variable is required in production. Refusing to start.');
+  process.exit(1);
+}
+if (!process.env.JWT_SECRET) {
+  console.warn('⚠  JWT_SECRET not set — using insecure dev default. Do not run in production.');
+}
+
 const app  = express();
 const PORT = process.env.PORT || 4000;
 
