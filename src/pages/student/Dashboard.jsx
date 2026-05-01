@@ -1,20 +1,61 @@
 // ============================================================
-//  src/pages/student/Dashboard.jsx
+//  src/pages/student/Dashboard.jsx — enhanced design
 // ============================================================
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import DashboardLayout from '../../components/DashboardLayout.jsx';
+import { Icon, ProgressRing, Sparkline, Badge, LiftButton } from '../../components/EnhancedUI.jsx';
 import s from '../../components/DashboardLayout.module.css';
 
 const API = import.meta.env.VITE_API_URL || '/api';
 
-function statusLabel(completed, total) {
-  if (!total)      return { label: 'Not Started', cls: s.pillGray };
-  if (completed >= total) return { label: 'Completed',   cls: s.pillGreen };
-  if (completed > 0)      return { label: 'In Progress', cls: s.pillBlue };
-  return { label: 'Not Started', cls: s.pillGray };
+const CLASS_PALETTE = ['#1E6FD9', '#0891B2', '#16A34A', '#D97706', '#7C3AED', '#DB2777'];
+
+function classColor(cls, idx) {
+  return cls.color || CLASS_PALETTE[idx % CLASS_PALETTE.length];
+}
+
+function statusVariant(p) {
+  if (!p) return 'not-started';
+  if (p.completed_sections >= p.total_sections && p.total_sections > 0) return 'complete';
+  if (p.completed_sections > 0) return 'in-progress';
+  return 'not-started';
+}
+
+const STAT_COLORS = {
+  blue:   { bar: '#1E6FD9', tint: '#DBEAFE' },
+  teal:   { bar: '#0891B2', tint: '#CFFAFE' },
+  amber:  { bar: '#D97706', tint: '#FEF3C7' },
+  purple: { bar: '#7C3AED', tint: '#EDE9FE' },
+  green:  { bar: '#16A34A', tint: '#DCFCE7' },
+};
+
+function StatCard({ label, value, icon, color = 'blue', sparkData, trend }) {
+  const c = STAT_COLORS[color] || STAT_COLORS.blue;
+  const trendCls = trend > 0 ? s.trendUp : trend < 0 ? s.trendDown : s.trendFlat;
+  return (
+    <div className={s.statCard}>
+      <div className={s.statTopBar} style={{ background: c.bar }} />
+      <div className={s.statHead}>
+        <div className={s.statIconBox} style={{ background: c.tint }}>
+          <Icon name={icon} size={20} color={c.bar} />
+        </div>
+        {sparkData && <Sparkline data={sparkData} color={c.bar} />}
+      </div>
+      <div>
+        <div className={s.statNumber}>{value}</div>
+        <div className={s.statLabel}>{label}</div>
+      </div>
+      {trend !== undefined && (
+        <div className={`${s.statTrend} ${trendCls}`}>
+          <Icon name="trending_up" size={13} color="currentColor" />
+          {trend > 0 ? '+' : ''}{trend}% this week
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function StudentDashboard() {
@@ -34,188 +75,271 @@ export default function StudentDashboard() {
     }).finally(() => setLoading(false));
   }, [user.id]);
 
-  // Build per-lesson lookup: classId-unit-lessonNum → {completedSections, totalSections}
+  // Build per-lesson lookup
   const progressMap = {};
   progress.forEach(p => {
-    const key = `${p.class_id}-${p.unit}-${p.lesson_num}`;
-    progressMap[key] = p;
+    progressMap[`${p.class_id}-${p.unit}-${p.lesson_num}`] = p;
   });
 
   // Stats
-  const totalLessons   = classes.reduce((s, c) => s + (c.lesson_count || 0), 0);
-  const completedCount = Object.values(progressMap).filter(p => p.completed_sections >= 1).length;
-  const inProgress     = Object.values(progressMap).filter(p => p.completed_sections > 0 && p.completed_sections < 5).length;
+  const totalLessons   = classes.reduce((acc, c) => acc + (c.lesson_count || 0), 0);
+  const touchedCount   = Object.values(progressMap).filter(p => p.completed_sections >= 1).length;
+  const inProgress     = Object.values(progressMap).filter(p => p.completed_sections > 0 && p.completed_sections < (p.total_sections || 5)).length;
 
-  // Recent activity: last 3 progress entries
+  // Recent activity
   const recent = progress
     .filter(p => p.last_attempt_at)
     .sort((a, b) => new Date(b.last_attempt_at) - new Date(a.last_attempt_at))
     .slice(0, 3);
 
-  // Next lesson to continue (first not fully completed)
+  // Next lesson to continue
   const nextLesson = (() => {
     for (const cls of classes) {
       for (let i = 1; i <= (cls.lesson_count || 0); i++) {
         const key = `${cls.id}-1-${i}`;
         const p = progressMap[key];
-        if (!p || p.completed_sections < p.total_sections) {
-          return { classId: cls.id, className: cls.name, unit: 1, lessonNum: i };
+        if (!p || p.completed_sections < (p.total_sections || 1)) {
+          return { classId: cls.id, className: cls.name, unit: 1, lessonNum: i, p };
         }
       }
     }
     return null;
   })();
 
+  // Overall progress %
+  const sectionsDone = progress.reduce((acc, p) => acc + (p.completed_sections || 0), 0);
+  const sectionsTotal = progress.reduce((acc, p) => acc + (p.total_sections || 0), 0);
+  const overallPct = sectionsTotal ? Math.round((sectionsDone / sectionsTotal) * 100) : 0;
+
   if (loading) return (
     <DashboardLayout>
-      <div style={{ textAlign: 'center', padding: 60, color: '#64748b' }}>Loading…</div>
+      <div style={{ textAlign: 'center', padding: 60, color: '#64748B' }}>Loading…</div>
     </DashboardLayout>
   );
 
+  const firstName = user?.name?.split(' ')[0] || 'there';
+
   return (
     <DashboardLayout>
-      {/* Welcome */}
-      <div style={{
-        background: 'linear-gradient(135deg, #0b2b5e 0%, #1e4a8b 100%)',
-        borderRadius: 20, padding: '24px 28px', marginBottom: 28, color: 'white',
-      }}>
-        <h2 style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>
-          Welcome back, {user?.name?.split(' ')[0]}! 👋
-        </h2>
-        <p style={{ margin: '6px 0 0', color: '#a8c4e8', fontSize: 14 }}>
-          Keep up the great work — you are enrolled in {classes.length} class{classes.length !== 1 ? 'es' : ''}.
-        </p>
-      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+        {/* ── Welcome banner ── */}
+        <div style={{
+          borderRadius: 18,
+          padding: '24px 28px',
+          background: 'linear-gradient(120deg, #1E1B4B 0%, #312E81 50%, #1E3A8A 100%)',
+          position: 'relative',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 16,
+        }}>
+          {/* Dot pattern */}
+          <svg style={{ position: 'absolute', inset: 0, opacity: 0.1, pointerEvents: 'none' }} width="100%" height="100%">
+            <defs>
+              <pattern id="ddash-dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                <circle cx="12" cy="12" r="1.5" fill="white" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#ddash-dots)" />
+          </svg>
+          {/* Glow blob */}
+          <div style={{
+            position: 'absolute', right: 100, top: -40,
+            width: 220, height: 220, borderRadius: '50%',
+            background: 'rgba(99,102,241,0.35)', filter: 'blur(48px)', pointerEvents: 'none',
+          }} />
 
-      {/* Stats */}
-      <div className={s.statsGrid}>
-        {[
-          { icon: '📚', label: 'Classes Enrolled',   value: classes.length,  bg: '#dbeafe', fg: '#1e40af' },
-          { icon: '✅', label: 'Lessons Touched',     value: completedCount,  bg: '#d1fae5', fg: '#065f46' },
-          { icon: '🔄', label: 'In Progress',          value: inProgress,      bg: '#fef9c3', fg: '#854d0e' },
-          { icon: '📋', label: 'Total Lessons',        value: totalLessons,    bg: '#ede9fe', fg: '#5b21b6' },
-        ].map(st => (
-          <div className={s.statCard} key={st.label}>
-            <div className={s.statIcon} style={{ background: st.bg, color: st.fg }}>{st.icon}</div>
-            <div>
-              <div className={s.statNumber}>{st.value}</div>
-              <div className={s.statLabel}>{st.label}</div>
+          <div style={{ position: 'relative', minWidth: 0, flex: 1 }}>
+            <div style={{
+              fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
+              textTransform: 'uppercase', color: '#A5B4FC', marginBottom: 8,
+            }}>Welcome back</div>
+            <div style={{ fontSize: 24, fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', marginBottom: 6 }}>
+              Good day, {firstName}! 👋
+            </div>
+            <div style={{ fontSize: 13.5, color: '#C7D2FE', fontWeight: 500 }}>
+              You're enrolled in {classes.length} class{classes.length !== 1 ? 'es' : ''} · Keep up the great work!
+            </div>
+            <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+              {nextLesson && (
+                <LiftButton
+                  variant="secondary" icon="play"
+                  onClick={() => navigate(`/student/lesson/${nextLesson.unit}/${nextLesson.lessonNum}?classId=${nextLesson.classId}`)}
+                  style={{ background: '#fff', color: '#312E81', border: 'none' }}
+                >
+                  Continue Learning
+                </LiftButton>
+              )}
+              <div style={{ fontSize: 12.5, color: '#A5B4FC', fontWeight: 600 }}>
+                {overallPct}% overall progress
+              </div>
             </div>
           </div>
-        ))}
-      </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-        {/* Continue learning */}
-        <div className={s.card}>
-          <div className={s.cardTitle}>Continue Learning</div>
-          {nextLesson ? (
-            <div style={{
-              background: '#f0f4ff', borderRadius: 14,
-              padding: '18px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            }}>
-              <div>
-                <div style={{ fontWeight: 700, color: '#0b2b5e', fontSize: 15 }}>{nextLesson.className}</div>
-                <div style={{ fontSize: 13, color: '#64748b', marginTop: 3 }}>
-                  Unit {nextLesson.unit} · Lesson {nextLesson.lessonNum}
-                </div>
+          <div style={{ position: 'relative', width: 80, height: 80, flexShrink: 0 }}>
+            <ProgressRing pct={overallPct} size={80} stroke={6} color="#22D3EE" track="rgba(255,255,255,0.18)" />
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 16, fontWeight: 900, color: '#fff', letterSpacing: '-0.03em' }}>{overallPct}%</div>
+                <div style={{ fontSize: 9, color: '#A5B4FC', fontWeight: 600 }}>done</div>
               </div>
-              <button
-                onClick={() => navigate(`/student/lesson/${nextLesson.unit}/${nextLesson.lessonNum}`)}
-                style={{
-                  background: '#2563eb', color: 'white', border: 'none',
-                  padding: '10px 20px', borderRadius: 40, fontWeight: 700,
-                  fontSize: 14, cursor: 'pointer',
-                }}
-              >
-                Continue →
-              </button>
             </div>
-          ) : (
-            <p style={{ color: '#64748b', fontSize: 14 }}>All lessons completed! Great work.</p>
-          )}
+          </div>
         </div>
 
-        {/* Recent activity */}
-        <div className={s.card}>
-          <div className={s.cardTitle}>Recent Activity</div>
-          {recent.length === 0 ? (
-            <p style={{ color: '#64748b', fontSize: 14 }}>No activity yet. Start your first lesson!</p>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {recent.map((r, i) => {
-                const { label, cls: pCls } = statusLabel(r.completed_sections, r.total_sections);
-                return (
+        {/* ── Stats ── */}
+        <div className={s.statsGrid} style={{ marginBottom: 0 }}>
+          <StatCard label="Classes Enrolled" value={classes.length} icon="classes" color="blue" />
+          <StatCard label="Lessons Touched"  value={touchedCount}    icon="book"    color="teal" />
+          <StatCard label="In Progress"      value={inProgress}      icon="zap"     color="amber" />
+          <StatCard label="Total Lessons"    value={totalLessons}    icon="chart"   color="purple" />
+        </div>
+
+        {/* ── Continue + Recent activity ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          {/* Continue learning */}
+          <div className={s.card} style={{ marginBottom: 0 }}>
+            <div className={s.cardTitle}>Continue Learning</div>
+            {nextLesson ? (
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 14,
+                padding: '14px 16px', borderRadius: 12,
+                background: '#F8FAFC', border: '1.5px solid #E2E8F0',
+              }}>
+                <div style={{
+                  width: 44, height: 44, borderRadius: 12,
+                  background: 'linear-gradient(135deg, #1E6FD9, #6366F1)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}>
+                  <Icon name="book" size={20} color="#fff" />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 14, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>
+                    {nextLesson.className}
+                  </div>
+                  <div style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
+                    Unit {nextLesson.unit} · Lesson {nextLesson.lessonNum}
+                  </div>
+                  <div style={{ marginTop: 8, height: 4, background: '#E2E8F0', borderRadius: 4, overflow: 'hidden' }}>
+                    <div style={{
+                      width: `${nextLesson.p ? Math.round(((nextLesson.p.completed_sections || 0) / Math.max(1, nextLesson.p.total_sections || 1)) * 100) : 0}%`,
+                      height: '100%',
+                      background: 'linear-gradient(90deg, #1E6FD9, #22D3EE)',
+                      borderRadius: 4,
+                    }} />
+                  </div>
+                </div>
+                <LiftButton variant="primary" size="sm" icon="play"
+                  onClick={() => navigate(`/student/lesson/${nextLesson.unit}/${nextLesson.lessonNum}?classId=${nextLesson.classId}`)}>
+                  Continue
+                </LiftButton>
+              </div>
+            ) : (
+              <div style={{ color: '#64748B', fontSize: 14 }}>All lessons completed! Great work.</div>
+            )}
+          </div>
+
+          {/* Recent activity */}
+          <div className={s.card} style={{ marginBottom: 0 }}>
+            <div className={s.cardTitle}>Recent Activity</div>
+            {recent.length === 0 ? (
+              <div style={{ color: '#64748B', fontSize: 14 }}>No activity yet. Start your first lesson!</div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {recent.map((r, i) => (
                   <div key={i} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '10px 14px', background: '#f8fafd', borderRadius: 12,
+                    display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '10px 12px', borderRadius: 10,
                   }}>
-                    <div>
-                      <div style={{ fontWeight: 600, fontSize: 14, color: '#1e293b' }}>
+                    <div style={{
+                      width: 34, height: 34, borderRadius: 9,
+                      background: '#EEF2FF',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    }}>
+                      <Icon name="book" size={15} color="#1E6FD9" />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#0F172A', letterSpacing: '-0.01em' }}>
                         Unit {r.unit} · Lesson {r.lesson_num}
                       </div>
-                      <div style={{ fontSize: 12, color: '#94a3b8' }}>
+                      <div style={{ fontSize: 11.5, color: '#64748B', marginTop: 1 }}>
                         {new Date(r.last_attempt_at).toLocaleDateString()}
                       </div>
                     </div>
-                    <span className={`${s.pill} ${pCls}`}>{label}</span>
+                    <Badge variant={statusVariant(r)} />
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Enrolled classes quick view */}
-      <div className={s.card} style={{ marginTop: 0 }}>
-        <div className={s.cardTitle}>My Classes</div>
-        <div className={s.cardGrid}>
-          {classes.map(cls => {
-            const lessons = Array.from({ length: cls.lesson_count || 0 }, (_, i) => i + 1);
-            const done = lessons.filter(i => {
-              const p = progressMap[`${cls.id}-1-${i}`];
-              return p && p.completed_sections > 0;
-            }).length;
-            const pct = cls.lesson_count ? Math.round((done / cls.lesson_count) * 100) : 0;
-
-            return (
-              <div
-                key={cls.id}
-                onClick={() => navigate('/student/classes')}
-                style={{
-                  background: '#f8fafd', border: '1.5px solid #e2e8f0',
-                  borderRadius: 16, padding: '18px 20px', cursor: 'pointer',
-                  transition: 'box-shadow 0.2s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,20,50,0.1)'}
-                onMouseLeave={e => e.currentTarget.style.boxShadow = ''}
-              >
-                <div style={{
-                  width: 36, height: 36, borderRadius: 10,
-                  background: cls.color || '#1E6FD9',
-                  display: 'flex', alignItems: 'center',
-                  justifyContent: 'center', fontSize: 18, marginBottom: 10,
-                }}>
-                  📚
-                </div>
-                <div style={{ fontWeight: 700, fontSize: 15, color: '#0b2b5e', marginBottom: 4 }}>
-                  {cls.name}
-                </div>
-                <div style={{ fontSize: 12, color: '#64748b', marginBottom: 12 }}>
-                  {cls.teacher_name} · {cls.lesson_count} lessons
-                </div>
-                <div style={{ background: '#e2e8f0', borderRadius: 99, height: 6, overflow: 'hidden' }}>
-                  <div style={{
-                    height: '100%', borderRadius: 99,
-                    background: cls.color || '#1E6FD9', width: `${pct}%`,
-                    transition: 'width 0.4s ease',
-                  }} />
-                </div>
-                <div style={{ fontSize: 12, color: '#64748b', marginTop: 5 }}>{pct}% complete</div>
+                ))}
               </div>
-            );
-          })}
+            )}
+          </div>
+        </div>
+
+        {/* ── My Classes ── */}
+        <div className={s.card} style={{ marginBottom: 0 }}>
+          <div className={s.cardTitle}>My Classes</div>
+          <div className={s.cardGrid}>
+            {classes.map((cls, idx) => {
+              const lessons = Array.from({ length: cls.lesson_count || 0 }, (_, i) => i + 1);
+              const done = lessons.filter(i => {
+                const p = progressMap[`${cls.id}-1-${i}`];
+                return p && p.completed_sections > 0;
+              }).length;
+              const pct = cls.lesson_count ? Math.round((done / cls.lesson_count) * 100) : 0;
+              const color = classColor(cls, idx);
+
+              return (
+                <div
+                  key={cls.id}
+                  onClick={() => navigate('/student/classes')}
+                  style={{
+                    borderRadius: 14,
+                    border: '1.5px solid #EEF2F7',
+                    padding: 16,
+                    cursor: 'pointer',
+                    transition: 'all 0.18s',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    background: '#FFFFFF',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.boxShadow = '0 6px 22px rgba(15,23,42,0.10)';
+                    e.currentTarget.style.borderColor = '#CBD5E1';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.borderColor = '#EEF2F7';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <div style={{
+                    position: 'absolute', top: 0, left: 0, right: 0,
+                    height: 3, background: color, borderRadius: '14px 14px 0 0',
+                  }} />
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <div style={{
+                      width: 40, height: 40, borderRadius: 11,
+                      background: color,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <Icon name="book" size={18} color="#fff" />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <ProgressRing pct={pct} size={40} stroke={4} color={color} />
+                      <div style={{ fontSize: 10, fontWeight: 800, color: '#334155', marginTop: 2 }}>{pct}%</div>
+                    </div>
+                  </div>
+                  <div style={{
+                    fontSize: 13.5, fontWeight: 800, color: '#0F172A',
+                    letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 4,
+                  }}>{cls.name}</div>
+                  <div style={{ fontSize: 11.5, color: '#64748B' }}>{cls.teacher_name}</div>
+                  <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>{cls.lesson_count} lessons</div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </DashboardLayout>
