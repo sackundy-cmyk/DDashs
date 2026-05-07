@@ -156,8 +156,37 @@ export default function L3_FunctionMachines() {
                 return (
                   <QItem key={q.lbl} last={qi===ga.length-1}>
                     {q.guided&&<GuidedHint>{q.hint}</GuidedHint>}
-                    <QItemLabel><LblCircle letter={q.lbl}/><span style={{fontSize:15,fontWeight:700}}>IN: {q.ins.join(', ')} → OUT: {q.outs.join(', ')}</span></QItemLabel>
-                    <MCQOptions options={opts} onSelect={o=>setRuleSel(p=>({...p,[q.lbl]:o}))}/>
+                    <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
+                      <LblCircle letter={q.lbl}/>
+                    </div>
+                    <div style={{overflowX:'auto',marginBottom:12}}>
+                      <table style={{borderCollapse:'separate',borderSpacing:0,borderRadius:10,overflow:'hidden',border:'2px solid var(--border)',minWidth:280}}>
+                        <tbody>
+                          <tr>
+                            <th style={{padding:'8px 12px',background:'#334155',color:'#fff',textAlign:'center',fontWeight:900,fontSize:15}}>IN</th>
+                            {q.ins.map((v,i)=><td key={i} style={{padding:'8px 12px',textAlign:'center',fontSize:17,fontWeight:900,background:'#F8FAFF',color:'#334155',border:'1px solid var(--border)'}}>{v}</td>)}
+                          </tr>
+                          <tr>
+                            <th style={{padding:'8px 12px',background:'var(--blue)',color:'#fff',textAlign:'center',fontWeight:900,fontSize:15}}>OUT</th>
+                            {q.outs.map((v,i)=><td key={i} style={{padding:'8px 12px',textAlign:'center',fontSize:17,fontWeight:900,background:'var(--blue-light)',color:'var(--blue-dark)',border:'1px solid var(--border)'}}>{v}</td>)}
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div style={{display:'flex',flexWrap:'wrap',gap:8,marginTop:4}}>
+                      {opts.map(o=>{
+                        const locked=['correct','wrong','reveal'].includes(o.state);
+                        return (
+                          <button key={o.id} onClick={()=>!locked&&setRuleSel(p=>({...p,[q.lbl]:o.id}))} style={{
+                            padding:'10px 18px',borderRadius:10,fontSize:16,fontWeight:700,
+                            fontFamily:'var(--font)',cursor:locked?'default':'pointer',
+                            border:`2px solid ${o.state==='correct'?'var(--green)':o.state==='wrong'?'var(--red)':o.state==='selected'?'#9333EA':'var(--border)'}`,
+                            background:o.state==='correct'?'var(--green-bg)':o.state==='wrong'?'var(--red-bg)':o.state==='selected'?'#CE82FF':'white',
+                            color:o.state==='correct'?'var(--green)':o.state==='wrong'?'var(--red)':o.state==='selected'?'white':'var(--text)',
+                          }}>{o.label}</button>
+                        );
+                      })}
+                    </div>
                   </QItem>
                 );
               })}

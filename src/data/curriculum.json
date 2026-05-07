@@ -56,6 +56,24 @@
       "lessons": [
         { "id": 1, "title": "Brackets", "slug": "brackets" }
       ]
+    },
+    {
+      "id": 6,
+      "title": "Geometry",
+      "colour": "#0891B2",
+      "lessons": [
+        { "id": 1,  "title": "Lines and Directions",         "slug": "lines" },
+        { "id": 2,  "title": "Types of Angles",              "slug": "angle-types" },
+        { "id": 3,  "title": "Measuring Angles",             "slug": "measuring-angles" },
+        { "id": 4,  "title": "Polygons",                     "slug": "polygons" },
+        { "id": 5,  "title": "Triangles & Quadrilaterals",   "slug": "triangles-quads" },
+        { "id": 6,  "title": "Lines of Symmetry",            "slug": "symmetry" },
+        { "id": 7,  "title": "3D Shapes",                    "slug": "3d-shapes" },
+        { "id": 8,  "title": "Nets of 3D Shapes",            "slug": "nets" },
+        { "id": 9,  "title": "Coordinates",                  "slug": "coordinates" },
+        { "id": 10, "title": "Transformations",              "slug": "transformations" },
+        { "id": 11, "title": "Circles",                      "slug": "circles" }
+      ]
     }
   ]
 }

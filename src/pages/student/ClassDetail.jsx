@@ -7,11 +7,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import DashboardLayout from '../../components/DashboardLayout.jsx';
-import { Icon, ProgressRing } from '../../components/EnhancedUI.jsx';
+import { Icon } from '../../components/EnhancedUI.jsx';
 import s from '../../components/DashboardLayout.module.css';
 
 const API = import.meta.env.VITE_API_URL || '/api';
-const PALETTE = ['#1E6FD9', '#0891B2', '#16A34A', '#D97706', '#7C3AED', '#DB2777'];
+const PALETTE = ['#58CC02', '#1CB0F6', '#FF9600', '#CE82FF', '#FF4B4B', '#FFC800'];
 
 const UNIT_TITLES = {
   1: 'Decimals',
@@ -76,19 +76,19 @@ export default function ClassDetail() {
     <DashboardLayout>
       {/* Breadcrumb */}
       <div style={{ marginBottom: 8, fontSize: 13, color: '#64748B' }}>
-        <Link to="/student/classes" style={{ color: '#1E6FD9', fontWeight: 700, textDecoration: 'none' }}>My Classes</Link>
+        <Link to="/student/classes" style={{ color: '#1CB0F6', fontWeight: 700, textDecoration: 'none' }}>My Classes</Link>
         <span style={{ margin: '0 8px' }}>›</span>
         <span style={{ fontWeight: 600 }}>{cls.name}</span>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 22 }}>
         <div style={{
-          width: 52, height: 52, borderRadius: 14,
-          background: `linear-gradient(135deg, ${baseColor}, ${baseColor}cc)`,
+          width: 56, height: 56, borderRadius: 16,
+          background: `linear-gradient(145deg, ${baseColor}, ${baseColor}bb)`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: `0 4px 12px ${baseColor}44`,
+          boxShadow: `0 6px 18px ${baseColor}44`,
         }}>
-          <Icon name="book" size={24} color="#fff" />
+          <Icon name="book" size={26} color="#fff" />
         </div>
         <div>
           <h2 style={{ fontSize: 'var(--font-h1)', fontWeight: 900, color: '#0F172A', margin: 0, letterSpacing: '-0.03em' }}>
@@ -100,55 +100,81 @@ export default function ClassDetail() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20 }}>
         {units.map(u => (
           <div
             key={u.unit}
             onClick={() => navigate(`/student/classes/${classId}/unit/${u.unit}`)}
             style={{
-              borderRadius: 16,
-              border: '1.5px solid #EEF2F7',
-              padding: 18,
-              cursor: 'pointer',
-              transition: 'all 0.18s',
-              position: 'relative',
+              borderRadius: 20,
               overflow: 'hidden',
               background: '#FFFFFF',
+              border: '2px solid #F0F4FF',
+              cursor: 'pointer',
+              transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+              boxShadow: '0 2px 10px rgba(15,23,42,0.06)',
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.boxShadow = '0 8px 24px rgba(15,23,42,0.10)';
-              e.currentTarget.style.borderColor = '#CBD5E1';
-              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = `0 12px 32px ${u.color}33`;
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.boxShadow = 'none';
-              e.currentTarget.style.borderColor = '#EEF2F7';
               e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 2px 10px rgba(15,23,42,0.06)';
             }}
           >
+            {/* Vivid gradient header */}
             <div style={{
-              position: 'absolute', top: 0, left: 0, right: 0,
-              height: 4, background: u.color, borderRadius: '16px 16px 0 0',
-            }} />
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
+              height: 130,
+              background: `linear-gradient(145deg, ${u.color}, ${u.color}bb)`,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 6,
+              padding: '0 20px',
+              position: 'relative',
+            }}>
+              {/* Big unit number circle */}
               <div style={{
-                fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-                color: u.color, padding: '4px 10px', borderRadius: 9999, background: `${u.color}15`,
+                width: 60, height: 60, borderRadius: '50%',
+                background: 'rgba(255,255,255,0.22)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 26, fontWeight: 900, color: '#fff',
+              }}>
+                {u.unit}
+              </div>
+              <div style={{
+                fontSize: 13, fontWeight: 800, color: 'rgba(255,255,255,0.85)',
+                letterSpacing: '0.06em', textTransform: 'uppercase',
               }}>
                 Unit {u.unit}
               </div>
-              <div style={{ position: 'relative', width: 48, height: 48 }}>
-                <ProgressRing pct={u.pct} size={48} stroke={4} color={u.color} />
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#0F172A' }}>
+            </div>
+
+            {/* White body */}
+            <div style={{ padding: '16px 20px 20px' }}>
+              <div style={{ fontSize: 17, fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 12 }}>
+                {u.title}
+              </div>
+
+              {/* Progress bar + % */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                <div style={{ flex: 1, height: 8, background: '#F0F4FF', borderRadius: 4, overflow: 'hidden' }}>
+                  <div style={{
+                    width: `${u.pct}%`, height: '100%',
+                    background: u.color, borderRadius: 4,
+                    transition: 'width 0.4s ease',
+                  }} />
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 900, color: u.color, minWidth: 44, textAlign: 'right' }}>
                   {u.pct}%
                 </div>
               </div>
-            </div>
-            <div style={{ fontSize: 'var(--font-h3)', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 4 }}>
-              {u.title}
-            </div>
-            <div style={{ fontSize: 12, color: '#64748B' }}>
-              {u.doneLessons} of {u.totalLessons} lessons complete
+
+              <div style={{ fontSize: 12.5, color: '#94A3B8', fontWeight: 600 }}>
+                {u.doneLessons} of {u.totalLessons} lessons complete
+              </div>
             </div>
           </div>
         ))}

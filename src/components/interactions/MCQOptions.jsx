@@ -9,7 +9,7 @@ import React from 'react';
 const STATE_STYLES = {
   default:  { bg: '#fff',                color: 'var(--text)', border: '2.5px solid var(--border)', cursor: 'pointer' },
   hovered:  { bg: 'var(--blue-light)',   color: 'var(--blue-dark)', border: '2.5px solid var(--blue)', cursor: 'pointer' },
-  selected: { bg: 'var(--blue)',         color: '#fff',  border: '2.5px solid var(--blue)',  cursor: 'pointer' },
+  selected: { bg: '#CE82FF',             color: '#fff',  border: '2.5px solid #9333EA',     cursor: 'pointer' },
   correct:  { bg: 'var(--green-bg)',     color: 'var(--green)', border: '2.5px solid var(--green)', cursor: 'default' },
   wrong:    { bg: 'var(--red-bg)',       color: 'var(--red)',   border: '2.5px solid var(--red)',   cursor: 'default' },
   reveal:   { bg: 'var(--green-bg)',     color: 'var(--green)', border: '2.5px dashed var(--green)', cursor: 'default' },

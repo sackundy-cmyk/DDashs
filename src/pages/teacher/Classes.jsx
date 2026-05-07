@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 //  src/pages/teacher/Classes.jsx
 // ============================================================
 
@@ -40,7 +40,7 @@ function StudentRoster({ classId, color }) {
     } catch (err) { toast.error(err.message); }
   };
 
-  if (loading) return <div style={{ fontSize: 13, color: '#94a3b8', padding: '8px 0' }}>Loading students…</div>;
+  if (loading) return <div style={{ fontSize: 13, color: '#94a3b8', padding: '8px 0' }}>Loading studentsâ€¦</div>;
   if (students.length === 0) return <div style={{ fontSize: 13, color: '#94a3b8', padding: '8px 0' }}>No students enrolled.</div>;
 
   return (
@@ -63,7 +63,7 @@ function StudentRoster({ classId, color }) {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 600, fontSize: 13, color: '#1e293b' }}>{st.name}</div>
                 <div style={{ fontSize: 11, color: '#94a3b8' }}>
-                  {st.sections_done ?? 0} sections · {st.avg_score != null ? `${Math.round(st.avg_score)}% avg` : 'no score'}
+                  {st.sections_done ?? 0} sections Â· {st.avg_score != null ? `${Math.round(st.avg_score)}% avg` : 'no score'}
                 </div>
               </div>
               <button
@@ -126,18 +126,18 @@ function ClassRow({ cls, onOpenLesson }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{
             width: 38, height: 38, borderRadius: 10,
-            background: cls.color || '#1E6FD9',
+            background: cls.color || '#1CB0F6',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 18,
-          }}>📚</div>
+          }}>ðŸ“š</div>
           <div>
             <div style={{ fontWeight: 700, fontSize: 15, color: '#0b2b5e' }}>{cls.name}</div>
             <div style={{ fontSize: 13, color: '#64748b' }}>
-              {cls.grade} · {cls.student_count} students · {cls.lesson_count} lessons
+              {cls.grade} Â· {cls.student_count} students Â· {cls.lesson_count} lessons
             </div>
           </div>
         </div>
-        <span style={{ fontSize: 18, transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : '' }}>▼</span>
+        <span style={{ fontSize: 18, transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : '' }}>â–¼</span>
       </div>
 
       {open && (
@@ -232,12 +232,12 @@ export default function TeacherClasses() {
       <div style={{ marginBottom: 24 }}>
         <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0b2b5e', margin: 0 }}>My Classes</h2>
         <p style={{ color: '#64748b', margin: '4px 0 0', fontSize: 14 }}>
-          {classes.length} class{classes.length !== 1 ? 'es' : ''} — expand to manage lessons and students
+          {classes.length} class{classes.length !== 1 ? 'es' : ''} â€” expand to manage lessons and students
         </p>
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: 60, color: '#64748b' }}>Loading…</div>
+        <div style={{ textAlign: 'center', padding: 60, color: '#64748b' }}>Loadingâ€¦</div>
       ) : classes.length === 0 ? (
         <div className={s.card} style={{ textAlign: 'center', padding: 48 }}>
           <p style={{ color: '#64748b' }}>No classes assigned yet.</p>

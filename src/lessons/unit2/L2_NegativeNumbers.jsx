@@ -75,7 +75,7 @@ function NumberLine({ line }) {
         {ticks.map((v, i) => (
           <g key={i}>
             <line x1={x(v)} y1={44} x2={x(v)} y2={56} stroke="#1E40AF" strokeWidth="2"/>
-            <text x={x(v)} y={76} textAnchor="middle" fontSize="13" fontWeight="800" fill="#1E40AF">{v}</text>
+            {(v === line.min || v === line.max) && <text x={x(v)} y={76} textAnchor="middle" fontSize="13" fontWeight="800" fill="#1E40AF">{v}</text>}
           </g>
         ))}
         {/* arrows */}

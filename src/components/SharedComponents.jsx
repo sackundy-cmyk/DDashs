@@ -122,15 +122,30 @@ export function LblCircle({ letter }) {
 }
 
 /* ── NumChip ───────────────────────────────────────────────── */
-export function NumChip({ value }) {
+export function NumChip({ value, color = 'var(--blue)', size = 28 }) {
   return (
     <span style={{
-      background: 'var(--blue)', color: '#fff',
-      borderRadius: 10, padding: '4px 14px',
-      fontSize: 24, fontWeight: 900, lineHeight: 1.3,
+      background: color, color: '#fff',
+      borderRadius: 10, padding: '4px 16px',
+      fontSize: size, fontWeight: 900, lineHeight: 1.35,
       display: 'inline-block', boxShadow: 'var(--shadow-sm)',
+      verticalAlign: 'middle',
     }}>
       {value}
+    </span>
+  );
+}
+
+/* ── Frac — stacked fraction (numerator / line / denominator) ── */
+export function Frac({ num, den, size = 22, color = 'var(--blue)' }) {
+  return (
+    <span style={{
+      display: 'inline-flex', flexDirection: 'column', alignItems: 'center',
+      verticalAlign: 'middle', margin: '0 4px', lineHeight: 1,
+    }}>
+      <span style={{ fontSize: size, fontWeight: 900, color, lineHeight: 1.1 }}>{num}</span>
+      <span style={{ display: 'block', borderBottom: `2.5px solid ${color}`, width: '100%', minWidth: size * 0.9 }} />
+      <span style={{ fontSize: size, fontWeight: 900, color, lineHeight: 1.1 }}>{den}</span>
     </span>
   );
 }

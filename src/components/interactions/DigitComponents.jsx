@@ -66,7 +66,7 @@ export function DigitPalette({ paletteId, decimal = false }) {
 /* ── DigitDropZone ────────────────────────────────────────── */
 const ZONE_BORDER = {
   default: '2.5px dashed var(--border)',
-  filled:  '2.5px solid var(--blue)',
+  filled:  '2.5px solid #CE82FF',
   correct: '2.5px solid var(--green)',
   wrong:   '2.5px solid var(--red)',
   reveal:  '2.5px dashed var(--green)',
@@ -74,7 +74,7 @@ const ZONE_BORDER = {
 };
 const ZONE_BG = {
   default: '#fff',
-  filled:  'var(--blue-light)',
+  filled:  '#F9F0FF',
   correct: 'var(--green-bg)',
   wrong:   'var(--red-bg)',
   reveal:  'var(--green-bg)',
@@ -101,9 +101,9 @@ export function DigitDropZone({ digits = [], zoneState = 'default', onDrop, onRe
   };
 
   const digitStyle = {
-    background: state === 'correct' || state === 'reveal' ? 'var(--green-bg)' : state === 'wrong' ? 'var(--red-bg)' : 'var(--blue-light)',
-    color: state === 'correct' || state === 'reveal' ? 'var(--green)' : state === 'wrong' ? 'var(--red)' : 'var(--blue-dark)',
-    border: state === 'correct' || state === 'reveal' ? '2px solid var(--green)' : state === 'wrong' ? '2px solid var(--red)' : '2px solid var(--blue)',
+    background: state === 'correct' || state === 'reveal' ? 'var(--green-bg)' : state === 'wrong' ? 'var(--red-bg)' : '#F9F0FF',
+    color: state === 'correct' || state === 'reveal' ? 'var(--green)' : state === 'wrong' ? 'var(--red)' : '#7B2FA8',
+    border: state === 'correct' || state === 'reveal' ? '2px solid var(--green)' : state === 'wrong' ? '2px solid var(--red)' : '2px solid #CE82FF',
     borderRadius: 7, width: 34, height: 38,
     fontSize: 18, fontWeight: 900,
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',

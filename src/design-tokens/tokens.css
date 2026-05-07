@@ -35,6 +35,23 @@
   --orange-bg:     #FFF7ED;
   --orange-border: #FED7AA;
 
+  /* ── Nav/UI brand palette (Duolingo-vibrant) ── */
+  --brand-green:        #58CC02;
+  --brand-green-dark:   #47A301;
+  --brand-green-light:  #D7F5B3;
+  --brand-blue:         #1CB0F6;
+  --brand-blue-dark:    #0E8DC8;
+  --brand-blue-light:   #D0EFFE;
+  --brand-yellow:       #FFC800;
+  --brand-yellow-light: #FFF3C4;
+  --brand-coral:        #FF4B4B;
+  --brand-coral-light:  #FFD0D0;
+  --brand-purple:       #CE82FF;
+  --brand-purple-dark:  #9333EA;
+  --brand-purple-light: #F3E8FF;
+  --brand-orange:       #FF9600;
+  --brand-orange-light: #FFF0D0;
+
   /* ── Neutral surface ── */
   --bg:     #F0F4FF;
   --border: #C7D7F5;

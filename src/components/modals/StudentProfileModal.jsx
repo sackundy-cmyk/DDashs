@@ -25,6 +25,7 @@ export default function StudentProfileModal({ open, onClose, student, classId: c
   const [classId, setClassId] = useState(classIdProp || null);
   const [loading, setLoading] = useState(false);
   const [newPwd, setNewPwd] = useState('');
+  const [certificates, setCertificates] = useState([]);
 
   const lessons = useMemo(
     () => curriculum.units.flatMap(u => u.lessons.map(l => ({ unit: u.id, lesson_num: l.id, title: l.title }))),
@@ -67,6 +68,16 @@ export default function StudentProfileModal({ open, onClose, student, classId: c
     }).finally(() => !cancelled && setLoading(false));
     return () => { cancelled = true; };
   }, [open, student, classId, authFetch]);
+
+  // Step 3: load certificates for this student
+  useEffect(() => {
+    if (!open || !student) return;
+    let cancelled = false;
+    authFetch(`${API}/certificates/student/${student.id}`)
+      .then(r => r.json())
+      .then(d => { if (!cancelled) setCertificates(d.certificates || []); });
+    return () => { cancelled = true; };
+  }, [open, student, authFetch]);
 
   if (!student) return null;
 
@@ -140,6 +151,39 @@ export default function StudentProfileModal({ open, onClose, student, classId: c
     if (completed.length === 0) return null;
     return Math.round(completed.reduce((a, r) => a + (r.score || 0), 0) / completed.length);
   })();
+
+  // Certificates for the currently-selected class
+  const certForClass = certificates.filter(c => c.class_id === classId);
+  const hasCert = (type, unit = null, lessonNum = null) =>
+    certForClass.find(c => c.type === type
+      && (c.unit ?? null) === unit
+      && (c.lesson_num ?? null) === lessonNum);
+
+  const issueCert = async (type, unit = null, lessonNum = null, score = null) => {
+    if (!classId) { toast.error('Select a class first'); return; }
+    try {
+      const res = await authFetch(`${API}/certificates`, {
+        method: 'POST',
+        body: JSON.stringify({ studentId: student.id, classId, type, unit, lessonNum, score }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed');
+      // Reload certs
+      const fresh = await authFetch(`${API}/certificates/student/${student.id}`).then(r => r.json());
+      setCertificates(fresh.certificates || []);
+      toast.success('Certificate issued');
+    } catch (err) { toast.error(err.message); }
+  };
+
+  const revokeCert = async (certId) => {
+    if (!window.confirm('Revoke this certificate?')) return;
+    try {
+      const res = await authFetch(`${API}/certificates/${certId}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error((await res.json()).error || 'Failed');
+      setCertificates(prev => prev.filter(c => c.id !== certId));
+      toast.success('Certificate revoked');
+    } catch (err) { toast.error(err.message); }
+  };
 
   return (
     <Modal open={open} onClose={onClose} title={student.name} width={680}
@@ -215,6 +259,63 @@ export default function StudentProfileModal({ open, onClose, student, classId: c
             </div>
           ))}
 
+          {/* ── Certificates ───────────────────────────────────── */}
+          <div style={{ marginTop: 18, padding: 14, background: '#f0fdf4', borderRadius: 10, border: '1px solid #bbf7d0' }}>
+            <div style={{ fontWeight: 800, fontSize: 13, color: '#166534', marginBottom: 8 }}>
+              Certificates
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {/* Course */}
+              <CertRow
+                label="Course certificate"
+                sublabel={overallAcc != null ? `Average ${overallAcc}%` : null}
+                cert={hasCert('course')}
+                onIssue={() => issueCert('course', null, null, overallAcc)}
+                onRevoke={revokeCert}
+              />
+              {/* Per unit */}
+              {Object.keys(byUnit).map(u => {
+                const unitNum = Number(u);
+                const unitRows = progressRows.filter(p => p.unit === unitNum && p.completed === 1);
+                const unitAcc = unitRows.length
+                  ? Math.round(unitRows.reduce((a, r) => a + (r.score || 0), 0) / unitRows.length)
+                  : null;
+                return (
+                  <CertRow
+                    key={`unit-${u}`}
+                    label={`Unit ${u} certificate`}
+                    sublabel={unitAcc != null ? `Average ${unitAcc}%` : null}
+                    cert={hasCert('unit', unitNum)}
+                    onIssue={() => issueCert('unit', unitNum, null, unitAcc)}
+                    onRevoke={revokeCert}
+                  />
+                );
+              })}
+              {/* Per lesson — collapsed list, each lesson row */}
+              <details style={{ marginTop: 6 }}>
+                <summary style={{ cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#166534' }}>
+                  Per-lesson certificates ({lessons.length})
+                </summary>
+                <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  {lessons.map(l => {
+                    const acc = accuracyFor(l.unit, l.lesson_num);
+                    return (
+                      <CertRow
+                        key={`l-${l.unit}-${l.lesson_num}`}
+                        label={`U${l.unit}L${l.lesson_num} · ${l.title}`}
+                        sublabel={acc != null ? `Score ${acc}%` : null}
+                        cert={hasCert('lesson', l.unit, l.lesson_num)}
+                        onIssue={() => issueCert('lesson', l.unit, l.lesson_num, acc)}
+                        onRevoke={revokeCert}
+                        compact
+                      />
+                    );
+                  })}
+                </div>
+              </details>
+            </div>
+          </div>
+
           <StudentNotesTimeline studentId={student.id} />
 
           <div style={{ marginTop: 18, padding: 14, background: '#f0f9ff', borderRadius: 10, border: '1px solid #bae6fd' }}>
@@ -262,6 +363,47 @@ export default function StudentProfileModal({ open, onClose, student, classId: c
         </>
       )}
     </Modal>
+  );
+}
+
+function CertRow({ label, sublabel, cert, onIssue, onRevoke, compact = false }) {
+  const issued = !!cert;
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 10,
+      padding: compact ? '6px 10px' : '8px 12px',
+      borderRadius: 8,
+      background: issued ? '#fff' : 'rgba(255,255,255,0.5)',
+      border: '1px solid #d1fae5',
+    }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: compact ? 12 : 13, fontWeight: 700, color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {label}
+        </div>
+        {sublabel && (
+          <div style={{ fontSize: 11, color: '#64748b' }}>{sublabel}</div>
+        )}
+      </div>
+      {issued ? (
+        <>
+          <span style={{
+            fontSize: 10.5, fontWeight: 700, padding: '3px 8px', borderRadius: 9999,
+            background: '#dcfce7', color: '#166534',
+          }}>Issued</span>
+          <button onClick={() => onRevoke(cert.id)} style={{
+            padding: '4px 10px', borderRadius: 8, border: '1px solid #fecaca',
+            background: '#fff', color: '#b91c1c', fontSize: 11, fontWeight: 700,
+            cursor: 'pointer', fontFamily: 'var(--font)',
+          }}>Revoke</button>
+        </>
+      ) : (
+        <button onClick={onIssue} style={{
+          padding: '5px 12px', borderRadius: 8, border: 'none',
+          background: '#16a34a', color: '#fff', fontSize: 11.5, fontWeight: 700,
+          cursor: 'pointer', fontFamily: 'var(--font)',
+        }}>Issue</button>
+      )}
+    </div>
   );
 }
 

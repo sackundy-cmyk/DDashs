@@ -1,5 +1,5 @@
-// ============================================================
-//  src/pages/admin/Dashboard.jsx — enhanced design
+﻿// ============================================================
+//  src/pages/admin/Dashboard.jsx â€” enhanced design
 // ============================================================
 
 import { useState, useEffect } from 'react';
@@ -10,15 +10,15 @@ import s from '../../components/DashboardLayout.module.css';
 
 const API = import.meta.env.VITE_API_URL || '/api';
 
-const CLASS_PALETTE = ['#1E6FD9', '#0891B2', '#16A34A', '#D97706', '#7C3AED', '#DB2777'];
-const TEACHER_PALETTE = ['#7C3AED', '#0891B2', '#16A34A', '#D97706', '#DB2777', '#1E6FD9'];
+const CLASS_PALETTE = ['#58CC02', '#1CB0F6', '#FF9600', '#CE82FF', '#FF4B4B', '#FFC800'];
+const TEACHER_PALETTE = ['#CE82FF', '#1CB0F6', '#58CC02', '#FF9600', '#FF4B4B', '#FFC800'];
 
 const STAT_COLORS = {
-  blue:   { bar: '#1E6FD9', tint: '#DBEAFE' },
-  teal:   { bar: '#0891B2', tint: '#CFFAFE' },
-  amber:  { bar: '#D97706', tint: '#FEF3C7' },
-  purple: { bar: '#7C3AED', tint: '#EDE9FE' },
-  green:  { bar: '#16A34A', tint: '#DCFCE7' },
+  blue:   { bar: '#1565C0', tint: '#D0EFFE' },
+  teal:   { bar: '#1CB0F6', tint: '#D0EFFE' },
+  amber:  { bar: '#FF9600', tint: '#FFF0D0' },
+  purple: { bar: '#CE82FF', tint: '#F3E8FF' },
+  green:  { bar: '#58CC02', tint: '#D7F5B3' },
 };
 
 function StatCard({ label, value, icon, color = 'blue', sparkData, trend }) {
@@ -72,14 +72,14 @@ export default function AdminDashboard() {
 
   if (loading) return (
     <DashboardLayout>
-      <div style={{ textAlign: 'center', padding: 60, color: '#64748B' }}>Loading…</div>
+      <div style={{ textAlign: 'center', padding: 60, color: '#64748B' }}>Loadingâ€¦</div>
     </DashboardLayout>
   );
 
   return (
     <DashboardLayout>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-        {/* ── Stats ── */}
+        {/* â”€â”€ Stats â”€â”€ */}
         <div className={s.statsGrid} style={{ marginBottom: 0 }}>
           <StatCard label="Total Teachers" value={data.teachers.length}      icon="teachers" color="blue" />
           <StatCard label="Total Students" value={data.students.length}      icon="students" color="teal" />
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
           <StatCard label="Platform Avg"   value={`${avgAccuracy}%`}         icon="target"   color="amber" />
         </div>
 
-        {/* ── Teachers + Classes overview ── */}
+        {/* â”€â”€ Teachers + Classes overview â”€â”€ */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16, alignItems: 'flex-start' }}>
           {/* Teachers */}
           <div className={s.card} style={{ marginBottom: 0 }}>
@@ -153,7 +153,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* ── Students Needing Attention ── */}
+        {/* â”€â”€ Students Needing Attention â”€â”€ */}
         <div className={s.card} style={{ marginBottom: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
             <div style={{
@@ -171,7 +171,7 @@ export default function AdminDashboard() {
             }}>{flagged.length} flagged</span>
           </div>
           {flagged.length === 0 ? (
-            <div style={{ color: '#64748B', fontSize: 13.5 }}>No students currently flagged. 🎉</div>
+            <div style={{ color: '#64748B', fontSize: 13.5 }}>No students currently flagged. ðŸŽ‰</div>
           ) : (
             <>
               <div style={{
@@ -199,7 +199,7 @@ export default function AdminDashboard() {
                     <span style={{ fontSize: 12.5, color: '#475569', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{st.email}</span>
                     <span style={{ fontSize: 13, fontWeight: 800, color: '#334155', textAlign: 'center' }}>{st.class_count || 0}</span>
                     <span style={{ fontSize: 13, color: '#1E293B', textAlign: 'center', fontWeight: 700 }}>
-                      {st.avg_score ? `${Math.round(st.avg_score)}%` : '—'}
+                      {st.avg_score ? `${Math.round(st.avg_score)}%` : 'â€”'}
                     </span>
                     <Badge variant={variant} />
                   </div>

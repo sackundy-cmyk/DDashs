@@ -207,7 +207,7 @@ export default function L1_Divisibility() {
                   <QItemLabel>
                     <LblCircle letter={q.lbl}/>
                     <NumChip value={q.n}/>
-                    <span style={{fontSize:17,fontWeight:700}}>is divisible by</span>
+                    <span style={{fontSize:20,fontWeight:700}}>is divisible by</span>
                   </QItemLabel>
                   <DivSlots
                     q={q}

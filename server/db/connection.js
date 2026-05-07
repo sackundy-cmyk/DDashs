@@ -9,7 +9,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DB_PATH = join(__dirname, '../../ddash.db');
+const DB_PATH = process.env.DB_PATH || join(__dirname, '../../ddash.db');
 
 let _db = null;
 
@@ -126,6 +126,65 @@ export async function getDb() {
     );
 
     CREATE INDEX IF NOT EXISTS idx_report_log_student ON report_log(student_id);
+
+    CREATE TABLE IF NOT EXISTS certificates (
+      id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+      student_id         INTEGER NOT NULL REFERENCES users(id),
+      class_id           INTEGER NOT NULL REFERENCES classes(id),
+      type               TEXT NOT NULL CHECK(type IN ('lesson','unit','course')),
+      unit               INTEGER,
+      lesson_num         INTEGER,
+      score              INTEGER,
+      issued_at          TEXT DEFAULT (datetime('now')),
+      issued_by_user_id  INTEGER REFERENCES users(id),
+      UNIQUE(student_id, class_id, type, unit, lesson_num)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_cert_student ON certificates(student_id);
+    CREATE INDEX IF NOT EXISTS idx_cert_class   ON certificates(class_id);
+
+    CREATE TABLE IF NOT EXISTS quizzes (
+      id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+      class_id            INTEGER NOT NULL REFERENCES classes(id),
+      title               TEXT NOT NULL,
+      description         TEXT,
+      time_limit_seconds  INTEGER,
+      pass_mark           INTEGER DEFAULT 60,
+      published           INTEGER DEFAULT 0,
+      created_by          INTEGER REFERENCES users(id),
+      created_at          TEXT DEFAULT (datetime('now')),
+      updated_at          TEXT DEFAULT (datetime('now')),
+      deleted_at          TEXT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_quizzes_class ON quizzes(class_id);
+
+    CREATE TABLE IF NOT EXISTS quiz_questions (
+      id           INTEGER PRIMARY KEY AUTOINCREMENT,
+      quiz_id      INTEGER NOT NULL REFERENCES quizzes(id),
+      type         TEXT NOT NULL CHECK(type IN ('mcq','digit','fraction','true-false')),
+      prompt       TEXT NOT NULL,
+      config       TEXT NOT NULL,
+      points       INTEGER DEFAULT 1,
+      order_index  INTEGER DEFAULT 0
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_qq_quiz ON quiz_questions(quiz_id);
+
+    CREATE TABLE IF NOT EXISTS quiz_attempts (
+      id            INTEGER PRIMARY KEY AUTOINCREMENT,
+      quiz_id       INTEGER NOT NULL REFERENCES quizzes(id),
+      student_id    INTEGER NOT NULL REFERENCES users(id),
+      started_at    TEXT DEFAULT (datetime('now')),
+      submitted_at  TEXT,
+      responses     TEXT,
+      score         INTEGER,
+      max_score     INTEGER,
+      pct           INTEGER
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_qa_quiz    ON quiz_attempts(quiz_id);
+    CREATE INDEX IF NOT EXISTS idx_qa_student ON quiz_attempts(student_id);
   `);
 
   // ── Additive column migrations (idempotent) ───────────────

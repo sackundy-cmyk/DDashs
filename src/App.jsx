@@ -13,16 +13,21 @@ import Login   from './pages/Login.jsx';
 
 // ── Student pages (lazy) ─────────────────────────────────────
 const StudentDashboard = lazy(() => import('./pages/student/Dashboard.jsx'));
-const StudentClasses     = lazy(() => import('./pages/student/Classes.jsx'));
-const StudentClassDetail = lazy(() => import('./pages/student/ClassDetail.jsx'));
-const StudentUnitDetail  = lazy(() => import('./pages/student/UnitDetail.jsx'));
+const StudentClasses      = lazy(() => import('./pages/student/Classes.jsx'));
+const StudentClassDetail  = lazy(() => import('./pages/student/ClassDetail.jsx'));
+const StudentUnitDetail   = lazy(() => import('./pages/student/UnitDetail.jsx'));
+const StudentCertificates = lazy(() => import('./pages/student/Certificates.jsx'));
+const StudentQuizzes      = lazy(() => import('./pages/student/Quizzes.jsx'));
+const StudentTakeQuiz     = lazy(() => import('./pages/student/TakeQuiz.jsx'));
 
 // ── Teacher pages (lazy) ─────────────────────────────────────
-const TeacherDashboard = lazy(() => import('./pages/teacher/Dashboard.jsx'));
-const TeacherClasses   = lazy(() => import('./pages/teacher/Classes.jsx'));
-const TeacherStudents  = lazy(() => import('./pages/teacher/Students.jsx'));
-const TeacherReports   = lazy(() => import('./pages/teacher/Reports.jsx'));
-const TeacherSettings  = lazy(() => import('./pages/teacher/Settings.jsx'));
+const TeacherDashboard   = lazy(() => import('./pages/teacher/Dashboard.jsx'));
+const TeacherClasses     = lazy(() => import('./pages/teacher/Classes.jsx'));
+const TeacherStudents    = lazy(() => import('./pages/teacher/Students.jsx'));
+const TeacherReports     = lazy(() => import('./pages/teacher/Reports.jsx'));
+const TeacherSettings    = lazy(() => import('./pages/teacher/Settings.jsx'));
+const TeacherQuizzes     = lazy(() => import('./pages/teacher/Quizzes.jsx'));
+const TeacherQuizResults = lazy(() => import('./pages/teacher/QuizResults.jsx'));
 
 // ── Admin pages (lazy) ───────────────────────────────────────
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard.jsx'));
@@ -55,6 +60,17 @@ const U4L6 = lazy(() => import('./lessons/unit4/L6_DecimalTenths1.jsx'));
 const U4L7 = lazy(() => import('./lessons/unit4/L7_DecimalTenths2.jsx'));
 const U4L8 = lazy(() => import('./lessons/unit4/L8_DecimalHundredths.jsx'));
 const U5L1 = lazy(() => import('./lessons/unit5/L1_Brackets.jsx'));
+const U6L1  = lazy(() => import('./lessons/unit6/L1_Lines.jsx'));
+const U6L2  = lazy(() => import('./lessons/unit6/L2_AngleTypes.jsx'));
+const U6L3  = lazy(() => import('./lessons/unit6/L3_MeasuringAngles.jsx'));
+const U6L4  = lazy(() => import('./lessons/unit6/L4_Polygons.jsx'));
+const U6L5  = lazy(() => import('./lessons/unit6/L5_TrianglesQuadrilaterals.jsx'));
+const U6L6  = lazy(() => import('./lessons/unit6/L6_LinesOfSymmetry.jsx'));
+const U6L7  = lazy(() => import('./lessons/unit6/L7_3DShapes.jsx'));
+const U6L8  = lazy(() => import('./lessons/unit6/L8_Nets.jsx'));
+const U6L9  = lazy(() => import('./lessons/unit6/L9_Coordinates.jsx'));
+const U6L10 = lazy(() => import('./lessons/unit6/L10_Transformations.jsx'));
+const U6L11 = lazy(() => import('./lessons/unit6/L11_Circles.jsx'));
 
 const LESSON_MAP = {
   '1-1': U1L1, '1-2': U1L2, '1-3': U1L3, '1-4': U1L4,
@@ -62,6 +78,8 @@ const LESSON_MAP = {
   '3-1': U3L1, '3-2': U3L2, '3-3': U3L3, '3-4': U3L4,
   '4-1': U4L1, '4-2': U4L2, '4-3': U4L3, '4-4': U4L4, '4-5': U4L5, '4-6': U4L6, '4-7': U4L7, '4-8': U4L8,
   '5-1': U5L1,
+  '6-1': U6L1, '6-2': U6L2, '6-3': U6L3, '6-4': U6L4, '6-5': U6L5,
+  '6-6': U6L6, '6-7': U6L7, '6-8': U6L8, '6-9': U6L9, '6-10': U6L10, '6-11': U6L11,
 };
 
 function PageLoader() {
@@ -137,6 +155,15 @@ export default function App() {
           <Route path="/student/classes/:classId/unit/:unit" element={
             <ProtectedRoute roles={['student']}><StudentUnitDetail /></ProtectedRoute>
           } />
+          <Route path="/student/certificates" element={
+            <ProtectedRoute roles={['student']}><StudentCertificates /></ProtectedRoute>
+          } />
+          <Route path="/student/quizzes" element={
+            <ProtectedRoute roles={['student']}><StudentQuizzes /></ProtectedRoute>
+          } />
+          <Route path="/student/quiz/:quizId" element={
+            <ProtectedRoute roles={['student']}><StudentTakeQuiz /></ProtectedRoute>
+          } />
           <Route path="/student/lesson/:unitId/:lessonId" element={
             <ProtectedRoute roles={['student']}><DashboardLayout><LessonRoute /></DashboardLayout></ProtectedRoute>
           } />
@@ -161,6 +188,12 @@ export default function App() {
           } />
           <Route path="/teacher/settings" element={
             <ProtectedRoute roles={['teacher']}><TeacherSettings /></ProtectedRoute>
+          } />
+          <Route path="/teacher/quizzes" element={
+            <ProtectedRoute roles={['teacher']}><TeacherQuizzes /></ProtectedRoute>
+          } />
+          <Route path="/teacher/quizzes/:quizId/results" element={
+            <ProtectedRoute roles={['teacher']}><TeacherQuizResults /></ProtectedRoute>
           } />
 
           {/* Admin */}

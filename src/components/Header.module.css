@@ -1,57 +1,136 @@
+/* ============================================================
+   Header.module.css — lesson sticky top bar
+   ============================================================ */
+
 .header {
-  background: var(--blue);
+  background: linear-gradient(90deg, #0A1628 0%, #0D1F45 60%, #0C2A5C 100%);
   color: #fff;
-  padding: 14px 20px;
+  padding: 0 20px;
+  height: 62px;
   display: flex;
   align-items: center;
   gap: 12px;
   position: sticky;
   top: 0;
   z-index: 200;
-  box-shadow: var(--shadow-header);
+  box-shadow: 0 2px 16px rgba(13, 31, 69, 0.55);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
+/* Brand mark: D-DASH wordmark */
 .logo {
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: -1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.logoBadge {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1565C0, #00B4D8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(21,101,192,0.50);
   flex-shrink: 0;
 }
 
-.dash { color: #93C5FD; }
+.logoText {
+  font-size: 16px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
 
+.logoDash { color: #64B5F6; }
+
+/* Lesson chip */
 .chip {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-pill);
-  padding: 5px 14px;
-  font-size: 13px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: var(--font-h3);
   font-weight: 700;
   white-space: nowrap;
   flex-shrink: 0;
+  backdrop-filter: blur(8px);
 }
 
+/* Progress section */
 .progress {
   flex: 1;
-  margin: 0 16px;
-  min-width: 0;
+  margin: 0 8px;
+  min-width: 140px;
 }
 
 .bar {
-  height: 10px;
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 5px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .fill {
   height: 100%;
-  background: #4ADE80;
-  border-radius: 5px;
+  background: linear-gradient(90deg, #58CC02, #47A301);
+  border-radius: 4px;
   transition: width 0.5s ease;
+  box-shadow: 0 0 8px rgba(88,204,2,0.5);
 }
 
 .label {
-  font-size: 12px;
+  font-size: var(--font-small);
   margin-top: 4px;
-  opacity: 0.85;
+  color: rgba(255,255,255,0.6);
+  font-weight: 600;
+}
+
+/* Nav buttons */
+.navBtn {
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s ease, transform 0.12s ease;
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.navBtn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.20);
+  transform: translateY(-1px);
+}
+
+.navBtn:disabled {
+  opacity: 0.30;
+  cursor: not-allowed;
+}
+
+.navBtnBack {
+  background: rgba(21,101,192,0.35);
+  border-color: rgba(21,101,192,0.50);
+}
+
+.navBtnBack:hover:not(:disabled) {
+  background: rgba(21,101,192,0.55);
+}
+
+@media (max-width: 600px) {
+  .header  { padding: 0 12px; gap: 8px; height: auto; min-height: 58px; flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; }
+  .progress { margin: 0; flex-basis: 100%; order: 99; }
+  .logoText { display: none; }
 }

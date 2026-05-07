@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 //  src/pages/admin/Teachers.jsx
 // ============================================================
 
@@ -108,7 +108,7 @@ export default function AdminTeachers() {
         <div>
           <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0b2b5e', margin: 0 }}>Teachers</h2>
           <p style={{ color: '#64748b', margin: '4px 0 0', fontSize: 14 }}>
-            {active.length} active · {deleted.length} deleted
+            {active.length} active Â· {deleted.length} deleted
           </p>
         </div>
         <button
@@ -127,7 +127,7 @@ export default function AdminTeachers() {
       <div className={s.searchBar} style={{ marginBottom: 20 }}>
         <input
           type="text"
-          placeholder="Search teachers…"
+          placeholder="Search teachersâ€¦"
           value={search}
           onChange={e => setSearch(e.target.value)}
           className={s.searchInput}
@@ -135,7 +135,7 @@ export default function AdminTeachers() {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: 60, color: '#64748b' }}>Loading…</div>
+        <div style={{ textAlign: 'center', padding: 60, color: '#64748b' }}>Loadingâ€¦</div>
       ) : visible.length === 0 ? (
         <div className={s.card} style={{ textAlign: 'center', padding: 48 }}>
           <p style={{ color: '#94a3b8', margin: 0 }}>
@@ -185,8 +185,8 @@ export default function AdminTeachers() {
                   {myClasses.map(c => (
                     <span key={c.id} style={{
                       fontSize: 12, padding: '4px 10px', borderRadius: 20,
-                      background: (c.color || '#1E6FD9') + '20',
-                      color: c.color || '#1E6FD9', fontWeight: 600,
+                      background: (c.color || '#1CB0F6') + '20',
+                      color: c.color || '#1CB0F6', fontWeight: 600,
                     }}>
                       {c.name}
                     </span>

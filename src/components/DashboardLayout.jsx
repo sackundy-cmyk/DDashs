@@ -7,20 +7,24 @@ import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import Breadcrumbs from './Breadcrumbs.jsx';
 import { Icon, Avatar } from './EnhancedUI.jsx';
+import { DDashIcon } from './DDashLogo.jsx';
 import s from './DashboardLayout.module.css';
 
 // ── Nav configs per role ──────────────────────────────────────
 
 const STUDENT_NAV = [
-  { label: 'Dashboard',  icon: 'dashboard', path: '/student/dashboard' },
-  { label: 'My Classes', icon: 'classes',   path: '/student/classes'   },
+  { label: 'Dashboard',    icon: 'dashboard', path: '/student/dashboard'    },
+  { label: 'My Classes',   icon: 'classes',   path: '/student/classes'      },
+  { label: 'Quizzes',      icon: 'reports',   path: '/student/quizzes'      },
+  { label: 'Certificates', icon: 'award',     path: '/student/certificates' },
 ];
 
 const TEACHER_NAV = [
   { label: 'Dashboard', icon: 'dashboard', path: '/teacher/dashboard' },
   { label: 'Classes',   icon: 'classes',   path: '/teacher/classes'   },
   { label: 'Students',  icon: 'students',  path: '/teacher/students'  },
-  { label: 'Reports',   icon: 'reports',   path: '/teacher/reports'   },
+  { label: 'Quizzes',   icon: 'reports',   path: '/teacher/quizzes'   },
+  { label: 'Reports',   icon: 'chart',     path: '/teacher/reports'   },
   { label: 'Settings',  icon: 'settings',  path: '/teacher/settings'  },
 ];
 
@@ -38,9 +42,29 @@ const NAV_MAP = { student: STUDENT_NAV, teacher: TEACHER_NAV, admin: ADMIN_NAV }
 const ROLE_LABELS = { student: 'Student Portal', teacher: 'Teacher Portal', admin: 'Admin Panel' };
 
 const ROLE_AVATAR_BG = {
-  student: '#1E6FD9',
-  teacher: '#0891B2',
-  admin:   '#7C3AED',
+  student: '#58CC02',
+  teacher: '#1CB0F6',
+  admin:   '#CE82FF',
+};
+
+// Per-path accent color for nav icon boxes and active dot
+const NAV_ACCENT = {
+  '/student/dashboard':    '#58CC02',
+  '/student/classes':      '#1CB0F6',
+  '/student/quizzes':      '#CE82FF',
+  '/student/certificates': '#FFC800',
+  '/teacher/dashboard': '#58CC02',
+  '/teacher/classes':   '#1CB0F6',
+  '/teacher/students':  '#FF9600',
+  '/teacher/quizzes':   '#CE82FF',
+  '/teacher/reports':   '#FFC800',
+  '/teacher/settings':  '#94A3B8',
+  '/admin/dashboard': '#58CC02',
+  '/admin/teachers':  '#1CB0F6',
+  '/admin/students':  '#FF9600',
+  '/admin/classes':   '#CE82FF',
+  '/admin/reports':   '#FFC800',
+  '/admin/settings':  '#94A3B8',
 };
 
 // ── Sidebar ───────────────────────────────────────────────────
@@ -58,10 +82,10 @@ function Sidebar({ user, role, isOpen, onClose }) {
       {/* Logo */}
       <div className={s.logoArea}>
         <div className={s.logoIcon}>
-          <Icon name="zap" size={18} color="#fff" />
+          <DDashIcon size={28} />
         </div>
         <div>
-          <div className={s.logoText}>D-Dash</div>
+          <div className={s.logoText}>D-DASH</div>
           <div className={s.logoRole}>{ROLE_LABELS[role]}</div>
         </div>
       </div>
@@ -70,25 +94,36 @@ function Sidebar({ user, role, isOpen, onClose }) {
 
       {/* Nav items */}
       <div className={s.navMenu}>
-        {navItems.map(item => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) =>
-              `${s.navItem} ${isActive ? s.navItemActive : ''}`
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <span className={s.navIconBox}>
-                  <Icon name={item.icon} size={16} color={isActive ? '#fff' : '#94A3B8'} />
-                </span>
-                {item.label}
-                {isActive && <span className={s.activeDot} />}
-              </>
-            )}
-          </NavLink>
-        ))}
+        {navItems.map(item => {
+          const accent = NAV_ACCENT[item.path] || '#818CF8';
+          return (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                `${s.navItem} ${isActive ? s.navItemActive : ''}`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <span
+                    className={s.navIconBox}
+                    style={isActive ? { background: `${accent}30` } : {}}
+                  >
+                    <Icon name={item.icon} size={17} color={isActive ? accent : '#94A3B8'} />
+                  </span>
+                  {item.label}
+                  {isActive && (
+                    <span
+                      className={s.activeDot}
+                      style={{ background: accent, boxShadow: `0 0 8px ${accent}` }}
+                    />
+                  )}
+                </>
+              )}
+            </NavLink>
+          );
+        })}
       </div>
 
       {/* User block + logout */}
@@ -112,11 +147,14 @@ function Sidebar({ user, role, isOpen, onClose }) {
 // ── Top bar ───────────────────────────────────────────────────
 
 const PAGE_TITLES = {
-  '/student/dashboard': 'Dashboard',
-  '/student/classes':   'My Classes',
+  '/student/dashboard':    'Dashboard',
+  '/student/classes':      'My Classes',
+  '/student/quizzes':      'Quizzes',
+  '/student/certificates': 'Certificates',
   '/teacher/dashboard': 'Dashboard',
   '/teacher/classes':   'Classes',
   '/teacher/students':  'Students',
+  '/teacher/quizzes':   'Quizzes',
   '/teacher/reports':   'Reports',
   '/teacher/settings':  'Settings',
   '/admin/dashboard':   'Dashboard',

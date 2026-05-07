@@ -34,7 +34,7 @@
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 200px;
-  background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.28), transparent 70%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(21,101,192,0.30), transparent 70%);
   pointer-events: none;
 }
 
@@ -48,19 +48,29 @@
 }
 
 .logoIcon {
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  background: linear-gradient(135deg, #6366F1, #7C3AED);
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1565C0, #00B4D8);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.45);
+  box-shadow: 0 4px 16px rgba(21, 101, 192, 0.50);
 }
 
-.logoText  { font-weight: 900; font-size: 16px; color: #fff; letter-spacing: -0.03em; line-height: 1.1; }
-.logoRole  { font-size: 11px; color: #94A3B8; margin-top: 2px; font-weight: 600; }
+.logoText { font-weight: 900; font-size: 18px; color: #fff; letter-spacing: 0.04em; line-height: 1.1; }
+.logoRole {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #64B5F6;
+  background: rgba(21, 101, 192, 0.25);
+  padding: 2px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
 
 .divider {
   height: 1px;
@@ -83,11 +93,11 @@
   display: flex;
   align-items: center;
   gap: 11px;
-  padding: 8px 10px;
+  padding: 9px 10px;
   border-radius: 11px;
   color: #94A3B8;
-  font-weight: 600;
-  font-size: 13.5px;
+  font-weight: 700;
+  font-size: 14.5px;
   letter-spacing: -0.01em;
   cursor: pointer;
   text-decoration: none;
@@ -111,9 +121,9 @@
 }
 
 .navIconBox {
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -122,18 +132,12 @@
   transition: background 0.15s ease;
 }
 
-.navItemActive .navIconBox {
-  background: rgba(99, 102, 241, 0.35);
-}
-
 .activeDot {
   margin-left: auto;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #818CF8;
   flex-shrink: 0;
-  box-shadow: 0 0 8px #818CF8;
 }
 
 /* ── Sidebar bottom ────────────────────────────────────────── */
@@ -190,11 +194,11 @@
 .topBar {
   background: #FFFFFF;
   padding: 0 28px;
-  height: 60px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 2px solid #F0F4FF;
   position: sticky;
   top: 0;
   z-index: 50;
@@ -242,9 +246,9 @@
 }
 
 .bellBtn {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   border: 1.5px solid #E2E8F0;
   background: #FFFFFF;
   display: flex;
@@ -253,10 +257,10 @@
   cursor: pointer;
   color: #64748B;
   position: relative;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.bellBtn:hover { background: #F8FAFC; }
+.bellBtn:hover { background: #FFF3C4; border-color: #FFC800; color: #D97706; }
 
 .bellDot {
   position: absolute;
@@ -282,7 +286,7 @@
 .userLockup:hover { background: #F1F5F9; }
 
 .topBarName {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 700;
   color: #1E293B;
   letter-spacing: -0.02em;
@@ -405,7 +409,7 @@
   background: #FFFFFF;
 }
 
-.searchInput:focus { border-color: #1E6FD9; }
+.searchInput:focus { border-color: #1565C0; }
 
 /* ── Status pills (legacy) ─────────────────────────────────── */
 .pill {

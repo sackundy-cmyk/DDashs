@@ -11,7 +11,7 @@ import s from '../../components/DashboardLayout.module.css';
 
 const API = import.meta.env.VITE_API_URL || '/api';
 
-const CLASS_PALETTE = ['#1E6FD9', '#0891B2', '#16A34A', '#D97706', '#7C3AED', '#DB2777'];
+const CLASS_PALETTE = ['#58CC02', '#1CB0F6', '#FF9600', '#CE82FF', '#FF4B4B', '#FFC800'];
 
 function classColor(cls, idx) {
   return cls.color || CLASS_PALETTE[idx % CLASS_PALETTE.length];
@@ -25,11 +25,11 @@ function statusVariant(p) {
 }
 
 const STAT_COLORS = {
-  blue:   { bar: '#1E6FD9', tint: '#DBEAFE' },
-  teal:   { bar: '#0891B2', tint: '#CFFAFE' },
-  amber:  { bar: '#D97706', tint: '#FEF3C7' },
-  purple: { bar: '#7C3AED', tint: '#EDE9FE' },
-  green:  { bar: '#16A34A', tint: '#DCFCE7' },
+  blue:   { bar: '#1565C0', tint: '#D0EFFE' },
+  teal:   { bar: '#1CB0F6', tint: '#D0EFFE' },
+  amber:  { bar: '#FF9600', tint: '#FFF0D0' },
+  purple: { bar: '#CE82FF', tint: '#F3E8FF' },
+  green:  { bar: '#58CC02', tint: '#D7F5B3' },
 };
 
 function StatCard({ label, value, icon, color = 'blue', sparkData, trend }) {
@@ -126,7 +126,7 @@ export default function StudentDashboard() {
         <div style={{
           borderRadius: 18,
           padding: '24px 28px',
-          background: 'linear-gradient(120deg, #1E1B4B 0%, #312E81 50%, #1E3A8A 100%)',
+          background: 'linear-gradient(120deg, #0A1628 0%, #0D1F45 50%, #0C2A5C 100%)',
           position: 'relative',
           overflow: 'hidden',
           display: 'flex',
@@ -148,7 +148,7 @@ export default function StudentDashboard() {
           <div style={{
             position: 'absolute', right: 100, top: -40,
             width: 220, height: 220, borderRadius: '50%',
-            background: 'rgba(99,102,241,0.35)', filter: 'blur(48px)', pointerEvents: 'none',
+            background: 'rgba(21,101,192,0.35)', filter: 'blur(48px)', pointerEvents: 'none',
           }} />
 
           <div style={{ position: 'relative', minWidth: 0, flex: 1 }}>
