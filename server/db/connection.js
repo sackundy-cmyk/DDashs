@@ -7,9 +7,13 @@ import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { mkdirSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DB_PATH = process.env.DB_PATH || join(__dirname, '../../ddash.db');
+
+// Ensure the directory for the DB file exists
+try { mkdirSync(dirname(DB_PATH), { recursive: true }); } catch (_) {}
 
 let _db = null;
 
