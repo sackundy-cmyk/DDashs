@@ -76,10 +76,43 @@ app.get('*', (_req, res) =>
   res.sendFile(join(__dirname, '../dist/index.html'))
 );
 
+// ── Auto-seed if database is empty ───────────────────────────
+async function autoSeedIfEmpty(db) {
+  const { n } = await db.get('SELECT COUNT(*) as n FROM users');
+  if (n > 0) return;
+  console.log('📦 Empty database detected — running initial seed...');
+  const { createRequire } = await import('module');
+  const require = createRequire(import.meta.url);
+  const bcrypt  = require('bcryptjs');
+  const hash    = pw => bcrypt.hashSync(pw, 10);
+
+  const adminId   = (await db.run(`INSERT INTO users (name,email,password_hash,role,weekly_report_enabled) VALUES (?,?,?,?,1)`, ['Admin','admin1@ddash.com',hash('Admin@123'),'admin'])).lastID;
+  const teacherId = (await db.run(`INSERT INTO users (name,email,password_hash,role,weekly_report_enabled) VALUES (?,?,?,?,1)`, ['Ms. Sarah Collins','teacher1@ddash.com',hash('Teacher@123'),'teacher'])).lastID;
+  const demoId    = (await db.run(`INSERT INTO users (name,email,password_hash,role,weekly_report_enabled) VALUES (?,?,?,?,1)`, ['Demo Student','demo@ddash.com',hash('Demo@123'),'student'])).lastID;
+
+  const classId = (await db.run(`INSERT INTO classes (name,grade,teacher_id,description,color) VALUES (?,?,?,?,?)`, ['Grade 5 Mathematics','Grade 5',teacherId,'Full Grade 5 maths curriculum','#1E6FD9'])).lastID;
+
+  const lessons = [
+    {unit:1,num:1,title:'Place Value in Decimals'},{unit:1,num:2,title:'Thousandths'},{unit:1,num:3,title:'Multiply & Divide by 10/100'},{unit:1,num:4,title:'Rounding Decimals'},
+    {unit:2,num:1,title:'Sequences'},{unit:2,num:2,title:'Negative Numbers'},{unit:2,num:3,title:'Function Machines'},{unit:2,num:4,title:'Patterns & Formulae'},{unit:2,num:5,title:'Equations'},
+    {unit:3,num:1,title:'Rules of Divisibility'},{unit:3,num:2,title:'Multiples & LCM'},{unit:3,num:3,title:'Factors & HCF'},{unit:3,num:4,title:'Prime & Square Numbers'},
+    {unit:4,num:1,title:'Brackets & Order of Operations'},{unit:4,num:2,title:'More Brackets'},{unit:4,num:3,title:'Inverse Operations'},{unit:4,num:4,title:'Mental Addition & Subtraction'},{unit:4,num:5,title:'Large Numbers'},{unit:4,num:6,title:'Decimal Tenths — Part 1'},{unit:4,num:7,title:'Decimal Tenths — Part 2'},{unit:4,num:8,title:'Decimal Hundredths'},
+    {unit:5,num:1,title:'Brackets'},
+  ];
+  for (let i = 0; i < lessons.length; i++) {
+    const l = lessons[i];
+    await db.run(`INSERT INTO class_lessons (class_id,unit,lesson_num,title,order_index) VALUES (?,?,?,?,?)`, [classId,l.unit,l.num,l.title,i]);
+  }
+  await db.run(`INSERT INTO class_enrollments (class_id,student_id) VALUES (?,?)`, [classId,demoId]);
+  void adminId;
+  console.log('✅ Auto-seed complete — admin1@ddash.com / Admin@123');
+}
+
 // ── Start server (initialise DB first) ───────────────────────
 async function start() {
   try {
-    await getDb(); // ensures schema is created before accepting requests
+    const db = await getDb(); // ensures schema is created before accepting requests
+    await autoSeedIfEmpty(db);
     if (process.env.NODE_ENV !== 'test') startWeeklyCron();
     app.listen(PORT, () =>
       console.log('D-DASH API running on http://localhost:' + PORT)
