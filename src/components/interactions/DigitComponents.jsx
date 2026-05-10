@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 
 /* ── DigitPalette ─────────────────────────────────────────── */
-export function DigitPalette({ paletteId, decimal = false }) {
+export function DigitPalette({ paletteId, decimal = true }) {
   const cardStyle = {
     background: '#fff', color: 'var(--blue-dark)',
     border: '2.5px solid var(--blue)', borderRadius: 10,
