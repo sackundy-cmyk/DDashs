@@ -165,6 +165,7 @@ Rules:
 - **Attempt-based performance scoring** — uses `scoreFromAttempts(att)` in `useProgress.js`: 1st attempt → 100%, 2nd → 90%, 3rd → 75%, 4th → 55%, 5th+ → 40% (floor, never zero). Pass `payload.score` to `markDone` for an explicit override.
 - **Section completion = correctness-based:** `markDone` is only called once the student answers every question correctly at least once. The progress bar fills on completion only; no star rating.
 - **2-questions-per-DigitPalette rule:** every drag-digit section groups questions in pairs — each pair gets its own `DigitPalette` + Check button. Never put more than 2 drop zones under one palette.
+- **MCQ option shuffle:** shuffle option arrays once on mount (`useState` lazy initialiser) so the correct answer is never always-first. Keyed by question label for stability across renders: `const [shuf] = useState(() => ({ s1: Object.fromEntries(QS.map(q=>[q.lbl, sh(q.opts)])) }))`.
 - **Each question (or question pair) gets its own check button + feedback** — no global submit.
 - **English only.** No bilingual content.
 - **Colours from `src/design-tokens/tokens.css` only** — never hardcode hex. Font: Nunito (400/600/700/800/900).

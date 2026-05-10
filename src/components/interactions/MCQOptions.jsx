@@ -32,7 +32,7 @@ export function MCQOptions({ options, onSelect }) {
             style={{
               background: s.bg, color: s.color, border: s.border,
               borderRadius: 12, padding: '13px 18px',
-              fontSize: 17, fontWeight: 700,
+              fontSize: 20, fontWeight: 700,
               cursor: s.cursor, textAlign: 'left',
               fontFamily: 'var(--font)', lineHeight: 1.5,
               transition: 'all .15s',

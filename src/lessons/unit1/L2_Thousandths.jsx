@@ -206,6 +206,11 @@ export default function L2_Thousandths() {
   const [s3Banks] = useState(() =>
     Object.fromEntries(SEQ_Q.map(q => [q.lbl, shuffle([...q.next, ...q.dist])]))
   );
+  // Shuffle s1 MCQ options once on mount so correct answer isn't always first.
+  const [s1Shuf] = useState(() => ({
+    words: Object.fromEntries(WORDS_Q.map(q => [q.lbl, shuffle(q.wordsOpts)])),
+    place: Object.fromEntries(WORDS_Q.map(q => [q.lbl, shuffle(q.placeOpts)])),
+  }));
 
   // ═══ s1 checking ═══
   const checkS1Group = (ga, gi) => {
@@ -351,11 +356,11 @@ export default function L2_Thousandths() {
           {s1Groups.map((ga, gi) => (
             <QGroup key={gi} title={`Questions ${ga.map(q=>q.lbl.toUpperCase()).join(' & ')}`}>
               {ga.map((q, qi) => {
-                const wOpts = q.wordsOpts.map(o => ({
+                const wOpts = (s1Shuf.words[q.lbl] || q.wordsOpts).map(o => ({
                   id: o, label: o,
                   state: s1St[`${q.lbl}-words-${o}`] || ((s1Sel[q.lbl]||{}).words === o ? 'selected' : 'default'),
                 }));
-                const pOpts = q.placeOpts.map(o => ({
+                const pOpts = (s1Shuf.place[q.lbl] || q.placeOpts).map(o => ({
                   id: o, label: o,
                   state: s1St[`${q.lbl}-place-${o}`] || ((s1Sel[q.lbl]||{}).place === o ? 'selected' : 'default'),
                 }));

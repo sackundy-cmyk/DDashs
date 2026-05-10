@@ -157,13 +157,14 @@ export function CheckButton({ label = '✓ Check', onClick, disabled }) {
       onClick={onClick}
       disabled={disabled}
       style={{
-        background: disabled ? '#94A3B8' : 'var(--blue)',
+        background: disabled ? '#94A3B8' : '#D97706',
         color: '#fff', border: 'none', borderRadius: 10,
-        padding: '12px 26px', fontSize: 15, fontWeight: 800,
+        padding: '13px 30px', fontSize: 17, fontWeight: 800,
         cursor: disabled ? 'not-allowed' : 'pointer',
-        fontFamily: 'var(--font)', marginTop: 12,
+        fontFamily: 'var(--font)', marginTop: 14,
         display: 'inline-flex', alignItems: 'center', gap: 7,
-        transition: 'background .15s, transform .1s',
+        boxShadow: disabled ? 'none' : '0 3px 12px rgba(217,119,6,0.35)',
+        transition: 'background .15s, transform .1s, box-shadow .15s',
       }}
     >
       {label}

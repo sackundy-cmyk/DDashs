@@ -1,14 +1,14 @@
 // ============================================================
 //  lessons/unit1/L3_MultiplyDivide.jsx
 //  Unit 1 · Lesson 3: Multiply & Divide by 10 / 100
-//  4 sections (matches HTML structure):
+//  4 sections:
 //    s1 Multiply (×10, ×100)         — MCQ pairs
 //    s2 Divide (÷10, ÷100)           — MCQ pairs
 //    s3 Find the missing operation    — MCQ pairs
 //    s4 Word problems                 — MCQ pairs
 // ============================================================
 
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../../components/Header.jsx';
 import SectionCard from '../../components/SectionCard.jsx';
 import { ObjectiveCard, ExplainPanel, RuleBox, ScoreTrack,
@@ -78,18 +78,42 @@ const WORD_Q = [
 
 // ── Helpers ──
 function grp(arr,n){ const out=[];for(let i=0;i<arr.length;i+=n)out.push(arr.slice(i,i+n));return out; }
+function sh(a){ const x=[...a]; for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]];} return x; }
 
-// Generic group-of-MCQ check that fits the lesson's pattern.
+// Wraps numbers in bold coloured pills inside question text.
+function HighlightNums({ text }) {
+  const parts = text.split(/(\d+(?:\.\d+)?)/);
+  return (
+    <>
+      {parts.map((p, i) =>
+        /^\d+(?:\.\d+)?$/.test(p) ? (
+          <span key={i} style={{
+            display:'inline-block', background:'#1E40AF', color:'#fff',
+            borderRadius:8, padding:'2px 12px', fontSize:26, fontWeight:900,
+            margin:'0 3px', verticalAlign:'middle', lineHeight:1.35,
+          }}>{p}</span>
+        ) : (
+          <span key={i}>{p}</span>
+        )
+      )}
+    </>
+  );
+}
+
+// ── Core checker — computes ok BEFORE calling setSt so React's async
+//    updater batching doesn't zero out the counter. ──────────────────
 function makeChecker(QS, sid, perGroup, sectionTitle, getAtt, increment, sel, setSt, fbState, setFB, prog) {
   return (ga, gi) => {
     increment(`${sid}g${gi}`); const att = getAtt(`${sid}g${gi}`) + 1;
+    // Count correct BEFORE the async state updater runs
     let ok = 0;
+    ga.forEach(q => { if (sel[q.lbl] === q.ans) ok++; });
     setSt(prev => {
       const ns = { ...prev };
       ga.forEach(q => {
         const s = sel[q.lbl];
-        if (s === q.ans) { ns[`${q.lbl}-${s}`] = 'correct'; ok++; }
-        else if (s)      { ns[`${q.lbl}-${s}`] = 'wrong'; }
+        if (s === q.ans)      ns[`${q.lbl}-${s}`] = 'correct';
+        else if (s)           ns[`${q.lbl}-${s}`] = 'wrong';
       });
       return ns;
     });
@@ -115,6 +139,14 @@ export default function L3_MultiplyDivide() {
   const prog = useProgress(4, { onAllDone: clearDraft });
   const { getAtt, increment } = useAttempts();
 
+  // Shuffle MCQ options once on mount so correct answer isn't always first
+  const [shuf] = useState(() => ({
+    s1: Object.fromEntries(MULT_Q.map(q => [q.lbl, sh(q.opts)])),
+    s2: Object.fromEntries(DIV_Q.map(q => [q.lbl, sh(q.opts)])),
+    s3: Object.fromEntries(OP_Q.map(q => [q.lbl, sh(OP_OPTS)])),
+    s4: Object.fromEntries(WORD_Q.map(q => [q.lbl, sh(q.opts)])),
+  }));
+
   const s1Sel = state.s1Sel || {}, setS1Sel = setField('s1Sel');
   const s1St  = state.s1St  || {}, setS1St  = setField('s1St');
   const s1FB  = state.s1FB  || {}, setS1FB  = setField('s1FB');
@@ -133,23 +165,24 @@ export default function L3_MultiplyDivide() {
   const checkS3 = makeChecker(OP_Q,   's3', 2, 'Count how many places the decimal moved, and which direction.', getAtt, increment, s3Sel, setS3St, s3FB, setS3FB, prog);
   const checkS4 = makeChecker(WORD_Q, 's4', 2, 'To undo ×, divide. To undo ÷, multiply.', getAtt, increment, s4Sel, setS4St, s4FB, setS4FB, prog);
 
-  const renderArith = (QS, sid, sel, setSel, st, fb, checkFn) => grp(QS, 2).map((ga, gi) => (
+  // Renderer for s1/s2 arithmetic questions
+  const renderArith = (QS, sid, sel, setSel, st, fb, checkFn, shufSec) => grp(QS, 2).map((ga, gi) => (
     <QGroup key={gi} title={`Questions ${ga.map(q => q.lbl.toUpperCase()).join(' & ')}`}>
       {ga.map((q, qi) => {
-        const opts = q.opts.map(o => ({
+        const opts = (shufSec[q.lbl] || q.opts).map(o => ({
           id: o, label: o,
           state: st[`${q.lbl}-${o}`] || (sel[q.lbl] === o ? 'selected' : 'default'),
         }));
         return (
           <QItem key={q.lbl} last={qi === ga.length - 1}>
             {q.guided && (
-              <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:13, color:'var(--amber)', fontWeight:700, marginBottom:8 }}>
+              <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:14, color:'var(--amber)', fontWeight:700, marginBottom:8 }}>
                 💡 {q.hint}
               </div>
             )}
             <QItemLabel>
               <LblCircle letter={q.lbl}/>
-              <span style={{ display:'inline-flex', alignItems:'center', background:'#DBEAFE', color:'#1E40AF', border:'1.5px solid #93C3FD', borderRadius:8, padding:'4px 12px', fontSize:22, fontWeight:900, fontFamily:'monospace' }}>
+              <span style={{ display:'inline-flex', alignItems:'center', background:'#DBEAFE', color:'#1E40AF', border:'1.5px solid #93C3FD', borderRadius:8, padding:'6px 16px', fontSize:28, fontWeight:900, fontFamily:'monospace' }}>
                 {q.expr} =
               </span>
             </QItemLabel>
@@ -181,14 +214,14 @@ export default function L3_MultiplyDivide() {
         <SectionCard badge={1} title="Multiply — answer these" tagType="mcq" tagLabel="MCQ"
           subtitle="Pick the correct answer. ★ Guided a & b"
           score={prog.done['s1']}>
-          {renderArith(MULT_Q, 's1', s1Sel, setS1Sel, s1St, s1FB, checkS1)}
+          {renderArith(MULT_Q, 's1', s1Sel, setS1Sel, s1St, s1FB, checkS1, shuf.s1)}
         </SectionCard>
 
         {/* s2: divide */}
         <SectionCard badge={2} title="Divide — answer these" tagType="mcq" tagLabel="MCQ"
           subtitle="Pick the correct answer. ★ Guided a & b"
           score={prog.done['s2']}>
-          {renderArith(DIV_Q, 's2', s2Sel, setS2Sel, s2St, s2FB, checkS2)}
+          {renderArith(DIV_Q, 's2', s2Sel, setS2Sel, s2St, s2FB, checkS2, shuf.s2)}
         </SectionCard>
 
         {/* s3: missing operation */}
@@ -198,25 +231,25 @@ export default function L3_MultiplyDivide() {
           {grp(OP_Q, 2).map((ga, gi) => (
             <QGroup key={gi} title={`Questions ${ga.map(q => q.lbl.toUpperCase()).join(' & ')}`}>
               {ga.map((q, qi) => {
-                const opts = OP_OPTS.map(o => ({
+                const opts = shuf.s3[q.lbl].map(o => ({
                   id: o, label: o,
                   state: s3St[`${q.lbl}-${o}`] || (s3Sel[q.lbl] === o ? 'selected' : 'default'),
                 }));
                 return (
                   <QItem key={q.lbl} last={qi === ga.length - 1}>
                     {q.guided && (
-                      <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:13, color:'var(--amber)', fontWeight:700, marginBottom:8 }}>
+                      <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:14, color:'var(--amber)', fontWeight:700, marginBottom:8 }}>
                         💡 {q.hint}
                       </div>
                     )}
                     <QItemLabel>
                       <LblCircle letter={q.lbl}/>
                       <div style={{ display:'flex', alignItems:'center', gap:10, flexWrap:'wrap' }}>
-                        <span style={{ background:'#DBEAFE', color:'#1E40AF', border:'1.5px solid #93C3FD', borderRadius:8, padding:'4px 12px', fontSize:22, fontWeight:900, fontFamily:'monospace' }}>{q.from}</span>
-                        <span style={{ fontSize:22, fontWeight:900, color:'var(--muted)' }}>→</span>
-                        <span style={{ background:'#FEF3C7', color:'#92400E', border:'2px dashed var(--amber-border)', borderRadius:8, padding:'4px 14px', fontSize:22, fontWeight:900 }}>?</span>
-                        <span style={{ fontSize:22, fontWeight:900, color:'var(--muted)' }}>→</span>
-                        <span style={{ background:'#DCFCE7', color:'#15803D', border:'1.5px solid var(--green-border)', borderRadius:8, padding:'4px 12px', fontSize:22, fontWeight:900, fontFamily:'monospace' }}>{q.to}</span>
+                        <span style={{ background:'#DBEAFE', color:'#1E40AF', border:'1.5px solid #93C3FD', borderRadius:8, padding:'6px 16px', fontSize:28, fontWeight:900, fontFamily:'monospace' }}>{q.from}</span>
+                        <span style={{ fontSize:28, fontWeight:900, color:'var(--muted)' }}>→</span>
+                        <span style={{ background:'#FEF3C7', color:'#92400E', border:'2px dashed var(--amber-border)', borderRadius:8, padding:'6px 18px', fontSize:28, fontWeight:900 }}>?</span>
+                        <span style={{ fontSize:28, fontWeight:900, color:'var(--muted)' }}>→</span>
+                        <span style={{ background:'#DCFCE7', color:'#15803D', border:'1.5px solid var(--green-border)', borderRadius:8, padding:'6px 16px', fontSize:28, fontWeight:900, fontFamily:'monospace' }}>{q.to}</span>
                       </div>
                     </QItemLabel>
                     <MCQOptions options={opts} onSelect={o => setS3Sel(p => ({ ...p, [q.lbl]: o }))}/>
@@ -236,20 +269,22 @@ export default function L3_MultiplyDivide() {
           {grp(WORD_Q, 2).map((ga, gi) => (
             <QGroup key={gi} title={`Questions ${ga.map(q => q.lbl.toUpperCase()).join(' & ')}`}>
               {ga.map((q, qi) => {
-                const opts = q.opts.map(o => ({
+                const opts = shuf.s4[q.lbl].map(o => ({
                   id: o, label: o,
                   state: s4St[`${q.lbl}-${o}`] || (s4Sel[q.lbl] === o ? 'selected' : 'default'),
                 }));
                 return (
                   <QItem key={q.lbl} last={qi === ga.length - 1}>
                     {q.guided && (
-                      <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:13, color:'var(--amber)', fontWeight:700, marginBottom:8 }}>
+                      <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:14, color:'var(--amber)', fontWeight:700, marginBottom:8 }}>
                         💡 {q.hint}
                       </div>
                     )}
                     <QItemLabel>
                       <LblCircle letter={q.lbl}/>
-                      <span style={{ fontSize:16, fontWeight:700 }}>{q.q}</span>
+                      <span style={{ fontSize:20, fontWeight:700, lineHeight:1.5 }}>
+                        <HighlightNums text={q.q}/>
+                      </span>
                     </QItemLabel>
                     <MCQOptions options={opts} onSelect={o => setS4Sel(p => ({ ...p, [q.lbl]: o }))}/>
                   </QItem>
