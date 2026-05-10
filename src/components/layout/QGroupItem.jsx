@@ -39,8 +39,8 @@ export function QItem({ children, last }) {
 export function QItemLabel({ children }) {
   return (
     <div style={{
-      fontSize: 18, fontWeight: 800,
-      display: 'flex', alignItems: 'center', gap: 10,
+      fontSize: 22, fontWeight: 800,
+      display: 'flex', alignItems: 'center', gap: 12,
       flexWrap: 'wrap', marginBottom: 12, lineHeight: 1.4,
     }}>
       {children}
