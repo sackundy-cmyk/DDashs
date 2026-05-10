@@ -61,20 +61,20 @@ const WORDS_Q = [
 ];
 
 // ── s2: Fractions → decimals (/1000, 3 decimal places) ──
-// `whole` prefix (may be ''), `num/1000` gives the decimal part.
+// Student writes the FULL decimal (whole + '.' + 3 dp) as digits.
 const FRAC_Q = [
-  { lbl:'a', whole:'',   num:'7',   ans:'007', guided:true,  hint:'7÷1000 = 0.007 (two leading zeros).' },
-  { lbl:'b', whole:'',   num:'90',  ans:'090', guided:true,  hint:'90÷1000 = 0.090 (one leading zero).' },
-  { lbl:'c', whole:'2',  num:'300', ans:'300', guided:true,  hint:'300÷1000 = 0.300, so the answer is 2.300.' },
-  { lbl:'d', whole:'17', num:'1',   ans:'001' },
-  { lbl:'e', whole:'',   num:'450', ans:'450' },
-  { lbl:'f', whole:'',   num:'525', ans:'525' },
-  { lbl:'g', whole:'12', num:'800', ans:'800' },
-  { lbl:'h', whole:'68', num:'950', ans:'950' },
-  { lbl:'i', whole:'19', num:'325', ans:'325' },
-  { lbl:'j', whole:'',   num:'45',  ans:'045' },
-  { lbl:'k', whole:'3',  num:'572', ans:'572' },
-  { lbl:'l', whole:'29', num:'807', ans:'807' },
+  { lbl:'a', whole:'',   num:'7',   ans:'0.007', guided:true,  hint:'7÷1000 = 0.007 — write: 0 · . · 0 · 0 · 7' },
+  { lbl:'b', whole:'',   num:'90',  ans:'0.090', guided:true,  hint:'90÷1000 = 0.090 — write: 0 · . · 0 · 9 · 0' },
+  { lbl:'c', whole:'2',  num:'300', ans:'2.300', guided:true,  hint:'300÷1000 = 0.300, so the full answer is 2 · . · 3 · 0 · 0' },
+  { lbl:'d', whole:'17', num:'1',   ans:'17.001' },
+  { lbl:'e', whole:'',   num:'450', ans:'0.450' },
+  { lbl:'f', whole:'',   num:'525', ans:'0.525' },
+  { lbl:'g', whole:'12', num:'800', ans:'12.800' },
+  { lbl:'h', whole:'68', num:'950', ans:'68.950' },
+  { lbl:'i', whole:'19', num:'325', ans:'19.325' },
+  { lbl:'j', whole:'',   num:'45',  ans:'0.045' },
+  { lbl:'k', whole:'3',  num:'572', ans:'3.572' },
+  { lbl:'l', whole:'29', num:'807', ans:'29.807' },
 ];
 
 // ── s3: Count in thousandths (drag chips into gaps) ──
@@ -103,7 +103,7 @@ function shuffle(a){ const x=[...a]; for(let i=x.length-1;i>0;i--){const j=Math.
 // Shows a number with one digit highlighted red (at index redIdx in original string).
 function RedDigitNum({ num, redIdx }) {
   return (
-    <span style={{ fontFamily:'monospace', fontSize:22, fontWeight:900, letterSpacing:2 }}>
+    <span style={{ fontFamily:'monospace', fontSize:34, fontWeight:900, letterSpacing:3 }}>
       {num.split('').map((ch,i) => (
         <span key={i} style={i === redIdx ? { color:'var(--red)' } : undefined}>{ch}</span>
       ))}
@@ -116,19 +116,19 @@ function FracTile({ whole, num }) {
   return (
     <span style={{
       display:'inline-flex', alignItems:'stretch',
-      background:'#DBEAFE', border:'1.5px solid #93C3FD', borderRadius:8,
+      background:'#DBEAFE', border:'2px solid #93C3FD', borderRadius:10,
       overflow:'hidden', verticalAlign:'middle', margin:'0 4px',
     }}>
       {whole && (
         <span style={{
-          fontSize:22, fontWeight:900, color:'#1E40AF',
-          padding:'4px 10px', borderRight:'2.5px solid #93C3FD',
+          fontSize:30, fontWeight:900, color:'#1E40AF',
+          padding:'6px 14px', borderRight:'2.5px solid #93C3FD',
           background:'#BFDBFE', display:'flex', alignItems:'center',
         }}>{whole}</span>
       )}
-      <span style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'3px 10px', gap:1 }}>
-        <span style={{ fontSize:14, fontWeight:900, color:'#1E40AF', borderBottom:'2px solid #1E40AF', padding:'0 4px 1px', lineHeight:1.3, minWidth:28, textAlign:'center' }}>{num}</span>
-        <span style={{ fontSize:14, fontWeight:900, color:'#1E40AF', lineHeight:1.3, textAlign:'center' }}>1000</span>
+      <span style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'5px 14px', gap:2 }}>
+        <span style={{ fontSize:20, fontWeight:900, color:'#1E40AF', borderBottom:'2.5px solid #1E40AF', padding:'0 6px 2px', lineHeight:1.3, minWidth:36, textAlign:'center' }}>{num}</span>
+        <span style={{ fontSize:20, fontWeight:900, color:'#1E40AF', lineHeight:1.3, textAlign:'center' }}>1000</span>
       </span>
     </span>
   );
@@ -149,8 +149,8 @@ function SeqChip({ value, disabled }) {
         background: disabled ? '#CBD5E1' : 'var(--blue)',
         color: '#fff',
         border: `2px solid ${disabled ? '#94A3B8' : 'var(--blue-dark)'}`,
-        borderRadius: 9, padding: '8px 14px',
-        fontSize: 15, fontWeight: 800,
+        borderRadius: 9, padding: '10px 18px',
+        fontSize: 20, fontWeight: 800,
         cursor: disabled ? 'default' : 'grab', userSelect: 'none',
         opacity: disabled ? 0.35 : 1, transition: 'transform .1s',
       }}>
@@ -172,10 +172,10 @@ function SeqDrop({ value, state, onDrop, onClick }) {
       onDrop={e => { e.preventDefault(); setOver(false); const d = e.dataTransfer.getData('text/plain'); if (d.startsWith('seq:')) onDrop(d.slice(4)); }}
       onClick={onClick}
       style={{
-        minWidth: 88, height: 46, borderRadius: 9,
+        minWidth: 100, height: 54, borderRadius: 9,
         border: bd, background: bg, color,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 15, fontWeight: 800, padding: '0 8px',
+        fontSize: 20, fontWeight: 800, padding: '0 10px',
         cursor: value ? 'pointer' : 'default', transition: 'all .2s',
       }}>
       {value || '?'}
@@ -370,11 +370,11 @@ export default function L2_Thousandths() {
                       <LblCircle letter={q.lbl}/>
                       <RedDigitNum num={q.num} redIdx={q.redIdx}/>
                     </QItemLabel>
-                    <div style={{ fontSize:14, fontWeight:800, color:'var(--muted)', margin:'8px 0 6px' }}>
+                    <div style={{ fontSize:18, fontWeight:800, color:'var(--muted)', margin:'10px 0 8px' }}>
                       Part 1 — Choose the correct words
                     </div>
                     <MCQOptions options={wOpts} onSelect={o => setS1Sel(p => ({ ...p, [q.lbl]: { ...(p[q.lbl]||{}), words:o } }))}/>
-                    <div style={{ fontSize:14, fontWeight:800, color:'var(--muted)', margin:'12px 0 6px' }}>
+                    <div style={{ fontSize:18, fontWeight:800, color:'var(--muted)', margin:'14px 0 8px' }}>
                       Part 2 — The red digit is in the …
                     </div>
                     <MCQOptions options={pOpts} onSelect={o => setS1Sel(p => ({ ...p, [q.lbl]: { ...(p[q.lbl]||{}), place:o } }))}/>
@@ -391,7 +391,7 @@ export default function L2_Thousandths() {
         <SectionCard badge={2}
           title="Write these fractions as decimals"
           tagType="drag" tagLabel="Drag Digits"
-          subtitle="All fractions have 1000 on the bottom → always 3 decimal places. ★ Guided a–c"
+          subtitle="Write the full decimal — whole number, decimal point, then 3 decimal places. ★ Guided a–c"
           score={prog.done['s2']}>
           {s2Groups.map((ga, gi) => (
             <QGroup key={gi} title={`Questions ${ga.map(q=>q.lbl.toUpperCase()).join(' & ')}`}>
@@ -406,16 +406,13 @@ export default function L2_Thousandths() {
                   <QItemLabel>
                     <LblCircle letter={q.lbl}/>
                     <FracTile whole={q.whole} num={q.num}/>
-                    <span style={{ fontSize:18, fontWeight:800 }}>=</span>
-                    {q.whole && <span style={{ fontSize:22, fontWeight:900, color:'var(--blue-dark)' }}>{q.whole}.</span>}
-                    {!q.whole && <span style={{ fontSize:22, fontWeight:900, color:'var(--blue-dark)' }}>0.</span>}
+                    <span style={{ fontSize:22, fontWeight:800 }}>=</span>
                     <DigitDropZone
                       digits={s2D[q.lbl] || []}
                       zoneState={s2St[q.lbl] || 'default'}
                       onDrop={s2Drop(q.lbl)}
                       onRemove={s2Remove(q.lbl)}
                     />
-                    <span style={{ fontSize:12, color:'var(--muted)', marginLeft:4 }}>← 3 digits</span>
                   </QItemLabel>
                 </QItem>
               ))}
@@ -443,16 +440,16 @@ export default function L2_Thousandths() {
                         💡 {q.hint}
                       </div>
                     )}
-                    <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10 }}>
                       <LblCircle letter={q.lbl}/>
-                      <span style={{ fontSize:14, fontWeight:800, color:'var(--muted)' }}>Continue the sequence:</span>
+                      <span style={{ fontSize:20, fontWeight:800, color:'var(--muted)' }}>Continue the sequence:</span>
                     </div>
                     {/* Sequence row */}
-                    <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap', margin:'10px 0' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', margin:'10px 0' }}>
                       {q.seq.map((n, i) => (
                         <React.Fragment key={i}>
-                          <div style={{ background:'#EEF4FF', border:'2px solid var(--border)', borderRadius:8, padding:'7px 12px', fontSize:17, fontWeight:800 }}>{n}</div>
-                          <span style={{ fontSize:18, color:'var(--muted)', fontWeight:700 }}>→</span>
+                          <div style={{ background:'#EEF4FF', border:'2px solid var(--border)', borderRadius:8, padding:'9px 16px', fontSize:22, fontWeight:800 }}>{n}</div>
+                          <span style={{ fontSize:22, color:'var(--muted)', fontWeight:700 }}>→</span>
                         </React.Fragment>
                       ))}
                       <SeqDrop
@@ -461,7 +458,7 @@ export default function L2_Thousandths() {
                         onDrop={s3DropAt(q.lbl, 0)}
                         onClick={s3Clear(q.lbl, 0)}
                       />
-                      <span style={{ fontSize:18, color:'var(--muted)', fontWeight:700 }}>→</span>
+                      <span style={{ fontSize:22, color:'var(--muted)', fontWeight:700 }}>→</span>
                       <SeqDrop
                         value={filled[1]}
                         state={s3St[q.lbl]}

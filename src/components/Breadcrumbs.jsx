@@ -58,9 +58,9 @@ export default function Breadcrumbs() {
   return (
     <nav aria-label="Breadcrumb" style={{
       display: 'flex', alignItems: 'center', flexWrap: 'wrap',
-      gap: 6, padding: '8px 24px',
+      gap: 8, padding: '10px 28px',
       background: '#fff', borderBottom: '1px solid var(--border)',
-      fontSize: 13, fontFamily: 'var(--font)',
+      fontSize: 15, fontFamily: 'var(--font)',
     }}>
       {crumbs.map((c, i) => {
         const last = i === crumbs.length - 1;

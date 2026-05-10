@@ -24,9 +24,12 @@
   top: 0;
   left: 0;
   height: 100vh;
-  height: 100dvh; /* fills actual visible area on tablet/phone browsers */
+  height: 100svh; /* small viewport — excludes browser chrome bar */
+  height: 100dvh; /* dynamic — updates as chrome appears/disappears */
   overflow: hidden;
   z-index: 100;
+  /* Ensure full height on iOS Safari and Android Chrome */
+  min-height: -webkit-fill-available;
 }
 
 /* Top radial glow */

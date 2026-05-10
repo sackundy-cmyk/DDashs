@@ -5,13 +5,23 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 
+// Attempt-based performance scoring: 1st=100%, 2nd=90%, 3rd=75%, 4th=55%, 5th+=40%
+function scoreFromAttempts(att) {
+  if (att <= 1) return 100;
+  if (att === 2) return 90;
+  if (att === 3) return 75;
+  if (att === 4) return 55;
+  return 40;
+}
+
 /**
  * @param {number} totalSections - how many sections the lesson has
  * @param {object} [opts]
  * @param {() => void} [opts.onAllDone] - fired once when every section is complete
  *
  * markDone(sectionId, payload) accepts:
- *   - { correct, total, attempts } → saves pct = round(correct/total*100)
+ *   - { correct, total, attempts } → score = scoreFromAttempts(attempts)
+ *   - { score }                    → explicit score override (0-100)
  *   - string ("3/5 ✓")            → legacy display label, score=null
  *   - number                       → legacy raw score
  *   - null/undefined               → just marks complete
@@ -32,8 +42,10 @@ export function useProgress(totalSections, opts = {}) {
         correct  = Number.isFinite(payload.correct) ? payload.correct : null;
         total    = Number.isFinite(payload.total)   ? payload.total   : null;
         attempts = Number.isFinite(payload.attempts) ? payload.attempts : 1;
-        if (correct !== null && total !== null && total > 0) {
-          pct = Math.round((correct / total) * 100);
+        if (Number.isFinite(payload.score)) {
+          pct = payload.score; // explicit override
+        } else if (correct !== null && total !== null && total > 0) {
+          pct = scoreFromAttempts(attempts);
           displayLabel = `${correct}/${total} ✓`;
         }
       } else if (typeof payload === 'string') {

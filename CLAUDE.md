@@ -161,7 +161,10 @@ Rules:
 
 ## Lesson authoring rules (load-bearing — break a lesson if violated)
 
-- **3-attempt feedback ladder, no exceptions:** attempt 1 = correct/wrong only, attempt 2 = hint, attempt 3+ = reveal + lock. Never reveal unselected correct answers before attempt 3. Special case: prime grid Q1 in U3L4 — check button never locks until all primes are found; wrong picks go red; unfound primes are NOT revealed.
+- **Feedback ladder — NEVER reveal the final answer at any attempt:** attempt 1 = correct/wrong only, attempt 2 = hint (direction clue, not the answer), attempt 3+ = stronger hint + lock (wrong zone stays red). The correct answer is NEVER shown — not even on the 3rd attempt or beyond. Special case: prime grid Q1 in U3L4 — check button never locks until all primes are found; wrong picks go red; unfound primes are NOT revealed.
+- **Attempt-based performance scoring** — uses `scoreFromAttempts(att)` in `useProgress.js`: 1st attempt → 100%, 2nd → 90%, 3rd → 75%, 4th → 55%, 5th+ → 40% (floor, never zero). Pass `payload.score` to `markDone` for an explicit override.
+- **Section completion = correctness-based:** `markDone` is only called once the student answers every question correctly at least once. The progress bar fills on completion only; no star rating.
+- **2-questions-per-DigitPalette rule:** every drag-digit section groups questions in pairs — each pair gets its own `DigitPalette` + Check button. Never put more than 2 drop zones under one palette.
 - **Each question (or question pair) gets its own check button + feedback** — no global submit.
 - **English only.** No bilingual content.
 - **Colours from `src/design-tokens/tokens.css` only** — never hardcode hex. Font: Nunito (400/600/700/800/900).
