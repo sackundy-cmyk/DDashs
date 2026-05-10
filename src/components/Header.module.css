@@ -11,10 +11,17 @@
   align-items: center;
   gap: 12px;
   position: sticky;
-  top: 0;
-  z-index: 200;
+  /* Stick below the DashboardLayout top bar (64 px tall) */
+  top: 64px;
+  /* Below the DashboardLayout top bar (z-50) so they never fight */
+  z-index: 45;
   box-shadow: 0 2px 16px rgba(13, 31, 69, 0.55);
   border-bottom: 1px solid rgba(255,255,255,0.06);
+  /* Break out of pageBody padding (24px top, 28px sides) so the bar spans full width */
+  margin: -24px -28px 0;
+  /* Restore full width across the mainArea */
+  width: calc(100% + 56px);
+  box-sizing: border-box;
 }
 
 /* Brand mark: D-DASH wordmark */
@@ -133,4 +140,12 @@
   .header  { padding: 0 12px; gap: 8px; height: auto; min-height: 58px; flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; }
   .progress { margin: 0; flex-basis: 100%; order: 99; }
   .logoText { display: none; }
+}
+
+@media (max-width: 480px) {
+  /* At ≤480px pageBody padding drops to 16px each side */
+  .header {
+    margin: -16px -16px 0;
+    width: calc(100% + 32px);
+  }
 }
