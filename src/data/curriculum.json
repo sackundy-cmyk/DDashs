@@ -8,7 +8,8 @@
         { "id": 1, "title": "Place Value in Decimals",      "slug": "place-value" },
         { "id": 2, "title": "Thousandths",                  "slug": "thousandths" },
         { "id": 3, "title": "Multiply & Divide by 10/100", "slug": "multiply-divide" },
-        { "id": 4, "title": "Rounding Decimals",            "slug": "rounding" }
+        { "id": 4, "title": "Rounding Decimals",            "slug": "rounding" },
+        { "id": 5, "title": "Comparing & Ordering Decimals","slug": "comparing-ordering" }
       ]
     },
     {

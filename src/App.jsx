@@ -42,6 +42,7 @@ const U1L1 = lazy(() => import('./lessons/unit1/L1_PlaceValue.jsx'));
 const U1L2 = lazy(() => import('./lessons/unit1/L2_Thousandths.jsx'));
 const U1L3 = lazy(() => import('./lessons/unit1/L3_MultiplyDivide.jsx'));
 const U1L4 = lazy(() => import('./lessons/unit1/L4_Rounding.jsx'));
+const U1L5 = lazy(() => import('./lessons/unit1/L5_ComparingOrdering.jsx'));
 const U2L1 = lazy(() => import('./lessons/unit2/L1_Sequences.jsx'));
 const U2L2 = lazy(() => import('./lessons/unit2/L2_NegativeNumbers.jsx'));
 const U2L3 = lazy(() => import('./lessons/unit2/L3_FunctionMachines.jsx'));
@@ -73,7 +74,7 @@ const U6L10 = lazy(() => import('./lessons/unit6/L10_Transformations.jsx'));
 const U6L11 = lazy(() => import('./lessons/unit6/L11_Circles.jsx'));
 
 const LESSON_MAP = {
-  '1-1': U1L1, '1-2': U1L2, '1-3': U1L3, '1-4': U1L4,
+  '1-1': U1L1, '1-2': U1L2, '1-3': U1L3, '1-4': U1L4, '1-5': U1L5,
   '2-1': U2L1, '2-2': U2L2, '2-3': U2L3, '2-4': U2L4, '2-5': U2L5,
   '3-1': U3L1, '3-2': U3L2, '3-3': U3L3, '3-4': U3L4,
   '4-1': U4L1, '4-2': U4L2, '4-3': U4L3, '4-4': U4L4, '4-5': U4L5, '4-6': U4L6, '4-7': U4L7, '4-8': U4L8,
