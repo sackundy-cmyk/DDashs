@@ -73,6 +73,7 @@ const U6L9  = lazy(() => import('./lessons/unit6/L9_Coordinates.jsx'));
 const U6L10 = lazy(() => import('./lessons/unit6/L10_Transformations.jsx'));
 const U6L11 = lazy(() => import('./lessons/unit6/L11_Circles.jsx'));
 const U7L1  = lazy(() => import('./lessons/unit7/L1_NumberLineIntegers.jsx'));
+const U7L2  = lazy(() => import('./lessons/unit7/L2_RoundingNumbers.jsx'));
 
 const LESSON_MAP = {
   '1-1': U1L1, '1-2': U1L2, '1-3': U1L3, '1-4': U1L4, '1-5': U1L5,
@@ -82,7 +83,7 @@ const LESSON_MAP = {
   '5-1': U5L1,
   '6-1': U6L1, '6-2': U6L2, '6-3': U6L3, '6-4': U6L4, '6-5': U6L5,
   '6-6': U6L6, '6-7': U6L7, '6-8': U6L8, '6-9': U6L9, '6-10': U6L10, '6-11': U6L11,
-  '7-1': U7L1,
+  '7-1': U7L1, '7-2': U7L2,
 };
 
 function PageLoader() {

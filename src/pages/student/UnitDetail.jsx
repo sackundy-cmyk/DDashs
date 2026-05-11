@@ -19,6 +19,8 @@ const UNIT_TITLES = {
   3: 'Multiples, Factors & Primes',
   4: 'Addition & Subtraction',
   5: 'Mental & Written Calculations',
+  6: 'Geometry',
+  7: 'Integers',
 };
 
 function lessonStatus(l) {
@@ -65,10 +67,11 @@ export default function UnitDetail() {
 
   const cls = data.class;
   const lessons = data.lessons.filter(l => l.unit === unitNum);
-  // Pick a unit color: use unit index in distinct unit list
   const distinctUnits = [...new Set(data.lessons.map(l => l.unit))].sort((a, b) => a - b);
   const unitColorIdx = distinctUnits.indexOf(unitNum);
   const unitColor = PALETTE[unitColorIdx % PALETTE.length];
+  // Display number is rank within this class (1-based), not the raw unit ID
+  const displayUnitNum = unitColorIdx + 1;
 
   const handleClick = (l) => {
     if (l.locked) {
@@ -86,7 +89,7 @@ export default function UnitDetail() {
         <span style={{ margin: '0 8px' }}>›</span>
         <Link to={`/student/classes/${classId}`} style={{ color: '#1CB0F6', fontWeight: 700, textDecoration: 'none' }}>{cls.name}</Link>
         <span style={{ margin: '0 8px' }}>›</span>
-        <span style={{ fontWeight: 600 }}>Unit {unitNum}</span>
+        <span style={{ fontWeight: 600 }}>Unit {displayUnitNum}</span>
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 22 }}>
@@ -96,11 +99,11 @@ export default function UnitDetail() {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: `0 6px 18px ${unitColor}44`,
         }}>
-          <span style={{ fontSize: 22, fontWeight: 900, color: '#fff' }}>{unitNum}</span>
+          <span style={{ fontSize: 22, fontWeight: 900, color: '#fff' }}>{displayUnitNum}</span>
         </div>
         <div>
           <h2 style={{ fontSize: 'var(--font-h1)', fontWeight: 900, color: '#0F172A', margin: 0, letterSpacing: '-0.03em' }}>
-            {UNIT_TITLES[unitNum] || `Unit ${unitNum}`}
+            {UNIT_TITLES[unitNum] || `Unit ${displayUnitNum}`}
           </h2>
           <div style={{ fontSize: 'var(--font-small)', color: '#64748B', marginTop: 2 }}>
             {lessons.length} lesson{lessons.length !== 1 ? 's' : ''}

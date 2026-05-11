@@ -81,7 +81,8 @@
       "title": "Unit 1 — Integers",
       "colour": "#0F766E",
       "lessons": [
-        { "id": 1, "title": "Integers on a Number Line", "slug": "number-line-integers" }
+        { "id": 1, "title": "Integers on a Number Line", "slug": "number-line-integers" },
+        { "id": 2, "title": "Rounding Large Numbers",    "slug": "rounding-numbers" }
       ]
     }
   ]

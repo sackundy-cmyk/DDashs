@@ -19,6 +19,8 @@ const UNIT_TITLES = {
   3: 'Multiples, Factors & Primes',
   4: 'Addition & Subtraction',
   5: 'Mental & Written Calculations',
+  6: 'Geometry',
+  7: 'Integers',
 };
 
 export default function ClassDetail() {
@@ -64,7 +66,8 @@ export default function ClassDetail() {
       const done = lessons.filter(l => l.completedSections >= l.totalSections && l.totalSections > 0).length;
       return {
         unit,
-        title: UNIT_TITLES[unit] || `Unit ${unit}`,
+        displayNum: idx + 1,
+        title: UNIT_TITLES[unit] || `Unit ${idx + 1}`,
         color: PALETTE[idx % PALETTE.length],
         totalLessons: total,
         doneLessons: done,
@@ -142,13 +145,13 @@ export default function ClassDetail() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 26, fontWeight: 900, color: '#fff',
               }}>
-                {u.unit}
+                {u.displayNum}
               </div>
               <div style={{
                 fontSize: 13, fontWeight: 800, color: 'rgba(255,255,255,0.85)',
                 letterSpacing: '0.06em', textTransform: 'uppercase',
               }}>
-                Unit {u.unit}
+                Unit {u.displayNum}
               </div>
             </div>
 
