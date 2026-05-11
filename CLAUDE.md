@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-**D-DASH** — interactive maths platform for ages 8–12. React 18 + Vite frontend, Express + SQLite (sqlite3 N-API, no native build) backend, JWT auth, three roles: student / teacher / admin. **22 lessons live** across Units 1–5, all in one course: **Grade 5 Mathematics**.
+**D-DASH** — interactive maths platform for ages 8–12. React 18 + Vite frontend, Express + SQLite (sqlite3 N-API, no native build) backend, JWT auth, three roles: student / teacher / admin. **23 lessons live** across Units 1–5 (Unit 1 now has 5 lessons), all in one course: **Grade 5 Mathematics**.
 
 ## Commands
 
@@ -61,7 +61,7 @@ Three routed pages — books → units → lessons, each as a card grid:
 | `/student/classes/:classId` | Units grid (one card per unit, progress ring + lesson count) |
 | `/student/classes/:classId/unit/:unit` | Lessons grid (one card per lesson, status badge, Continue/Start) |
 
-The lesson player itself stays at `/student/lesson/:unitId/:lessonId?classId=`.
+The lesson player itself stays at `/student/lesson/:unitId/:lessonId?classId=`. **`classId` is required in the query string** — without it, `useProgress` has no class to attribute progress to and skips the backend POST.
 
 ### Lesson state model — three layers
 
@@ -77,9 +77,35 @@ A lesson page typically uses three hooks:
    const q1 = state.q1 || q1Init, setQ1 = setField('q1', q1Init);
    ```
 
-2. **`useProgress(totalSections, { onAllDone })`** — section completion tracker. `markDone(sectionId, ...)` posts to `/api/progress`. `onAllDone` fires once when every section completes — wire to `clearDraft`.
+2. **`useProgress(totalSections, { onAllDone })`** — section completion tracker. `markDone(sectionId, payload)` posts to `/api/progress` and fills the lesson progress bar. `onAllDone` fires once when every section completes — wire to `clearDraft`.
 
-3. **`useAttempts(questionId)`** — per-question 3-attempt counter.
+   `markDone` payload shapes:
+   - `{ correct, total, attempts }` → score computed via `scoreFromAttempts(attempts)`: 1st→100%, 2nd→90%, 3rd→75%, 4th→55%, 5th+→40%
+   - `{ score }` → explicit percentage override (0–100)
+   - string / number / null → legacy; avoid in new lessons
+
+3. **`useAttempts(questionId)`** — per-question attempt counter. `increment(key)` then `getAtt(key) + 1` gives the current attempt number.
+
+### Critical: React async-updater bug in check functions
+
+**Never increment an `ok` counter inside a `setState` functional updater.** React batches updaters and they do not run synchronously inline — reading `ok` after `setState(prev => { …ok++… })` will always see 0, so `markDone` is never called and the progress bar never fills.
+
+**Wrong pattern:**
+```js
+let ok = 0;
+setSt(prev => { ga.forEach(q => { if (correct) ok++; }); return ns; }); // ok stays 0 outside
+if (ok === total) markDone(...); // never fires
+```
+
+**Correct pattern (compute before setState):**
+```js
+let ok = 0;
+ga.forEach(q => { if (sel[q.lbl] === q.ans) ok++; }); // synchronous count
+setSt(prev => { /* apply visual state only */ return ns; });
+if (ok === total) markDone(...); // fires correctly
+```
+
+All existing lessons in `src/lessons/unit1/L1–L5`, `unit2`, `unit3`, `unit4`, `unit5` use the correct pattern. The bug was found and fixed in `L3_MultiplyDivide.jsx` — do not reintroduce it.
 
 ### Backend
 
@@ -153,11 +179,12 @@ Defined in `src/design-tokens/tokens.css`:
 ```
 
 Rules:
-- **Use clamp() typography variables** for headings; don't hardcode `fontSize: 20`.
+- **Use clamp() typography variables** for headings in shell/layout; lesson-internal components may use explicit px values.
 - **Card grids**: `repeat(auto-fit, minmax(<min>, 1fr))`; never `1fr 1fr`.
 - **Sidebar**: collapses to slide-in drawer at ≤900px (handled in `DashboardLayout.module.css`).
 - **Tables / table-like grids**: at ≤768px, convert to stacked card layout (use `s.respRow` / `s.respCell` helpers in `DashboardLayout.module.css`, or CSS media query).
-- **Drag interactions**: `src/utils/touchDragPolyfill.js` is wired in `main.jsx` and covers all `[draggable=true]` elements — no per-component touch wiring needed.
+- **Drag interactions**: `src/utils/touchDragPolyfill.js` is wired in `main.jsx` and covers all `[draggable=true]` elements — 200 ms hold before drag starts, `passive:false` on `touchmove` so scrolling is blocked during drag. No per-component touch wiring needed.
+- **Lesson sticky header**: `Header.jsx` sits below the DashboardLayout top bar. Key CSS: `top: 64px; z-index: 45; margin: -24px -28px 0; width: calc(100% + 56px)` (at ≤480px: `-16px -16px 0` / `calc(100% + 32px)`).
 
 ## Lesson authoring rules (load-bearing — break a lesson if violated)
 
@@ -168,7 +195,7 @@ Rules:
 - **MCQ option shuffle:** shuffle option arrays once on mount (`useState` lazy initialiser) so the correct answer is never always-first. Keyed by question label for stability across renders: `const [shuf] = useState(() => ({ s1: Object.fromEntries(QS.map(q=>[q.lbl, sh(q.opts)])) }))`.
 - **Each question (or question pair) gets its own check button + feedback** — no global submit.
 - **English only.** No bilingual content.
-- **Colours from `src/design-tokens/tokens.css` only** — never hardcode hex. Font: Nunito (400/600/700/800/900).
+- **Shell colours from `src/design-tokens/tokens.css`**; lesson-internal component colours may use hex directly.
 - **Numbers in question text**: ≥24px bold pill — use `NumChip` from `SharedComponents.jsx`. Never inline a literal number in text-only style.
 - **Fractions**: stacked numerator-over-denominator inside a card with a clear standing-out font — use the `Frac` component (or stacked `NumChip` pair). Mixed numbers: pill + Frac side by side.
 - **Question letter badges:** 40px circle, bold (use `LblCircle`).
@@ -176,11 +203,23 @@ Rules:
 - **Drag-and-drop preferred for number input;** MCQ for complex option sets.
 - **Venn diagrams:** SVG circles + absolutely-positioned transparent overlay drop zones.
 
+## Shared component standards (current baseline)
+
+These were updated globally and must stay consistent:
+
+| Component | Key style |
+|---|---|
+| `CheckButton` | Amber/gold `#D97706` background (disabled → `#94A3B8`), `boxShadow: 0 3px 12px rgba(217,119,6,0.35)`, 17px, 900 weight |
+| `MCQOptions` button | 20px, 700 weight, purple selected state (`#CE82FF`) |
+| `QItemLabel` | 22px, 800 weight, `flexWrap:wrap`, `lineHeight:1.4` |
+| `DigitPalette` | `decimal` prop defaults to `true` — decimal point card always shown |
+| `NumChip` | Default 28px, 900 weight, solid blue background, white text |
+
 ## Adding a lesson
 
 1. Create `src/lessons/unitX/LN_TopicName.jsx`. Use `useLessonDraft` + `useProgress`. Lift any state representing user progress into `state` slots; keep transient UI as `useState`.
-2. Register in `LESSON_MAP` in `src/App.jsx`.
-3. Add data file `src/data/unitX/lessonN.json` and entry in `src/data/curriculum.json` (curriculum drives prev/next nav in `Header.jsx` and breadcrumb labels).
+2. Register in `LESSON_MAP` in `src/App.jsx` (lazy import + `'X-N': UXlLN` entry).
+3. Add entry in `src/data/curriculum.json` (drives prev/next nav in `Header.jsx` and breadcrumb labels). Per-lesson JSON data files under `src/data/unitX/` are optional.
 4. Add the lesson row in the Grade 5 Math class via the admin UI (or extend the `lessons` array in `seed.js`).
 5. Run `npm run build` — must stay green.
 
@@ -196,7 +235,7 @@ All platform layers shipped:
 - **Book → Unit → Lesson card navigation** — `/student/classes` ▸ `:classId` ▸ `:classId/unit/:unit`
 - **Certificates** — teacher-issued (lesson / unit / course), printable PDF, student "Certificates" tab
 - **Quizzes & Exams** — teacher builder (4 question types), publish toggle, results page; student takes with timer + retake
-- **Responsive system** — breakpoint tokens + clamp typography + sidebar drawer
+- **Responsive system** — breakpoint tokens + clamp typography + sidebar drawer + touch-drag polyfill
 
 **Explicitly out of scope (do not implement):** parent portal login, streaks/XP/badges/gamification, adaptive difficulty, spaced repetition, password reset / forced-change-on-first-login, SMTP-driven email delivery, search across lessons, audit log, student profile / password-change page, automatic DB backup.
 

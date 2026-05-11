@@ -64,20 +64,19 @@ function CloudChip({ value, disabled }) {
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         background: disabled
           ? 'linear-gradient(135deg,#E2E8F0,#CBD5E1)'
-          : 'linear-gradient(135deg,#DBEAFE,#BFDBFE)',
-        color: disabled ? '#94A3B8' : '#1E40AF',
-        border: `2.5px solid ${disabled ? '#CBD5E1' : '#93C5FD'}`,
-        // Wavy oval = cloud silhouette
+          : 'linear-gradient(135deg,#1E40AF,#1565C0)',
+        color: disabled ? '#94A3B8' : '#fff',
+        border: `2.5px solid ${disabled ? '#CBD5E1' : '#1E3A8A'}`,
         borderRadius: '48% 52% 44% 56% / 56% 44% 56% 44%',
-        padding: '12px 28px',
-        fontSize: 22, fontWeight: 900,
-        fontFamily: 'monospace', letterSpacing: '0.5px',
+        padding: 'clamp(9px,2vw,14px) clamp(14px,4vw,32px)',
+        fontSize: 'clamp(20px,4.5vw,28px)', fontWeight: 900,
+        fontFamily: 'var(--font)',
         cursor: disabled ? 'default' : 'grab',
         userSelect: 'none',
-        opacity: disabled ? 0.4 : 1,
+        opacity: disabled ? 0.35 : 1,
         transition: 'all .15s',
-        boxShadow: disabled ? 'none' : '0 4px 14px rgba(30,64,175,0.20)',
-        minWidth: 90, textAlign: 'center',
+        boxShadow: disabled ? 'none' : '0 4px 16px rgba(30,64,175,0.30)',
+        minWidth: 'clamp(76px,19vw,100px)', textAlign: 'center',
       }}
     >
       {value}
@@ -107,11 +106,12 @@ function OrderDrop({ value, state, onDrop, onClick }) {
       }}
       onClick={() => !locked && value && onClick && onClick()}
       style={{
-        minWidth: 110, height: 58, borderRadius: 10,
+        minWidth: 'clamp(68px,18vw,120px)', height: 'clamp(50px,10vw,64px)', borderRadius: 10,
         border: bd, background: bg, color,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 22, fontWeight: 900, padding: '0 10px',
-        fontFamily: 'monospace', letterSpacing: '0.5px',
+        fontSize: 'clamp(19px,4.5vw,28px)', fontWeight: 900,
+        padding: '0 clamp(6px,2vw,14px)',
+        fontFamily: 'var(--font)',
         cursor: value && !locked ? 'pointer' : 'default',
         transition: 'all .2s',
       }}
@@ -269,7 +269,7 @@ export default function L5_ComparingOrdering() {
                     )}
                     <QItemLabel>
                       <LblCircle letter={q.lbl}/>
-                      <span style={{ fontSize:18, fontWeight:700, color:'var(--muted)' }}>Start with the <strong style={{ color: q.order === 'asc' ? 'var(--blue-dark)' : '#DC2626' }}>{label}</strong></span>
+                      <span style={{ fontSize:20, fontWeight:700, color:'var(--muted)' }}>Start with the <strong style={{ color: q.order === 'asc' ? 'var(--blue-dark)' : '#DC2626' }}>{label}</strong></span>
                     </QItemLabel>
 
                     {/* Pool row */}
@@ -279,10 +279,10 @@ export default function L5_ComparingOrdering() {
                       ))}
                     </div>
 
-                    {/* Drop boxes row */}
-                    <div style={{ display:'flex', alignItems:'center', gap:10, flexWrap:'wrap' }}>
+                    {/* Drop boxes row — each [box + sign] is a flex item so they wrap as a pair */}
+                    <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
                       {[0,1,2].map(idx => (
-                        <React.Fragment key={idx}>
+                        <div key={idx} style={{ display:'flex', alignItems:'center', gap:8 }}>
                           <OrderDrop
                             value={filled[idx]}
                             state={s1St[q.lbl]}
@@ -290,11 +290,11 @@ export default function L5_ComparingOrdering() {
                             onClick={s1Clear(q.lbl, idx)}
                           />
                           {idx < 2 && (
-                            <span style={{ fontSize:30, fontWeight:900, color: q.order === 'asc' ? 'var(--blue-dark)' : '#DC2626' }}>
+                            <span style={{ fontSize:'clamp(22px,5.5vw,36px)', fontWeight:900, color: q.order === 'asc' ? 'var(--blue-dark)' : '#DC2626', lineHeight:1 }}>
                               {sign}
                             </span>
                           )}
-                        </React.Fragment>
+                        </div>
                       ))}
                     </div>
                   </QItem>
@@ -326,7 +326,7 @@ export default function L5_ComparingOrdering() {
                     )}
                     <QItemLabel>
                       <LblCircle letter={q.lbl}/>
-                      <span style={{ fontSize:18, fontWeight:700, color:'var(--muted)' }}>
+                      <span style={{ fontSize:20, fontWeight:700, color:'var(--muted)' }}>
                         Smallest <strong style={{ color:'var(--blue-dark)' }}>→</strong> Largest
                       </span>
                     </QItemLabel>
@@ -338,10 +338,10 @@ export default function L5_ComparingOrdering() {
                       ))}
                     </div>
 
-                    {/* Drop boxes row */}
+                    {/* Drop boxes row — each [box + sign] is a flex item so they wrap as a pair */}
                     <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
                       {[0,1,2,3].map(idx => (
-                        <React.Fragment key={idx}>
+                        <div key={idx} style={{ display:'flex', alignItems:'center', gap:8 }}>
                           <OrderDrop
                             value={filled[idx]}
                             state={s2St[q.lbl]}
@@ -349,9 +349,9 @@ export default function L5_ComparingOrdering() {
                             onClick={s2Clear(q.lbl, idx)}
                           />
                           {idx < 3 && (
-                            <span style={{ fontSize:28, fontWeight:900, color:'var(--blue-dark)' }}>{'<'}</span>
+                            <span style={{ fontSize:'clamp(22px,5.5vw,36px)', fontWeight:900, color:'var(--blue-dark)', lineHeight:1 }}>{'<'}</span>
                           )}
-                        </React.Fragment>
+                        </div>
                       ))}
                     </div>
                   </QItem>

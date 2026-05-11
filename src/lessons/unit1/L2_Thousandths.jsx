@@ -449,27 +449,29 @@ export default function L2_Thousandths() {
                       <LblCircle letter={q.lbl}/>
                       <span style={{ fontSize:20, fontWeight:800, color:'var(--muted)' }}>Continue the sequence:</span>
                     </div>
-                    {/* Sequence row */}
+                    {/* Sequence row — each [num+arrow] is a div so signs wrap with their chip */}
                     <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', margin:'10px 0' }}>
                       {q.seq.map((n, i) => (
-                        <React.Fragment key={i}>
+                        <div key={i} style={{ display:'flex', alignItems:'center', gap:8 }}>
                           <div style={{ background:'#EEF4FF', border:'2px solid var(--border)', borderRadius:8, padding:'9px 16px', fontSize:22, fontWeight:800 }}>{n}</div>
                           <span style={{ fontSize:22, color:'var(--muted)', fontWeight:700 }}>→</span>
-                        </React.Fragment>
+                        </div>
                       ))}
-                      <SeqDrop
-                        value={filled[0]}
-                        state={s3St[q.lbl]}
-                        onDrop={s3DropAt(q.lbl, 0)}
-                        onClick={s3Clear(q.lbl, 0)}
-                      />
-                      <span style={{ fontSize:22, color:'var(--muted)', fontWeight:700 }}>→</span>
-                      <SeqDrop
-                        value={filled[1]}
-                        state={s3St[q.lbl]}
-                        onDrop={s3DropAt(q.lbl, 1)}
-                        onClick={s3Clear(q.lbl, 1)}
-                      />
+                      <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                        <SeqDrop
+                          value={filled[0]}
+                          state={s3St[q.lbl]}
+                          onDrop={s3DropAt(q.lbl, 0)}
+                          onClick={s3Clear(q.lbl, 0)}
+                        />
+                        <span style={{ fontSize:22, color:'var(--muted)', fontWeight:700 }}>→</span>
+                        <SeqDrop
+                          value={filled[1]}
+                          state={s3St[q.lbl]}
+                          onDrop={s3DropAt(q.lbl, 1)}
+                          onClick={s3Clear(q.lbl, 1)}
+                        />
+                      </div>
                     </div>
                     {/* Chip bank */}
                     <div style={{ background:'var(--blue-light)', border:'1.5px solid var(--border)', borderRadius:10, padding:'10px 12px', marginBottom:6 }}>
