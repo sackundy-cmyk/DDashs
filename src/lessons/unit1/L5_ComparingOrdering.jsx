@@ -68,15 +68,15 @@ function CloudChip({ value, disabled }) {
         color: disabled ? '#94A3B8' : '#fff',
         border: `2.5px solid ${disabled ? '#CBD5E1' : '#1E3A8A'}`,
         borderRadius: '48% 52% 44% 56% / 56% 44% 56% 44%',
-        padding: 'clamp(9px,2vw,14px) clamp(14px,4vw,32px)',
-        fontSize: 'clamp(20px,4.5vw,28px)', fontWeight: 900,
+        padding: 'clamp(6px,1.5vw,10px) clamp(10px,3vw,20px)',
+        fontSize: 'clamp(14px,3vw,18px)', fontWeight: 900,
         fontFamily: 'var(--font)',
         cursor: disabled ? 'default' : 'grab',
         userSelect: 'none',
         opacity: disabled ? 0.35 : 1,
         transition: 'all .15s',
         boxShadow: disabled ? 'none' : '0 4px 16px rgba(30,64,175,0.30)',
-        minWidth: 'clamp(76px,19vw,100px)', textAlign: 'center',
+        minWidth: 'clamp(56px,14vw,76px)', textAlign: 'center',
       }}
     >
       {value}
@@ -106,11 +106,11 @@ function OrderDrop({ value, state, onDrop, onClick }) {
       }}
       onClick={() => !locked && value && onClick && onClick()}
       style={{
-        minWidth: 'clamp(68px,18vw,120px)', height: 'clamp(50px,10vw,64px)', borderRadius: 10,
+        minWidth: 'clamp(52px,13vw,88px)', height: 'clamp(38px,7.5vw,50px)', borderRadius: 10,
         border: bd, background: bg, color,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 'clamp(19px,4.5vw,28px)', fontWeight: 900,
-        padding: '0 clamp(6px,2vw,14px)',
+        fontSize: 'clamp(13px,3vw,18px)', fontWeight: 900,
+        padding: '0 clamp(4px,1.5vw,10px)',
         fontFamily: 'var(--font)',
         cursor: value && !locked ? 'pointer' : 'default',
         transition: 'all .2s',
@@ -290,7 +290,7 @@ export default function L5_ComparingOrdering() {
                             onClick={s1Clear(q.lbl, idx)}
                           />
                           {idx < 2 && (
-                            <span style={{ fontSize:'clamp(22px,5.5vw,36px)', fontWeight:900, color: q.order === 'asc' ? 'var(--blue-dark)' : '#DC2626', lineHeight:1 }}>
+                            <span style={{ fontSize:'clamp(16px,4vw,24px)', fontWeight:900, color: q.order === 'asc' ? 'var(--blue-dark)' : '#DC2626', lineHeight:1 }}>
                               {sign}
                             </span>
                           )}
@@ -349,7 +349,7 @@ export default function L5_ComparingOrdering() {
                             onClick={s2Clear(q.lbl, idx)}
                           />
                           {idx < 3 && (
-                            <span style={{ fontSize:'clamp(22px,5.5vw,36px)', fontWeight:900, color:'var(--blue-dark)', lineHeight:1 }}>{'<'}</span>
+                            <span style={{ fontSize:'clamp(16px,4vw,24px)', fontWeight:900, color:'var(--blue-dark)', lineHeight:1 }}>{'<'}</span>
                           )}
                         </div>
                       ))}

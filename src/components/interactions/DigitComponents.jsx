@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 
 /* ── DigitPalette ─────────────────────────────────────────── */
-export function DigitPalette({ paletteId, decimal = true }) {
+export function DigitPalette({ paletteId, decimal = true, minus = false }) {
   const cardStyle = {
     background: '#fff', color: 'var(--blue-dark)',
     border: '2.5px solid var(--blue)', borderRadius: 10,
@@ -46,6 +46,15 @@ export function DigitPalette({ paletteId, decimal = true }) {
             style={{ ...cardStyle, fontSize: 22, fontWeight: 900 }}
           >
             .
+          </div>
+        )}
+        {minus && (
+          <div
+            draggable
+            onDragStart={handleDragStart('-')}
+            style={{ ...cardStyle, fontSize: 22, fontWeight: 900, color: 'var(--red)', borderColor: 'var(--red)' }}
+          >
+            −
           </div>
         )}
         <div

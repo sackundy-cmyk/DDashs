@@ -284,8 +284,7 @@ export default function L1_Sequences() {
 
   // ── s3 handlers ───────────────────────────────────────────────
   const s3Drop = (lbl, pos) => data => {
-    const sideKey = `${lbl}-${pos <= 1 ? 'left' : 'right'}`;
-    if (s3St[sideKey] === 'correct') return;
+    if (s3St[lbl] === 'correct') return;
     setS3F(p => {
       const row = p[lbl] || {};
       const cur = row[pos] || [];
@@ -297,47 +296,43 @@ export default function L1_Sequences() {
     });
   };
   const s3Remove = (lbl, pos) => idx => {
-    const sideKey = `${lbl}-${pos <= 1 ? 'left' : 'right'}`;
-    if (s3St[sideKey] === 'correct') return;
+    if (s3St[lbl] === 'correct') return;
     setS3F(p => {
       const row = p[lbl] || {};
       const cur = row[pos] || [];
       return { ...p, [lbl]: { ...row, [pos]: cur.filter((_, i) => i !== idx) } };
     });
   };
-  const checkS3Side = (lbl, side) => {
+  const checkS3Row = lbl => {
     const q = DBL_SEQ.find(x => x.lbl === lbl);
-    const positions = side === 'left' ? [0, 1] : [5, 6];
     const f = s3F[lbl] || {};
-    increment(`s3-${lbl}-${side}`);
-    const att = getAtt(`s3-${lbl}-${side}`) + 1;
+    increment(`s3${lbl}`);
+    const att = getAtt(`s3${lbl}`) + 1;
     // Compute correctness BEFORE setState
-    const allCorrect = positions.every(pos => {
+    const allCorrect = [0, 1, 5, 6].every(pos => {
       const entered = (f[pos] || []).join('');
       const expected = String(q.seq[pos]);
       return entered === expected;
     });
-    const newSt = { ...s3St, [`${lbl}-${side}`]: allCorrect ? 'correct' : 'wrong' };
+    const newSt = { ...s3St, [lbl]: allCorrect ? 'correct' : 'wrong' };
     setS3St(newSt);
     if (!allCorrect) {
       setTimeout(() => setS3St(p => {
         const x = {...p};
-        if (x[`${lbl}-${side}`] === 'wrong') delete x[`${lbl}-${side}`];
+        if (x[lbl] === 'wrong') delete x[lbl];
         return x;
       }), 1200);
     }
     let fb;
-    if (allCorrect)    fb = { type:'correct', text:'✓ Correct!' };
-    else if (att >= 3) fb = { type:'hint',    text: side === 'left' ? 'Divide the first visible number by 2 to get the term before it, then divide again.' : 'Multiply the last visible number by 2 to get the next term, then multiply again.' };
-    else if (att === 2)fb = { type:'hint',    text:'💡 Each term is double the one before it — work backwards (÷2) for the left blanks and forwards (×2) for the right.' };
-    else               fb = { type:'wrong',   text:'✗ Not quite. Remember: every number is exactly double the one before it.' };
-    const updatedFB = { ...s3FB, [`${lbl}-${side}`]: fb };
+    if (allCorrect)    fb = { type:'correct', text:'✓ All four terms correct!' };
+    else if (att >= 3) fb = { type:'hint',    text:'Divide the first visible term by 2 twice for the left blanks; multiply the last visible term by 2 twice for the right.' };
+    else if (att === 2)fb = { type:'hint',    text:'💡 Each term is double the one before it — work backwards (÷2) for the left side and forwards (×2) for the right.' };
+    else               fb = { type:'wrong',   text:'✗ Not quite — check all four blanks. Every number is exactly double the previous one.' };
+    const updatedFB = { ...s3FB, [lbl]: fb };
     setS3FB(updatedFB);
     if (allCorrect) {
-      const allDone = DBL_SEQ.every(dq =>
-        newSt[`${dq.lbl}-left`] === 'correct' && newSt[`${dq.lbl}-right`] === 'correct'
-      );
-      if (allDone) prog.markDone('s3', { correct: 8, total: 8, attempts: att });
+      const allDone = DBL_SEQ.every(dq => newSt[dq.lbl] === 'correct');
+      if (allDone) prog.markDone('s3', { correct: DBL_SEQ.length, total: DBL_SEQ.length, attempts: att });
     }
   };
 
@@ -484,32 +479,32 @@ export default function L1_Sequences() {
           badge={3}
           title="Each number is double the previous — write the missing numbers"
           tagType="drag" tagLabel="Number Cards"
-          subtitle="Drag digit cards to build each missing number. The amber numbers are given. Fill the 2 blanks on the left, then the 2 blanks on the right."
+          subtitle="Use the digit cards to build each missing number and drop it into the blank. Amber numbers are given."
           score={prog.done['s3']}
         >
           {s3Groups.map((ga, gi) => (
             <QGroup key={gi} title={`Questions ${ga.map(q => q.lbl.toUpperCase()).join(' & ')}`}>
               {ga.map((q, qi) => {
-                const f = s3F[q.lbl] || {};
-                const leftKey  = `${q.lbl}-left`;
-                const rightKey = `${q.lbl}-right`;
-                const leftSt   = s3St[leftKey]  || 'default';
-                const rightSt  = s3St[rightKey] || 'default';
+                const f    = s3F[q.lbl] || {};
+                const rowSt = s3St[q.lbl] || 'default';
                 return (
                   <QItem key={q.lbl} last={qi === ga.length - 1}>
                     <QItemLabel><LblCircle letter={q.lbl} /></QItemLabel>
 
-                    {/* Sequence overview — blanks shown as ? placeholders */}
-                    <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap', margin:'8px 0 16px' }}>
+                    {/* Single digit palette */}
+                    <DigitPalette paletteId={`s3${q.lbl}`} />
+
+                    {/* Sequence row — drop zones sit directly in position */}
+                    <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap', margin:'10px 0 14px' }}>
                       {q.seq.map((v, i) => (
                         <React.Fragment key={i}>
                           {[0,1,5,6].includes(i) ? (
-                            <div style={{
-                              minWidth:44, height:38, borderRadius:8,
-                              border:'2px dashed #CBD5E1', background:'#F8FAFF',
-                              display:'flex', alignItems:'center', justifyContent:'center',
-                              fontSize:18, fontWeight:800, color:'#CBD5E1',
-                            }}>?</div>
+                            <DigitDropZone
+                              digits={f[i] || []}
+                              zoneState={rowSt}
+                              onDrop={s3Drop(q.lbl, i)}
+                              onRemove={s3Remove(q.lbl, i)}
+                            />
                           ) : (
                             <AnchorChip v={v} />
                           )}
@@ -518,62 +513,12 @@ export default function L1_Sequences() {
                       ))}
                     </div>
 
-                    {/* Left and right input areas side by side */}
-                    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14 }}>
-                      {/* Left — 2 blanks before */}
-                      <div style={{
-                        background:'var(--blue-light)', border:'1.5px solid var(--border)',
-                        borderRadius:10, padding:12,
-                      }}>
-                        <div style={{ fontSize:12, fontWeight:800, color:'var(--blue)', marginBottom:8 }}>
-                          ← Fill the 2 numbers BEFORE
-                        </div>
-                        <DigitPalette paletteId={`s3${q.lbl}L`} />
-                        <div style={{ display:'flex', gap:8, marginBottom:10, flexWrap:'wrap' }}>
-                          <DigitDropZone
-                            digits={f[0] || []} zoneState={leftSt}
-                            onDrop={s3Drop(q.lbl, 0)} onRemove={s3Remove(q.lbl, 0)}
-                          />
-                          <DigitDropZone
-                            digits={f[1] || []} zoneState={leftSt}
-                            onDrop={s3Drop(q.lbl, 1)} onRemove={s3Remove(q.lbl, 1)}
-                          />
-                        </div>
-                        <CheckButton
-                          label="✓ Check Left"
-                          onClick={() => checkS3Side(q.lbl, 'left')}
-                          disabled={leftSt === 'correct'}
-                        />
-                        {s3FB[leftKey] && <FeedbackBox type={s3FB[leftKey].type} message={s3FB[leftKey].text} />}
-                      </div>
-
-                      {/* Right — 2 blanks after */}
-                      <div style={{
-                        background:'#FFF7ED', border:'1.5px solid #D97706',
-                        borderRadius:10, padding:12,
-                      }}>
-                        <div style={{ fontSize:12, fontWeight:800, color:'#92400E', marginBottom:8 }}>
-                          Fill the 2 numbers AFTER →
-                        </div>
-                        <DigitPalette paletteId={`s3${q.lbl}R`} />
-                        <div style={{ display:'flex', gap:8, marginBottom:10, flexWrap:'wrap' }}>
-                          <DigitDropZone
-                            digits={f[5] || []} zoneState={rightSt}
-                            onDrop={s3Drop(q.lbl, 5)} onRemove={s3Remove(q.lbl, 5)}
-                          />
-                          <DigitDropZone
-                            digits={f[6] || []} zoneState={rightSt}
-                            onDrop={s3Drop(q.lbl, 6)} onRemove={s3Remove(q.lbl, 6)}
-                          />
-                        </div>
-                        <CheckButton
-                          label="✓ Check Right"
-                          onClick={() => checkS3Side(q.lbl, 'right')}
-                          disabled={rightSt === 'correct'}
-                        />
-                        {s3FB[rightKey] && <FeedbackBox type={s3FB[rightKey].type} message={s3FB[rightKey].text} />}
-                      </div>
-                    </div>
+                    <CheckButton
+                      label={`✓ Check ${q.lbl.toUpperCase()}`}
+                      onClick={() => checkS3Row(q.lbl)}
+                      disabled={rowSt === 'correct'}
+                    />
+                    {s3FB[q.lbl] && <FeedbackBox type={s3FB[q.lbl].type} message={s3FB[q.lbl].text} />}
                   </QItem>
                 );
               })}
