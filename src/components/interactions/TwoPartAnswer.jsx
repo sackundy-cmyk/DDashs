@@ -8,6 +8,7 @@ import React from 'react';
 import { DigitDropZone } from './DigitComponents.jsx';
 
 /**
+ * @param {string}   paletteId    - shared id matching the DigitPalette above
  * @param {string}   part1Label   - expression string e.g. "(19 × 2) + 4"
  * @param {string}   part2Label   - expression string e.g. "19 × (2 + 4)"
  * @param {string[]} digits1      - digits in part 1 zone
@@ -20,6 +21,7 @@ import { DigitDropZone } from './DigitComponents.jsx';
  * @param {function} onRemove2    - remove digit part 2
  */
 export function TwoPartAnswer({
+  paletteId = 'tpa',
   part1Label, part2Label,
   digits1, digits2,
   state1, state2,
@@ -39,7 +41,7 @@ export function TwoPartAnswer({
         <div style={{ fontSize: 22, fontWeight: 900, color: 'var(--text)', display: 'block', marginBottom: 10 }}>
           {part1Label} =
         </div>
-        <DigitDropZone digits={digits1} zoneState={state1} onDrop={onDrop1} onRemove={onRemove1} />
+        <DigitDropZone paletteId={paletteId} digits={digits1} zoneState={state1} onDrop={onDrop1} onRemove={onRemove1} />
       </div>
 
       {/* Part 2 — orange */}
@@ -53,7 +55,7 @@ export function TwoPartAnswer({
         <div style={{ fontSize: 22, fontWeight: 900, color: 'var(--text)', display: 'block', marginBottom: 10 }}>
           {part2Label} =
         </div>
-        <DigitDropZone digits={digits2} zoneState={state2} onDrop={onDrop2} onRemove={onRemove2} />
+        <DigitDropZone paletteId={paletteId} digits={digits2} zoneState={state2} onDrop={onDrop2} onRemove={onRemove2} />
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ import { ObjectiveCard, ExplainPanel, RuleBox, ScoreTrack,
 import { QGroup, QItem, QItemLabel } from '../../components/layout/QGroupItem.jsx';
 import { MCQOptions } from '../../components/interactions/MCQOptions.jsx';
 import { DigitPalette, DigitDropZone } from '../../components/interactions/DigitComponents.jsx';
+import { digitPickState } from '../../components/interactions/digitPickState.js';
 import { useProgress } from '../../hooks/useProgress.js';
 import { useAttempts } from '../../hooks/useAttempts.js';
 import { useLessonDraft } from '../../hooks/useLessonDraft.js';
@@ -472,18 +473,17 @@ export default function L1_PlaceValue() {
                         cells.push(
                           <td key={c} style={{ padding: 4, textAlign: 'center', background: bg, border: bd }}>
                             <input type="text" maxLength={1} value={val} readOnly
-                              onDragOver={e => e.preventDefault()}
-                              onDrop={e => {
-                                e.preventDefault();
+                              onClick={() => {
                                 if (locked) return;
-                                try {
-                                  const d = e.dataTransfer.getData('text/plain');
-                                  if (d.startsWith('digit:')) setPvD(p => ({ ...p, [r.lbl]: { ...p[r.lbl], [c]: d.split(':')[1] } }));
-                                } catch {}
+                                const sel = digitPickState.get('pvpal');
+                                if (sel !== null) {
+                                  setPvD(p => ({ ...p, [r.lbl]: { ...p[r.lbl], [c]: sel } }));
+                                } else if (val) {
+                                  setPvD(p => ({ ...p, [r.lbl]: { ...p[r.lbl], [c]: '' } }));
+                                }
                               }}
-                              onClick={() => { if (!locked && val) setPvD(p => ({ ...p, [r.lbl]: { ...p[r.lbl], [c]: '' } })); }}
-                              title={!locked && val ? 'Tap to clear' : ''}
-                              style={{ width: 40, height: 36, textAlign: 'center', fontWeight: 900, fontSize: 20, border: 'none', background: 'transparent', cursor: locked ? 'default' : val ? 'pointer' : 'default', color: st === 'correct' ? 'var(--green)' : st === 'wrong' ? 'var(--red)' : 'var(--text)' }}
+                              title={!locked ? 'Click a digit card first, then click here' : ''}
+                              style={{ width: 40, height: 36, textAlign: 'center', fontWeight: 900, fontSize: 20, border: 'none', background: 'transparent', cursor: locked ? 'default' : 'pointer', color: st === 'correct' ? 'var(--green)' : st === 'wrong' ? 'var(--red)' : 'var(--text)' }}
                             />
                           </td>
                         );
@@ -523,6 +523,7 @@ export default function L1_PlaceValue() {
                           <LblCircle letter={a.lbl} />
                           <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--muted)' }}>→</span>
                           <DigitDropZone
+                            paletteId={pairId}
                             digits={s2D[a.lbl] || []}
                             zoneState={s2St[a.lbl] || 'default'}
                             onDrop={s2Drop(a.lbl)}
@@ -583,6 +584,7 @@ export default function L1_PlaceValue() {
                     <FracCard whole={q.whole} num={q.num} den={q.den} />
                     <span style={{ fontSize: 26, fontWeight: 800, margin: '0 6px' }}>=</span>
                     <DigitDropZone
+                      paletteId={`s4pal_${gi}`}
                       digits={s4D[q.lbl] || []}
                       zoneState={s4St[q.lbl] || 'default'}
                       onDrop={s4Drop(q.lbl)}
@@ -611,6 +613,7 @@ export default function L1_PlaceValue() {
                     <span style={{ fontSize: 22, fontWeight: 700 }}>{q.words}</span>
                     <span style={{ fontSize: 22, fontWeight: 800 }}>=</span>
                     <DigitDropZone
+                      paletteId={`s5pal_${gi}`}
                       digits={s5D[q.lbl] || []}
                       zoneState={s5St[q.lbl] || 'default'}
                       onDrop={s5Drop(q.lbl)}

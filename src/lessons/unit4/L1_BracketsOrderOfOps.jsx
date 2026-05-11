@@ -284,6 +284,7 @@ export default function L1_BracketsOrderOfOps() {
                     <LblCircle letter={q.lbl}/>
                     <span style={{ fontSize:20, fontWeight:800 }}>{q.expr} =</span>
                     <DigitDropZone
+                      paletteId={`q1p${gi}`}
                       digits={q1D[q.lbl]||[]}
                       zoneState={q1St[q.lbl]||'default'}
                       onDrop={q1Drop(q.lbl)}
@@ -349,6 +350,7 @@ export default function L1_BracketsOrderOfOps() {
                 <div style={{ display:'flex', alignItems:'center', gap:8, marginTop:10, paddingLeft:4 }}>
                   <span style={{ fontSize:17, fontWeight:800, color:'var(--blue)' }}>? =</span>
                   <DigitDropZone
+                    paletteId="q3p"
                     digits={q3D[q.lbl]||[]}
                     zoneState={q3St[q.lbl]||'default'}
                     onDrop={q3Drop(q.lbl)}
@@ -378,6 +380,7 @@ export default function L1_BracketsOrderOfOps() {
                 </QItemLabel>
                 <DigitPalette paletteId={`q4p${q.lbl}`}/>
                 <TwoPartAnswer
+                  paletteId={`q4p${q.lbl}`}
                   part1Label={q.p1} part2Label={q.p2}
                   digits1={q4D[`${q.lbl}-1`]||[]} digits2={q4D[`${q.lbl}-2`]||[]}
                   state1={q4St[`${q.lbl}-1`]||'default'} state2={q4St[`${q.lbl}-2`]||'default'}

@@ -195,6 +195,7 @@ export default function L8_DecimalHundredths() {
                     <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
                       <ColumnAdd addends={q.addends}/>
                       <DigitDropZone
+                        paletteId={`q1p${gi}`}
                         digits={q1D[q.lbl]||[]}
                         zoneState={q1St[q.lbl]||'default'}
                         onDrop={q1Drop(q.lbl)}
@@ -227,6 +228,7 @@ export default function L8_DecimalHundredths() {
                     <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
                       <span style={{ fontSize:20, fontWeight:800, color:'var(--text)' }}>{q.expr}</span>
                       <DigitDropZone
+                        paletteId={`q2p${gi}`}
                         digits={q2D[q.lbl]||[]}
                         zoneState={q2St[q.lbl]||'default'}
                         onDrop={q2Drop(q.lbl)}

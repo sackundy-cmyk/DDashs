@@ -9,16 +9,18 @@ import { MCQOptions } from './MCQOptions.jsx';
 import { DigitPalette, DigitDropZone } from './DigitComponents.jsx';
 
 /**
+ * @param {string}   paletteId      - shared id for palette ↔ drop zone
  * @param {string}   step1Question  - question text for step 1
  * @param {Array}    step1Options   - [{ id, label }]
  * @param {string}   step1AnswerId  - correct option id
  * @param {string}   step2Question  - hint text for step 2
  * @param {number[]} digits         - current digits in answer zone
  * @param {string}   zoneState      - 'default'|'correct'|'wrong'|'reveal'
- * @param {function} onDigitDrop    - called with raw dataTransfer string
+ * @param {function} onDigitDrop    - called with 'digit:X'
  * @param {function} onDigitRemove  - called with digit index
  */
 export function TwoStepQuestion({
+  paletteId = 'tsq',
   step1Question, step1Options, step1AnswerId,
   step2Question, digits, zoneState,
   onDigitDrop, onDigitRemove,
@@ -88,15 +90,16 @@ export function TwoStepQuestion({
             color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 12, fontWeight: 900,
           }}>2</div>
-          {step2Question} — Drag digits to build your answer:
+          {step2Question} — Click a digit card, then click the box:
         </div>
 
         {/* Mini digit palette */}
-        <DigitPalette />
+        <DigitPalette paletteId={paletteId} />
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
           <span style={{ fontSize: 20, fontWeight: 900 }}>? =</span>
           <DigitDropZone
+            paletteId={paletteId}
             digits={digits}
             zoneState={zoneState}
             onDrop={onDigitDrop}

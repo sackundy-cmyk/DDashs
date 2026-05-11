@@ -251,6 +251,7 @@ export default function L5_LargeNumbers() {
                       <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                         <span style={{ fontSize:20, fontWeight:800, color:'var(--text)' }}>=</span>
                         <DigitDropZone
+                          paletteId={`q1p${gi}`}
                           digits={q1D[q.lbl]||[]}
                           zoneState={q1St[q.lbl]||'default'}
                           onDrop={q1Drop(q.lbl)}
@@ -301,6 +302,7 @@ export default function L5_LargeNumbers() {
                     <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                       <span style={{ fontSize:20, fontWeight:800, color:'var(--text)' }}>=</span>
                       <DigitDropZone
+                        paletteId="q2abp"
                         digits={q2D[q.lbl]||[]}
                         zoneState={q2DrSt[q.lbl]||'default'}
                         onDrop={q2Drop(q.lbl)}
@@ -360,6 +362,7 @@ export default function L5_LargeNumbers() {
                   <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                     <span style={{ fontSize:20, fontWeight:800, color:'var(--text)' }}>=</span>
                     <DigitDropZone
+                      paletteId="q2ep"
                       digits={q2D['e']||[]}
                       zoneState={q2DrSt['e']||'default'}
                       onDrop={q2Drop('e')}

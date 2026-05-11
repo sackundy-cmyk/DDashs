@@ -413,6 +413,7 @@ export default function L2_Thousandths() {
                     <FracTile whole={q.whole} num={q.num}/>
                     <span style={{ fontSize:22, fontWeight:800 }}>=</span>
                     <DigitDropZone
+                      paletteId={`s2pal_${gi}`}
                       digits={s2D[q.lbl] || []}
                       zoneState={s2St[q.lbl] || 'default'}
                       onDrop={s2Drop(q.lbl)}

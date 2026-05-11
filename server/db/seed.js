@@ -26,14 +26,18 @@ async function seed() {
 
   // ── Wipe existing data (order matters for FK constraints) ─────
   await db.exec(`
+    DELETE FROM quiz_attempts;
+    DELETE FROM quiz_questions;
+    DELETE FROM quizzes;
+    DELETE FROM certificates;
     DELETE FROM lesson_progress;
     DELETE FROM lesson_drafts;
     DELETE FROM lesson_locks;
     DELETE FROM class_enrollments;
     DELETE FROM class_lessons;
-    DELETE FROM classes;
     DELETE FROM student_notes;
     DELETE FROM report_log;
+    DELETE FROM classes;
     DELETE FROM users;
   `);
 
@@ -110,14 +114,38 @@ async function seed() {
 
   console.log(`  ✓ 1 class created (Grade 5 Mathematics, ${lessons.length} lessons)`);
 
-  // ── 3. Demo enrollment ──────────────────────────────────────
+  // ── 3. Demo enrollment in Grade 5 ───────────────────────────
 
   await db.run(
     'INSERT INTO class_enrollments (class_id, student_id) VALUES (?, ?)',
     [classId, demoId]
   );
 
-  console.log('  ✓ demo student enrolled');
+  console.log('  ✓ demo student enrolled in Grade 5');
+
+  // ── 4. Class: Grade 6 Mathematics — Book A ───────────────────
+
+  const g6Id = await insertClass(
+    'Grade 6 Mathematics — Book A', 'Grade 6', teacherId,
+    'Grade 6 Mathematics Book A — Integers and Number Lines',
+    '#0F766E'
+  );
+
+  await db.run(
+    'INSERT INTO class_lessons (class_id, unit, lesson_num, title, order_index) VALUES (?, ?, ?, ?, ?)',
+    [g6Id, 7, 1, 'Integers on a Number Line', 0]
+  );
+
+  console.log('  ✓ 1 class created (Grade 6 Mathematics — Book A, 1 lesson)');
+
+  // ── 5. Demo enrollment in Grade 6 ───────────────────────────
+
+  await db.run(
+    'INSERT INTO class_enrollments (class_id, student_id) VALUES (?, ?)',
+    [g6Id, demoId]
+  );
+
+  console.log('  ✓ demo student enrolled in Grade 6');
 
   // ── Summary ──────────────────────────────────────────────────
   console.log('\n✅ Seed complete.');
@@ -129,6 +157,7 @@ async function seed() {
 
   // Suppress unused-var lint
   void adminId;
+  void g6Id;
 }
 
 seed().catch(err => {

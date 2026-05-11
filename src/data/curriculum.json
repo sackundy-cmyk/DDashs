@@ -75,6 +75,14 @@
         { "id": 10, "title": "Transformations",              "slug": "transformations" },
         { "id": 11, "title": "Circles",                      "slug": "circles" }
       ]
+    },
+    {
+      "id": 7,
+      "title": "Unit 1 — Integers",
+      "colour": "#0F766E",
+      "lessons": [
+        { "id": 1, "title": "Integers on a Number Line", "slug": "number-line-integers" }
+      ]
     }
   ]
 }

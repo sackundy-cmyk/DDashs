@@ -281,7 +281,7 @@ export default function L1_Brackets() {
                   <QItemLabel>
                     <LblCircle letter={q.lbl}/>
                     <span style={{fontSize:20,fontWeight:800}}>{q.expr} =</span>
-                    <DigitDropZone digits={q1D[q.lbl]||[]} zoneState={q1St[q.lbl]||'default'} onDrop={q1Drop(q.lbl)} onRemove={q1Rm(q.lbl)}/>
+                    <DigitDropZone paletteId={`q1p${gi}`} digits={q1D[q.lbl]||[]} zoneState={q1St[q.lbl]||'default'} onDrop={q1Drop(q.lbl)} onRemove={q1Rm(q.lbl)}/>
                   </QItemLabel>
                 </QItem>
               ))}
@@ -323,6 +323,7 @@ export default function L1_Brackets() {
                 {q.guided&&<GuidedHint>{q.hint}</GuidedHint>}
                 <QItemLabel><LblCircle letter={q.lbl}/><span style={{fontSize:22,fontWeight:800}}>{q.display}</span></QItemLabel>
                 <TwoStepQuestion
+                  paletteId={`q3p${q.lbl}`}
                   step1Question={q.s1q}
                   step1Options={q.s1opts}
                   step1AnswerId={q.s1ans}
@@ -348,6 +349,7 @@ export default function L1_Brackets() {
                 <QItemLabel><LblCircle letter={q.lbl}/><span style={{fontSize:22,fontWeight:900}}>{q.raw}</span></QItemLabel>
                 <DigitPalette paletteId={`q4p${q.lbl}`}/>
                 <TwoPartAnswer
+                  paletteId={`q4p${q.lbl}`}
                   part1Label={q.p1} part2Label={q.p2}
                   digits1={q4D[`${q.lbl}-1`]||[]} digits2={q4D[`${q.lbl}-2`]||[]}
                   state1={q4St[`${q.lbl}-1`]||'default'} state2={q4St[`${q.lbl}-2`]||'default'}

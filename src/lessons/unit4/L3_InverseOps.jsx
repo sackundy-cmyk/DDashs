@@ -191,6 +191,7 @@ export default function L3_InverseOps() {
                         <span style={{ fontSize:20, fontWeight:800 }}>{q.before}</span>
                       )}
                       <DigitDropZone
+                        paletteId={`q1p${gi}`}
                         digits={q1D[q.lbl]||[]}
                         zoneState={q1St[q.lbl]||'default'}
                         onDrop={q1Drop(q.lbl)}
@@ -233,6 +234,7 @@ export default function L3_InverseOps() {
                         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                           <span style={{ fontSize:20, fontWeight:800 }}>{q.primary}</span>
                           <DigitDropZone
+                            paletteId={`q2p${gi}`}
                             digits={digits}
                             zoneState={q2St[q.lbl]||'default'}
                             onDrop={q2Drop(q.lbl)}

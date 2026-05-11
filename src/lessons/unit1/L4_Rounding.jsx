@@ -265,7 +265,7 @@ export default function L4_Rounding() {
       );
     };
 
-    const renderDragItem = (q, last) => (
+    const renderDragItem = (q, last, palIdx = 0) => (
       <QItem key={q.lbl} last={last}>
         {q.guided && <GuidedHint>{q.hint}</GuidedHint>}
         <QItemLabel>
@@ -273,6 +273,7 @@ export default function L4_Rounding() {
           <NumChip value={q.n}/>
           <span style={{ fontSize:22, fontWeight:700 }}>→</span>
           <DigitDropZone
+            paletteId={`${sid}p${palIdx}`}
             digits={drag[q.lbl]||[]}
             zoneState={dragSt[q.lbl]||'default'}
             onDrop={makeDrop(q.lbl)}
@@ -300,7 +301,7 @@ export default function L4_Rounding() {
         {/* Drag: b & d — one palette for two questions (2-per-palette rule) */}
         <QGroup title="Questions B & D">
           <DigitPalette paletteId={`${sid}p0`}/>
-          {dragG0.map((q, qi) => renderDragItem(q, qi === dragG0.length - 1))}
+          {dragG0.map((q, qi) => renderDragItem(q, qi === dragG0.length - 1, 0))}
           <CheckButton
             label="✓ Check B & D"
             onClick={() => checkDrag(dragG0, 0)}
@@ -323,7 +324,7 @@ export default function L4_Rounding() {
         {/* Drag: f — own palette */}
         <QGroup title="Question F">
           <DigitPalette paletteId={`${sid}p1`}/>
-          {dragG1.map(q => renderDragItem(q, true))}
+          {dragG1.map(q => renderDragItem(q, true, 1))}
           <CheckButton
             label="✓ Check F"
             onClick={() => checkDrag(dragG1, 1)}

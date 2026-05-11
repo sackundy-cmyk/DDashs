@@ -273,8 +273,8 @@ export default function L2_AngleTypes() {
 
         {/* ── Section 2 ── */}
         <SectionCard badge={2} title="Missing angles in shapes" tagType="drag" tagLabel="Drag">
-          <QGroup title="What is the missing angle? Drag digits to build your answer.">
-            <DigitPalette />
+          <QGroup title="What is the missing angle? Click a digit, then click the box.">
+            <DigitPalette paletteId="s2pal" />
             <div style={{
               display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px,1fr))',
               gap: 16, marginBottom: 16,
@@ -292,6 +292,7 @@ export default function L2_AngleTypes() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 10 }}>
                     <span style={{ fontWeight: 700 }}>? =</span>
                     <DigitDropZone
+                      paletteId="s2pal"
                       digits={s2Ans[q.lbl] || []}
                       zoneState={s2ZSt[q.lbl] || 'default'}
                       onDrop={makeDropHandler(setS2Ans, q.lbl, s2Done)}
@@ -314,7 +315,7 @@ export default function L2_AngleTypes() {
         {/* ── Section 3 ── */}
         <SectionCard badge={3} title="Angles on a straight line" tagType="drag" tagLabel="Drag">
           <QGroup title="Calculate the missing angle. Angles on a straight line = 180°.">
-            <DigitPalette />
+            <DigitPalette paletteId="s3pal" />
             <div style={{
               display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px,1fr))',
               gap: 16, marginBottom: 16,
@@ -331,6 +332,7 @@ export default function L2_AngleTypes() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 10 }}>
                     <span style={{ fontWeight: 700 }}>? =</span>
                     <DigitDropZone
+                      paletteId="s3pal"
                       digits={s3Ans[q.lbl] || []}
                       zoneState={s3ZSt[q.lbl] || 'default'}
                       onDrop={makeDropHandler(setS3Ans, q.lbl, s3Done)}

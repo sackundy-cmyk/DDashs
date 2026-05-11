@@ -197,6 +197,7 @@ export default function L7_DecimalTenths2() {
                       <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                         <span style={{ fontSize:20, fontWeight:800, color:'var(--text)' }}>=</span>
                         <DigitDropZone
+                          paletteId={`q3p${gi}`}
                           digits={q3D[q.lbl]||[]}
                           zoneState={q3St[q.lbl]||'default'}
                           onDrop={q3Drop(q.lbl)}
@@ -230,6 +231,7 @@ export default function L7_DecimalTenths2() {
                     <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
                       <ColumnAdd addends={q.addends}/>
                       <DigitDropZone
+                        paletteId={`q4p${gi}`}
                         digits={q4D[q.lbl]||[]}
                         zoneState={q4St[q.lbl]||'default'}
                         onDrop={q4Drop(q.lbl)}

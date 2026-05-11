@@ -236,6 +236,7 @@ export default function L4_MentalAddSub() {
                     <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
                       <span style={{ fontSize:20, fontWeight:800, color:'var(--text)' }}>{q.expr}</span>
                       <DigitDropZone
+                        paletteId={`q1p${gi}`}
                         digits={q1D[q.lbl]||[]}
                         zoneState={q1St[q.lbl]||'default'}
                         onDrop={q1Drop(q.lbl)}
@@ -268,6 +269,7 @@ export default function L4_MentalAddSub() {
                     <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
                       <span style={{ fontSize:20, fontWeight:800, color:'var(--text)' }}>{q.expr}</span>
                       <DigitDropZone
+                        paletteId={`q2p${gi}`}
                         digits={q2D[q.lbl]||[]}
                         zoneState={q2St[q.lbl]||'default'}
                         onDrop={q2Drop(q.lbl)}
@@ -302,6 +304,7 @@ export default function L4_MentalAddSub() {
                       <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                         <span style={{ fontSize:20, fontWeight:800, color:'var(--text)' }}>=</span>
                         <DigitDropZone
+                          paletteId={`q3p${gi}`}
                           digits={q3D[q.lbl]||[]}
                           zoneState={q3St[q.lbl]||'default'}
                           onDrop={q3Drop(q.lbl)}

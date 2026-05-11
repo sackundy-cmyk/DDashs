@@ -12,6 +12,7 @@ import {
 } from '../../components/SharedComponents.jsx';
 import { QGroup, QItem, QItemLabel } from '../../components/layout/QGroupItem.jsx';
 import { DigitPalette } from '../../components/interactions/DigitComponents.jsx';
+import { digitPickState } from '../../components/interactions/digitPickState.js';
 import { useProgress } from '../../hooks/useProgress.js';
 import { useAttempts } from '../../hooks/useAttempts.js';
 import { useLessonDraft } from '../../hooks/useLessonDraft.js';
@@ -125,28 +126,25 @@ export default function L3_FunctionMachines() {
     }
   };
 
-  // ── Drop handler for table cells (handles − sign) ─────────
-  const handleDrop = (q, i) => (e) => {
-    e.preventDefault();
-    const d = e.dataTransfer.getData('text/plain');
-    if(d === 'del') {
-      setTabD(p => ({...p, [q.lbl]: {...(p[q.lbl]||{}), [i]: ''}}));
+  // ── Click handler for table cells ─────────────────────────
+  const handleCellClick = (q, idx, paletteId, st) => () => {
+    if(st === 'correct') return;
+    const sel = digitPickState.get(paletteId);
+    if(sel === null) {
+      // no digit selected — clear the cell
+      setTabD(p => ({...p, [q.lbl]: {...(p[q.lbl]||{}), [idx]: ''}}));
       return;
     }
-    if(d.startsWith('digit:')) {
-      const v2 = d.split(':')[1];
-      setTabD(p => {
-        const cur = (p[q.lbl]?.[i]) || '';
-        let next;
-        if(v2 === '-') {
-          // toggle minus at front
-          next = cur.startsWith('-') ? cur.slice(1) : '-' + cur;
-        } else {
-          next = cur + v2;
-        }
-        return {...p, [q.lbl]: {...(p[q.lbl]||{}), [i]: next}};
-      });
-    }
+    setTabD(p => {
+      const cur = (p[q.lbl]?.[idx]) || '';
+      let next;
+      if(sel === '-') {
+        next = cur.startsWith('-') ? cur.slice(1) : '-' + cur;
+      } else {
+        next = cur + sel;
+      }
+      return {...p, [q.lbl]: {...(p[q.lbl]||{}), [idx]: next}};
+    });
   };
 
   return (
@@ -192,6 +190,7 @@ export default function L3_FunctionMachines() {
                             {q.outs.map((v, idx) => {
                               const placed = tabD[q.lbl]?.[idx];
                               const st = tabSt[q.lbl];
+                              const pid = `tp${gi}`;
                               const cellOk = st === 'correct' || (placed !== undefined && placed !== '' && parseInt(placed) === v);
                               const cellWrong = st === 'wrong' && placed !== undefined && placed !== '' && parseInt(placed) !== v;
                               return (
@@ -204,9 +203,7 @@ export default function L3_FunctionMachines() {
                                     type="text"
                                     value={placed || ''}
                                     readOnly
-                                    onDragOver={e => e.preventDefault()}
-                                    onDrop={handleDrop(q, idx)}
-                                    onClick={() => { if(st !== 'correct') setTabD(p => ({...p, [q.lbl]: {...(p[q.lbl]||{}), [idx]: ''}})); }}
+                                    onClick={handleCellClick(q, idx, pid, st)}
                                     style={{
                                       width: 52, height: 38, textAlign:'center',
                                       fontWeight: 900, fontSize: 17, border: 'none',
