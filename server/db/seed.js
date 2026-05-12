@@ -139,8 +139,12 @@ async function seed() {
     'INSERT INTO class_lessons (class_id, unit, lesson_num, title, order_index) VALUES (?, ?, ?, ?, ?)',
     [g6Id, 7, 2, 'Rounding Large Numbers', 1]
   );
+  await db.run(
+    'INSERT INTO class_lessons (class_id, unit, lesson_num, title, order_index) VALUES (?, ?, ?, ?, ?)',
+    [g6Id, 7, 3, 'Large Numbers', 2]
+  );
 
-  console.log('  ✓ 1 class created (Grade 6 Mathematics — Book A, 2 lessons)');
+  console.log('  ✓ 1 class created (Grade 6 Mathematics — Book A, 3 lessons)');
 
   // ── 5. Demo enrollment in Grade 6 ───────────────────────────
 

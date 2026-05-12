@@ -82,7 +82,10 @@
       "colour": "#0F766E",
       "lessons": [
         { "id": 1, "title": "Integers on a Number Line", "slug": "number-line-integers" },
-        { "id": 2, "title": "Rounding Large Numbers",    "slug": "rounding-numbers" }
+        { "id": 2, "title": "Rounding Large Numbers",    "slug": "rounding-numbers" },
+        { "id": 3, "title": "Large Numbers",             "slug": "large-numbers" },
+        { "id": 4, "title": "Decimal Numbers",           "slug": "decimal-numbers" },
+        { "id": 5, "title": "Adding and Subtracting Decimals", "slug": "add-sub-decimals" }
       ]
     }
   ]
