@@ -1,0 +1,73 @@
+/* ============================================================
+   D-DASH shared animation library
+   Import once in main.jsx — used via className across the app
+   ============================================================ */
+
+/* ── Entrance ─────────────────────────────────────────────── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Shimmer scan — sweeps across complete lesson card headers */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* ── Gentle float — decorative blobs on welcome banner ─────── */
+@keyframes floatY {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+/* ── Pulse ring — progress completion indicator ─────────────── */
+@keyframes pulseRing {
+  0%   { box-shadow: 0 0 0 0   rgba(88, 204, 2, 0.45); }
+  70%  { box-shadow: 0 0 0 10px rgba(88, 204, 2, 0); }
+  100% { box-shadow: 0 0 0 0   rgba(88, 204, 2, 0); }
+}
+
+/* ── Pop scale — button press feedback ─────────────────────── */
+@keyframes popScale {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.93); }
+  100% { transform: scale(1); }
+}
+
+/* ── Entrance utility ────────────────────────────────────────
+   Usage: className="anim-fade-up anim-delay-2"
+   `backwards` fill means the element is invisible before the
+   animation fires, preventing a flash of unstyled content.
+   ──────────────────────────────────────────────────────────── */
+.anim-fade-up {
+  animation: fadeSlideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+.anim-delay-1 { animation-delay: 0.07s; }
+.anim-delay-2 { animation-delay: 0.14s; }
+.anim-delay-3 { animation-delay: 0.21s; }
+.anim-delay-4 { animation-delay: 0.28s; }
+.anim-delay-5 { animation-delay: 0.35s; }
+.anim-delay-6 { animation-delay: 0.42s; }
+
+/* ── Shimmer overlay for completed cards ─────────────────────
+   Apply on an absolutely-positioned child div over the card
+   header. pointerEvents: none required.
+   ──────────────────────────────────────────────────────────── */
+.anim-shimmer-complete {
+  background: linear-gradient(
+    90deg,
+    transparent       0%,
+    rgba(255,255,255,0.32) 50%,
+    transparent       100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.4s linear infinite;
+}
+
+/* ── Float utility ────────────────────────────────────────── */
+.anim-float-slow  { animation: floatY 6s ease-in-out infinite; }
+.anim-float-slower{ animation: floatY 8s ease-in-out infinite; animation-delay: -3s; }
+
+/* ── Pulse ring on progress icons ────────────────────────── */
+.anim-pulse-ring { animation: pulseRing 2s ease-out infinite; }

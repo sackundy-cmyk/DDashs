@@ -24,36 +24,37 @@ function statusVariant(p) {
   return 'not-started';
 }
 
-const STAT_COLORS = {
-  blue:   { bar: '#1565C0', tint: '#D0EFFE' },
-  teal:   { bar: '#1CB0F6', tint: '#D0EFFE' },
-  amber:  { bar: '#FF9600', tint: '#FFF0D0' },
-  purple: { bar: '#CE82FF', tint: '#F3E8FF' },
-  green:  { bar: '#58CC02', tint: '#D7F5B3' },
+const STAT_GRADIENTS = {
+  blue:   { bg: 'linear-gradient(135deg, #1A5EB8 0%, #2E8DE8 100%)', glow: 'rgba(30,111,217,0.30)' },
+  teal:   { bg: 'linear-gradient(135deg, #0E7490 0%, #1CB0F6 100%)', glow: 'rgba(8,145,178,0.30)' },
+  amber:  { bg: 'linear-gradient(135deg, #B45309 0%, #F59E0B 100%)', glow: 'rgba(217,119,6,0.30)' },
+  purple: { bg: 'linear-gradient(135deg, #6D28D9 0%, #A78BFA 100%)', glow: 'rgba(124,58,237,0.30)' },
+  green:  { bg: 'linear-gradient(135deg, #15803D 0%, #58CC02 100%)', glow: 'rgba(88,204,2,0.30)' },
 };
 
-function StatCard({ label, value, icon, color = 'blue', sparkData, trend }) {
-  const c = STAT_COLORS[color] || STAT_COLORS.blue;
-  const trendCls = trend > 0 ? s.trendUp : trend < 0 ? s.trendDown : s.trendFlat;
+function StatCard({ label, value, icon, color = 'blue', sparkData, animClass = '' }) {
+  const g = STAT_GRADIENTS[color] || STAT_GRADIENTS.blue;
   return (
-    <div className={s.statCard}>
-      <div className={s.statTopBar} style={{ background: c.bar }} />
+    <div className={`${s.statCard} ${animClass}`} style={{
+      background: g.bg,
+      boxShadow: `0 6px 24px ${g.glow}`,
+      border: 'none',
+    }}>
       <div className={s.statHead}>
-        <div className={s.statIconBox} style={{ background: c.tint }}>
-          <Icon name={icon} size={20} color={c.bar} />
+        <div className={s.statIconBox} style={{ background: 'rgba(255,255,255,0.20)' }}>
+          <Icon name={icon} size={20} color="#fff" />
         </div>
-        {sparkData && <Sparkline data={sparkData} color={c.bar} />}
+        {sparkData && <Sparkline data={sparkData} color="rgba(255,255,255,0.7)" />}
       </div>
       <div>
-        <div className={s.statNumber}>{value}</div>
-        <div className={s.statLabel}>{label}</div>
+        <div className={s.statNumber} style={{ color: '#fff' }}>{value}</div>
+        <div className={s.statLabel} style={{
+          color: 'rgba(255,255,255,0.80)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.06em',
+          fontSize: 11,
+        }}>{label}</div>
       </div>
-      {trend !== undefined && (
-        <div className={`${s.statTrend} ${trendCls}`}>
-          <Icon name="trending_up" size={13} color="currentColor" />
-          {trend > 0 ? '+' : ''}{trend}% this week
-        </div>
-      )}
     </div>
   );
 }
@@ -150,6 +151,17 @@ export default function StudentDashboard() {
             width: 220, height: 220, borderRadius: '50%',
             background: 'rgba(21,101,192,0.35)', filter: 'blur(48px)', pointerEvents: 'none',
           }} />
+          {/* Floating decorative blobs */}
+          <div className="anim-float-slow" style={{
+            position: 'absolute', right: 40, top: 10,
+            width: 56, height: 56, borderRadius: '50%',
+            background: 'rgba(99,102,241,0.22)', pointerEvents: 'none',
+          }} />
+          <div className="anim-float-slower" style={{
+            position: 'absolute', right: 120, bottom: -20,
+            width: 40, height: 40, borderRadius: '50%',
+            background: 'rgba(34,211,238,0.18)', pointerEvents: 'none',
+          }} />
 
           <div style={{ position: 'relative', minWidth: 0, flex: 1 }}>
             <div style={{
@@ -191,22 +203,24 @@ export default function StudentDashboard() {
 
         {/* ── Stats ── */}
         <div className={s.statsGrid} style={{ marginBottom: 0 }}>
-          <StatCard label="Classes Enrolled" value={classes.length} icon="classes" color="blue" />
-          <StatCard label="Lessons Touched"  value={touchedCount}    icon="book"    color="teal" />
-          <StatCard label="In Progress"      value={inProgress}      icon="zap"     color="amber" />
-          <StatCard label="Total Lessons"    value={totalLessons}    icon="chart"   color="purple" />
+          <StatCard label="Classes Enrolled" value={classes.length} icon="classes" color="blue"   animClass="anim-fade-up anim-delay-1" />
+          <StatCard label="Lessons Touched"  value={touchedCount}   icon="book"    color="teal"   animClass="anim-fade-up anim-delay-2" />
+          <StatCard label="In Progress"      value={inProgress}     icon="zap"     color="amber"  animClass="anim-fade-up anim-delay-3" />
+          <StatCard label="Total Lessons"    value={totalLessons}   icon="chart"   color="purple" animClass="anim-fade-up anim-delay-4" />
         </div>
 
         {/* ── Continue + Recent activity ── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
           {/* Continue learning */}
           <div className={s.card} style={{ marginBottom: 0 }}>
-            <div className={s.cardTitle}>Continue Learning</div>
+            <div className={s.cardTitle} style={{ borderLeft: '3px solid #1E6FD9', paddingLeft: 10 }}>Continue Learning</div>
             {nextLesson ? (
               <div style={{
                 display: 'flex', alignItems: 'center', gap: 14,
                 padding: '14px 16px', borderRadius: 12,
-                background: '#F8FAFC', border: '1.5px solid #E2E8F0',
+                background: 'linear-gradient(90deg, #EEF4FF, #fff)',
+                border: '1.5px solid #DBEAFE',
+                borderLeft: '4px solid #1E6FD9',
               }}>
                 <div style={{
                   width: 44, height: 44, borderRadius: 12,
@@ -243,7 +257,7 @@ export default function StudentDashboard() {
 
           {/* Recent activity */}
           <div className={s.card} style={{ marginBottom: 0 }}>
-            <div className={s.cardTitle}>Recent Activity</div>
+            <div className={s.cardTitle} style={{ borderLeft: '3px solid #1E6FD9', paddingLeft: 10 }}>Recent Activity</div>
             {recent.length === 0 ? (
               <div style={{ color: '#64748B', fontSize: 14 }}>No activity yet. Start your first lesson!</div>
             ) : (
@@ -278,7 +292,7 @@ export default function StudentDashboard() {
 
         {/* ── My Classes ── */}
         <div className={s.card} style={{ marginBottom: 0 }}>
-          <div className={s.cardTitle}>My Classes</div>
+          <div className={s.cardTitle} style={{ borderLeft: '3px solid #1E6FD9', paddingLeft: 10 }}>My Classes</div>
           <div className={s.cardGrid}>
             {classes.map((cls, idx) => {
               const lessons = Array.from({ length: cls.lesson_count || 0 }, (_, i) => i + 1);
@@ -298,20 +312,20 @@ export default function StudentDashboard() {
                     border: '1.5px solid #EEF2F7',
                     padding: 16,
                     cursor: 'pointer',
-                    transition: 'all 0.18s',
+                    transition: 'transform 0.28s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease, border-color 0.2s ease',
                     position: 'relative',
                     overflow: 'hidden',
                     background: '#FFFFFF',
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.boxShadow = '0 6px 22px rgba(15,23,42,0.10)';
-                    e.currentTarget.style.borderColor = '#CBD5E1';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = `0 16px 36px ${color}40`;
+                    e.currentTarget.style.borderColor = color + '55';
+                    e.currentTarget.style.transform = 'translateY(-5px) scale(1.015)';
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.boxShadow = 'none';
                     e.currentTarget.style.borderColor = '#EEF2F7';
-                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
                   }}
                 >
                   <div style={{

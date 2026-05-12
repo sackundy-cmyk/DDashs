@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import DashboardLayout from '../../components/DashboardLayout.jsx';
-import { Icon } from '../../components/EnhancedUI.jsx';
+import { Icon, ProgressRing } from '../../components/EnhancedUI.jsx';
 import s from '../../components/DashboardLayout.module.css';
 
 const API = import.meta.env.VITE_API_URL || '/api';
@@ -21,6 +21,16 @@ const UNIT_TITLES = {
   5: 'Mental & Written Calculations',
   6: 'Geometry',
   7: 'Integers',
+};
+
+const UNIT_ICONS = {
+  1: 'calculator',
+  2: 'atom',
+  3: 'sparkles',
+  4: 'calculator',
+  5: 'lightbulb',
+  6: 'compass',
+  7: 'flame',
 };
 
 export default function ClassDetail() {
@@ -104,9 +114,10 @@ export default function ClassDetail() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20 }}>
-        {units.map(u => (
+        {units.map((u, idx) => (
           <div
             key={u.unit}
+            className={`anim-fade-up anim-delay-${Math.min(idx + 1, 6)}`}
             onClick={() => navigate(`/student/classes/${classId}/unit/${u.unit}`)}
             style={{
               borderRadius: 20,
@@ -114,22 +125,22 @@ export default function ClassDetail() {
               background: '#FFFFFF',
               border: '2px solid #F0F4FF',
               cursor: 'pointer',
-              transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+              transition: 'transform 0.30s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease',
               boxShadow: '0 2px 10px rgba(15,23,42,0.06)',
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = `0 12px 32px ${u.color}33`;
+              e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
+              e.currentTarget.style.boxShadow = `0 18px 40px ${u.color}44, 0 4px 12px rgba(15,23,42,0.08)`;
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
               e.currentTarget.style.boxShadow = '0 2px 10px rgba(15,23,42,0.06)';
             }}
           >
             {/* Vivid gradient header */}
             <div style={{
               height: 130,
-              background: `linear-gradient(145deg, ${u.color}, ${u.color}bb)`,
+              background: `linear-gradient(145deg, ${u.color} 0%, ${u.color}99 60%, ${u.color}cc 100%)`,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -137,19 +148,38 @@ export default function ClassDetail() {
               gap: 6,
               padding: '0 20px',
               position: 'relative',
+              overflow: 'hidden',
             }}>
+              {/* Dot texture */}
+              <svg style={{ position: 'absolute', inset: 0, opacity: 0.12, pointerEvents: 'none' }} width="100%" height="100%">
+                <defs>
+                  <pattern id={`dots-${u.unit}`} x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+                    <circle cx="8" cy="8" r="1.2" fill="white" />
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill={`url(#dots-${u.unit})`} />
+              </svg>
+              {/* Subject icon — top-right corner */}
+              <div style={{
+                position: 'absolute', top: 10, right: 14,
+                opacity: 0.45, pointerEvents: 'none',
+              }}>
+                <Icon name={UNIT_ICONS[u.unit] || 'book'} size={22} color="#fff" />
+              </div>
               {/* Big unit number circle */}
               <div style={{
                 width: 60, height: 60, borderRadius: '50%',
                 background: 'rgba(255,255,255,0.22)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 26, fontWeight: 900, color: '#fff',
+                position: 'relative',
               }}>
                 {u.displayNum}
               </div>
               <div style={{
-                fontSize: 13, fontWeight: 800, color: 'rgba(255,255,255,0.85)',
+                fontSize: 13, fontWeight: 800, color: 'rgba(255,255,255,0.90)',
                 letterSpacing: '0.06em', textTransform: 'uppercase',
+                position: 'relative',
               }}>
                 Unit {u.displayNum}
               </div>
@@ -157,7 +187,7 @@ export default function ClassDetail() {
 
             {/* White body */}
             <div style={{ padding: '16px 20px 20px' }}>
-              <div style={{ fontSize: 17, fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 12 }}>
+              <div style={{ fontSize: 17, fontWeight: 900, color: '#0F172A', letterSpacing: '-0.025em', lineHeight: 1.3, marginBottom: 12 }}>
                 {u.title}
               </div>
 
@@ -175,7 +205,10 @@ export default function ClassDetail() {
                 </div>
               </div>
 
-              <div style={{ fontSize: 12.5, color: '#94A3B8', fontWeight: 600 }}>
+              <div style={{
+                fontSize: 11, color: '#94A3B8', fontWeight: 700,
+                textTransform: 'uppercase', letterSpacing: '0.06em',
+              }}>
                 {u.doneLessons} of {u.totalLessons} lessons complete
               </div>
             </div>

@@ -112,33 +112,39 @@ export default function UnitDetail() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
-        {lessons.map(l => {
+        {lessons.map((l, idx) => {
           const status = lessonStatus(l);
           const action = actionLabel(status);
           const pct = l.totalSections ? Math.round((l.completedSections / l.totalSections) * 100) : 0;
           const isLocked = status === 'locked';
+          const isComplete = status === 'complete';
           const blockColor = isLocked ? '#94A3B8' : unitColor;
           return (
             <div
               key={`${l.unit}-${l.lesson_num}`}
+              className={`anim-fade-up anim-delay-${Math.min(idx + 1, 6)}`}
               style={{
                 borderRadius: 18,
                 overflow: 'hidden',
-                background: '#FFFFFF',
-                border: '2px solid #F0F4FF',
-                opacity: isLocked ? 0.55 : 1,
-                transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+                background: isLocked ? 'rgba(241,245,249,0.85)' : '#FFFFFF',
+                backdropFilter: isLocked ? 'blur(2px)' : 'none',
+                border: `2px solid ${isComplete ? unitColor + '30' : '#F0F4FF'}`,
+                opacity: isLocked ? 0.72 : 1,
+                transition: 'transform 0.28s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease, border-color 0.2s ease',
                 boxShadow: '0 2px 8px rgba(15,23,42,0.05)',
-                filter: isLocked ? 'grayscale(0.4)' : 'none',
+                filter: isLocked ? 'grayscale(0.3)' : 'none',
+                cursor: isLocked ? 'default' : 'pointer',
               }}
               onMouseEnter={e => {
                 if (isLocked) return;
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = `0 10px 26px ${unitColor}2a`;
+                e.currentTarget.style.transform = 'translateY(-5px) scale(1.02)';
+                e.currentTarget.style.boxShadow = `0 14px 32px ${unitColor}38`;
+                e.currentTarget.style.borderColor = unitColor + '60';
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
                 e.currentTarget.style.boxShadow = '0 2px 8px rgba(15,23,42,0.05)';
+                e.currentTarget.style.borderColor = isComplete ? unitColor + '30' : '#F0F4FF';
               }}
             >
               {/* Color block with big lesson number */}
@@ -146,20 +152,41 @@ export default function UnitDetail() {
                 height: 88,
                 background: isLocked
                   ? 'linear-gradient(145deg, #CBD5E1, #94A3B8)'
-                  : `linear-gradient(145deg, ${unitColor}, ${unitColor}bb)`,
+                  : `linear-gradient(145deg, ${unitColor} 0%, ${unitColor}99 60%, ${unitColor}cc 100%)`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 10,
+                position: 'relative',
+                overflow: 'hidden',
               }}>
+                {/* Shimmer on complete cards */}
+                {isComplete && (
+                  <div className="anim-shimmer-complete" style={{
+                    position: 'absolute', inset: 0, borderRadius: 'inherit', pointerEvents: 'none',
+                  }} />
+                )}
+                {/* Complete tick badge */}
+                {isComplete && (
+                  <div style={{
+                    position: 'absolute', top: 8, right: 10,
+                    width: 22, height: 22, borderRadius: '50%',
+                    background: '#16A34A',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: '0 2px 6px rgba(22,163,74,0.5)',
+                  }}>
+                    <Icon name="check" size={12} color="#fff" />
+                  </div>
+                )}
                 {isLocked ? (
                   <Icon name="lock" size={28} color="rgba(255,255,255,0.7)" />
                 ) : (
                   <div style={{
-                    width: 52, height: 52, borderRadius: '50%',
+                    width: 58, height: 58, borderRadius: '50%',
                     background: 'rgba(255,255,255,0.22)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 22, fontWeight: 900, color: '#fff',
+                    fontSize: 24, fontWeight: 900, color: '#fff',
+                    position: 'relative',
                   }}>
                     {l.lesson_num}
                   </div>
@@ -168,12 +195,12 @@ export default function UnitDetail() {
 
               {/* White body */}
               <div style={{ padding: '14px 16px 16px' }}>
-                <div style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.01em', lineHeight: 1.3, marginBottom: 10 }}>
+                <div style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.025em', lineHeight: 1.3, marginBottom: 10 }}>
                   {l.title}
                 </div>
 
                 {l.totalSections > 0 && (
-                  <div style={{ height: 6, background: '#F0F4FF', borderRadius: 3, overflow: 'hidden', marginBottom: 8 }}>
+                  <div style={{ height: 4, background: '#F0F4FF', borderRadius: 3, overflow: 'hidden', marginBottom: 8 }}>
                     <div style={{
                       width: `${pct}%`, height: '100%',
                       background: blockColor, borderRadius: 3,
@@ -182,7 +209,11 @@ export default function UnitDetail() {
                   </div>
                 )}
 
-                <div style={{ fontSize: 12, color: '#94A3B8', fontWeight: 600, marginBottom: 12 }}>
+                <div style={{
+                  fontSize: 11, color: '#94A3B8', fontWeight: 700,
+                  textTransform: 'uppercase', letterSpacing: '0.06em',
+                  marginBottom: 12,
+                }}>
                   {l.totalSections > 0
                     ? `${l.completedSections}/${l.totalSections} sections${l.avgScore ? ` · avg ${l.avgScore}%` : ''}`
                     : 'Not started'}
