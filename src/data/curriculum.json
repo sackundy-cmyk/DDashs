@@ -87,6 +87,14 @@
         { "id": 4, "title": "Decimal Numbers",           "slug": "decimal-numbers" },
         { "id": 5, "title": "Adding and Subtracting Decimals", "slug": "add-sub-decimals" }
       ]
+    },
+    {
+      "id": 8,
+      "title": "Unit 2 — Number",
+      "colour": "#EA580C",
+      "lessons": [
+        { "id": 1, "title": "Rules of Divisibility", "slug": "divisibility-rules" }
+      ]
     }
   ]
 }

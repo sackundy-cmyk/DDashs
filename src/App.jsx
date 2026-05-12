@@ -77,6 +77,7 @@ const U7L2  = lazy(() => import('./lessons/unit7/L2_RoundingNumbers.jsx'));
 const U7L3  = lazy(() => import('./lessons/unit7/L3_LargeNumbers.jsx'));
 const U7L4  = lazy(() => import('./lessons/unit7/L4_DecimalNumbers.jsx'));
 const U7L5  = lazy(() => import('./lessons/unit7/L5_AddSubDecimals.jsx'));
+const U8L1  = lazy(() => import('./lessons/unit8/L1_DivisibilityRules.jsx'));
 
 const LESSON_MAP = {
   '1-1': U1L1, '1-2': U1L2, '1-3': U1L3, '1-4': U1L4, '1-5': U1L5,
@@ -87,6 +88,7 @@ const LESSON_MAP = {
   '6-1': U6L1, '6-2': U6L2, '6-3': U6L3, '6-4': U6L4, '6-5': U6L5,
   '6-6': U6L6, '6-7': U6L7, '6-8': U6L8, '6-9': U6L9, '6-10': U6L10, '6-11': U6L11,
   '7-1': U7L1, '7-2': U7L2, '7-3': U7L3, '7-4': U7L4, '7-5': U7L5,
+  '8-1': U8L1,
 };
 
 function PageLoader() {
