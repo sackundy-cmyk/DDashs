@@ -1,0 +1,784 @@
+/* ============================================================
+   whiteboard.css — interactive teaching whiteboard
+   ============================================================ */
+
+/* ── Page wrapper (escapes DashboardLayout pageBody padding) ── */
+.wb-page-wrap {
+  margin: -24px -28px;
+  height: calc(100dvh - 64px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Nunito', sans-serif;
+  background: #f0f2f5;
+  position: relative;
+}
+@media (max-width: 480px) {
+  .wb-page-wrap { margin: -16px -16px; }
+}
+
+/* ── Fullscreen overlay (hides DashboardLayout sidebar + topbar) ── */
+.wb-page-wrap.wb-fs-mode {
+  position: fixed !important;
+  inset: 0 !important;
+  margin: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  z-index: 9999 !important;
+}
+
+/* ── Toolbar ──────────────────────────────────────────────── */
+.wb-toolbar {
+  height: 52px;
+  min-height: 52px;
+  background: #1E2130;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  gap: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  z-index: 20;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+.wb-toolbar::-webkit-scrollbar { display: none; }
+
+.tb-sep {
+  width: 1px;
+  height: 28px;
+  background: rgba(255,255,255,.14);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.tb-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: rgba(255,255,255,.35);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin: 0 3px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.tb-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  transition: background .15s, color .15s;
+  flex-shrink: 0;
+  position: relative;
+}
+.tb-btn:hover { background: rgba(255,255,255,.18); color: white; }
+.tb-btn.active {
+  background: #4f8ef7;
+  color: white;
+  box-shadow: 0 0 0 2px rgba(79,142,247,.5);
+}
+.tb-btn.mode-active {
+  background: #FF9600;
+  color: white;
+  box-shadow: 0 0 0 2px rgba(255,150,0,.4);
+}
+.tb-btn.danger:hover { background: rgba(231,76,60,.35); color: #ff8a7a; }
+
+.tb-btn-wide {
+  min-width: 54px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .72rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  letter-spacing: .01em;
+  transition: background .15s, color .15s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.tb-btn-wide:hover { background: rgba(255,255,255,.18); color: white; }
+.tb-btn-wide.mode-active { background: #FF9600; color: white; }
+
+/* Color dots in toolbar */
+.tb-color-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform .15s, border-color .15s;
+  flex-shrink: 0;
+}
+.tb-color-dot:hover { transform: scale(1.2); }
+.tb-color-dot.active { border-color: white; transform: scale(1.18); box-shadow: 0 0 0 2px rgba(255,255,255,.3); }
+
+/* Brush sizes */
+.tb-brush {
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  opacity: .45;
+  transition: opacity .15s, transform .15s;
+  flex-shrink: 0;
+}
+.tb-brush:hover { opacity: .8; transform: scale(1.15); }
+.tb-brush.active { opacity: 1; box-shadow: 0 0 0 2px #4f8ef7; }
+
+/* Instrument add buttons */
+.tb-inst-btn {
+  height: 36px;
+  padding: 0 9px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .68rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  transition: background .15s, color .15s;
+  flex-shrink: 0;
+  white-space: nowrap;
+  letter-spacing: .01em;
+}
+.tb-inst-btn:hover { background: rgba(255,255,255,.18); color: white; }
+
+/* Timer display within toolbar */
+.tb-timer-display {
+  font-size: 1rem;
+  font-weight: 900;
+  color: #FFC800;
+  font-family: 'Nunito', sans-serif;
+  min-width: 48px;
+  text-align: center;
+  letter-spacing: .02em;
+  flex-shrink: 0;
+}
+.tb-timer-display.urgent { color: #FF4B4B; }
+
+/* ── Body (stage + panel) ─────────────────────────────────── */
+.wb-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Board (Konva stage container) ───────────────────────── */
+.wb-board {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+  background-image:
+    linear-gradient(rgba(100,130,200,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100,130,200,.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Text input overlay (for text tool) */
+.wb-text-input {
+  position: absolute;
+  background: rgba(255,255,255,.92);
+  border: 2px dashed rgba(79,142,247,.8);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  outline: none;
+  min-width: 80px;
+  min-height: 36px;
+  color: #1e2130;
+  pointer-events: all;
+  z-index: 50;
+  resize: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 12px rgba(79,142,247,.25);
+}
+
+/* Placement cursor overlay */
+.wb-board.placing { cursor: crosshair; }
+
+/* Card hover controls (HTML overlay) */
+.wb-card-controls {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #1E2130;
+  border-radius: 8px;
+  padding: 4px 6px;
+  z-index: 100;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  pointer-events: all;
+}
+.wb-card-ctrl-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .75rem;
+  font-weight: 900;
+  font-family: 'Nunito', sans-serif;
+  transition: opacity .15s;
+}
+.wb-card-ctrl-btn:hover { opacity: .85; }
+.wb-card-ctrl-btn.size-plus  { background: #4f8ef7; color: white; }
+.wb-card-ctrl-btn.size-minus { background: #64748b; color: white; }
+.wb-card-ctrl-btn.del        { background: #e74c3c; color: white; }
+.wb-color-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform .12s, border-color .12s;
+}
+.wb-color-swatch:hover { transform: scale(1.25); }
+.wb-color-swatch.picked { border-color: white; }
+
+/* ── Card Panel — always visible ──────────────────────────── */
+.wb-panel {
+  width: 140px;
+  min-width: 140px;
+  background: #1E2130;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-shrink: 0;
+  box-shadow: -3px 0 12px rgba(0,0,0,.25);
+  z-index: 10;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.1) transparent;
+}
+/* Narrow slightly on tablets */
+@media (max-width: 900px) {
+  .wb-panel { width: 110px; min-width: 110px; }
+}
+@media (max-width: 600px) {
+  .wb-panel { width: 88px; min-width: 88px; }
+}
+
+/* Panel group */
+.wb-group { flex-shrink: 0; }
+
+.wb-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 8px 5px;
+  cursor: pointer;
+  user-select: none;
+  font-size: .6rem;
+  font-weight: 800;
+  color: rgba(255,255,255,.4);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  transition: color .15s;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.wb-group-header:hover { color: rgba(255,255,255,.7); }
+.wb-group-header .badge {
+  background: rgba(255,255,255,.12);
+  color: rgba(255,255,255,.5);
+  font-size: .55rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 99px;
+}
+.wb-group-header .chevron {
+  font-size: .65rem;
+  opacity: .5;
+  transition: transform .2s;
+}
+.wb-group-header.open .chevron { transform: rotate(180deg); }
+
+/* Panel card grid */
+.wb-group-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px 8px 8px;
+}
+
+/* Source card in panel */
+.wb-src-card {
+  width: 100%;
+  min-height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4px 6px;
+  cursor: pointer;
+  border: none;
+  background: white;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  transition: transform .12s, box-shadow .12s, opacity .12s;
+  line-height: 1.2;
+  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+  user-select: none;
+}
+.wb-src-card:hover { transform: scale(1.04) translateX(-2px); box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+.wb-src-card:active { transform: scale(.96); }
+.wb-src-card.pending-match {
+  box-shadow: 0 0 0 2px #FF9600, 0 4px 14px rgba(0,0,0,.3);
+  transform: scale(1.04);
+}
+
+/* ── Equation Row Strip ───────────────────────────────────── */
+.wb-eq-area {
+  flex-shrink: 0;
+  background: #131929;
+  border-top: 2px solid rgba(79,142,247,.4);
+  padding: 8px 12px 10px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.wb-eq-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.wb-eq-banner span {
+  font-size: .68rem;
+  font-weight: 800;
+  color: rgba(79,142,247,.9);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.wb-eq-add-row {
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(79,142,247,.2);
+  color: #4f8ef7;
+  font-family: 'Nunito', sans-serif;
+  font-size: .7rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background .15s;
+}
+.wb-eq-add-row:hover { background: rgba(79,142,247,.35); }
+
+.wb-eq-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+  background: rgba(255,255,255,.05);
+  border-radius: 8px;
+  padding: 5px 8px;
+  min-height: 52px;
+  flex-wrap: wrap;
+}
+
+.wb-eq-slot {
+  width: 48px;
+  height: 40px;
+  border-radius: 7px;
+  border: 2px dashed rgba(255,255,255,.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  flex-shrink: 0;
+}
+.wb-eq-slot:hover { border-color: rgba(79,142,247,.7); background: rgba(79,142,247,.1); }
+.wb-eq-slot.filled { border-color: transparent; border-style: solid; border-width: 2px; border-color: rgba(255,255,255,.12); background: white; cursor: default; }
+
+.wb-eq-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  position: relative;
+}
+.wb-eq-card .eq-del {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 14px;
+  height: 14px;
+  background: #e74c3c;
+  border-radius: 50%;
+  color: white;
+  font-size: .55rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1.5px solid #131929;
+  line-height: 1;
+}
+
+.wb-eq-row-del {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: rgba(231,76,60,.2);
+  border: none;
+  color: #ff8a7a;
+  cursor: pointer;
+  font-size: .8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: 'Nunito', sans-serif;
+  transition: background .15s;
+}
+.wb-eq-row-del:hover { background: rgba(231,76,60,.4); color: white; }
+
+/* ── Timer overlay ────────────────────────────────────────── */
+.wb-timer-overlay {
+  position: absolute;
+  bottom: 20px;
+  right: 140px;
+  background: #1E2130;
+  border-radius: 12px;
+  padding: 10px 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 60;
+  pointer-events: all;
+  border: 1px solid rgba(255,255,255,.1);
+}
+.wb-timer-digits {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #FFC800;
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: .04em;
+  line-height: 1;
+}
+.wb-timer-digits.urgent { color: #FF4B4B; }
+.wb-timer-controls {
+  display: flex;
+  gap: 6px;
+}
+.wb-timer-ctrl {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .7rem;
+  font-weight: 900;
+  font-family: 'Nunito', sans-serif;
+  transition: background .15s;
+}
+.wb-timer-ctrl:hover { background: rgba(255,255,255,.2); color: white; }
+.wb-timer-presets {
+  display: flex;
+  gap: 4px;
+}
+.wb-timer-preset {
+  padding: 2px 7px;
+  border-radius: 5px;
+  border: none;
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.6);
+  font-family: 'Nunito', sans-serif;
+  font-size: .65rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s;
+}
+.wb-timer-preset:hover { background: rgba(255,255,255,.18); color: white; }
+
+/* ── Confirm dialog ───────────────────────────────────────── */
+.wb-overlay-dim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wb-confirm-box {
+  background: white;
+  border-radius: 16px;
+  padding: 28px 32px;
+  text-align: center;
+  max-width: 300px;
+  box-shadow: 0 16px 48px rgba(0,0,0,.3);
+}
+.wb-confirm-box h3 { font-size: 1.1rem; font-weight: 900; color: #1E2130; margin-bottom: 6px; }
+.wb-confirm-box p  { font-size: .84rem; color: #64748b; margin-bottom: 18px; line-height: 1.5; }
+.wb-confirm-btns { display: flex; gap: 8px; justify-content: center; }
+.wb-confirm-btn  {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: .84rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.wb-confirm-btn:hover { opacity: .85; }
+.wb-confirm-btn.cancel  { background: #f1f5f9; color: #475569; }
+.wb-confirm-btn.confirm { background: #e74c3c; color: white; }
+
+/* ── HTML instrument overlays (tables) ───────────────────── */
+.wb-html-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.wb-table-obj {
+  position: absolute;
+  pointer-events: all;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.18);
+  overflow: hidden;
+  cursor: move;
+  border: 2px solid rgba(79,142,247,.3);
+  user-select: none;
+}
+.wb-table-obj.selected { border-color: #4f8ef7; box-shadow: 0 0 0 3px rgba(79,142,247,.3), 0 4px 20px rgba(0,0,0,.18); }
+
+.wb-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 6px;
+  background: #1E2130;
+  cursor: move;
+}
+.wb-table-title {
+  font-size: .62rem;
+  font-weight: 800;
+  color: rgba(255,255,255,.5);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.wb-table-actions {
+  display: flex;
+  gap: 3px;
+}
+.wb-table-action-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.6);
+  font-size: .65rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Nunito', sans-serif;
+  transition: background .15s;
+}
+.wb-table-action-btn:hover { background: rgba(255,255,255,.25); color: white; }
+.wb-table-action-btn.del { background: rgba(231,76,60,.25); color: #ff8a7a; }
+.wb-table-action-btn.del:hover { background: rgba(231,76,60,.5); color: white; }
+
+.wb-table-grid {
+  display: inline-grid;
+}
+.wb-table-cell {
+  width: 56px;
+  height: 36px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  outline: none;
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+  font-size: .88rem;
+  font-weight: 700;
+  color: #1e293b;
+  cursor: text;
+}
+.wb-table-cell:focus { background: #eff6ff; border-color: #4f8ef7; position: relative; z-index: 1; }
+.wb-table-cell.header-cell {
+  background: #1e6fd9;
+  color: white;
+  font-weight: 900;
+  cursor: default;
+}
+
+.wb-table-row-controls, .wb-table-col-controls {
+  display: flex;
+  gap: 3px;
+  padding: 3px 6px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+.wb-tbl-ctrl-btn {
+  padding: 2px 8px;
+  border-radius: 5px;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: .65rem;
+  font-weight: 800;
+  cursor: pointer;
+  background: #e2e8f0;
+  color: #475569;
+  transition: background .15s;
+}
+.wb-tbl-ctrl-btn:hover { background: #cbd5e1; color: #1e293b; }
+.wb-tbl-ctrl-btn.remove { background: rgba(231,76,60,.1); color: #e74c3c; }
+.wb-tbl-ctrl-btn.remove:hover { background: rgba(231,76,60,.2); }
+
+/* Pending card ghost that follows cursor */
+.wb-ghost-card {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  background: white;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  box-shadow: 0 6px 20px rgba(0,0,0,.25);
+  opacity: .85;
+  transform: translate(-50%, -50%);
+  border: 2px dashed rgba(79,142,247,.6);
+  white-space: nowrap;
+}
+
+/* ── Coord mode info strip ────────────────────────────────── */
+.wb-coord-strip {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(30, 33, 48, 0.85);
+  border-radius: 8px;
+  padding: 4px 10px;
+  z-index: 55;
+  pointer-events: none;
+}
+.wb-coord-strip span {
+  font-size: .68rem;
+  font-weight: 800;
+  color: rgba(255,255,255,.7);
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Equation mode banner */
+.wb-eq-mode-banner {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  background: rgba(79,142,247,.18);
+  border: 1px solid rgba(79,142,247,.4);
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: .68rem;
+  font-weight: 800;
+  color: #4f8ef7;
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: .04em;
+  z-index: 55;
+  pointer-events: none;
+}
+
+/* Collapsible toolbar section labels */
+.tb-label-toggle {
+  cursor: pointer;
+  user-select: none;
+  transition: color .15s;
+}
+.tb-label-toggle:hover { color: rgba(255,255,255,.75); }
+
+/* Zoom percentage readout */
+.tb-zoom-pct {
+  font-size: .72rem;
+  font-weight: 800;
+  color: rgba(255,255,255,.6);
+  min-width: 38px;
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+  flex-shrink: 0;
+}
+
+/* "→ Board" button in equation rows */
+.wb-eq-to-board {
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(46,204,113,.2);
+  color: #2ecc71;
+  font-family: 'Nunito', sans-serif;
+  font-size: .7rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background .15s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.wb-eq-to-board:hover { background: rgba(46,204,113,.38); color: #27ae60; }
+
+/* ── Responsive ───────────────────────────────────────────── */
+/* Panel is NEVER absolutely positioned — always a flex child.
+   Width is handled by the panel-specific breakpoints above.  */
+@media (max-width: 900px) {
+  .tb-label { display: none; }
+  .tb-label-toggle { display: none; }
+  .tb-zoom-pct { min-width: 28px; font-size: .65rem; }
+  .wb-src-card { min-height: 44px; } /* bigger touch targets on tablet */
+}
+@media (max-width: 600px) {
+  .wb-toolbar { flex-wrap: wrap; height: auto; min-height: 44px; padding: 4px 8px; }
+  .wb-timer-overlay { right: 16px; bottom: 12px; }
+  .wb-src-card { font-size: .62rem; }
+  .wb-group-header { font-size: .55rem; padding: 5px 6px 4px; }
+}

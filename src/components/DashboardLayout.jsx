@@ -17,24 +17,27 @@ const STUDENT_NAV = [
   { label: 'My Classes',   icon: 'classes',   path: '/student/classes'      },
   { label: 'Quizzes',      icon: 'reports',   path: '/student/quizzes'      },
   { label: 'Certificates', icon: 'award',     path: '/student/certificates' },
+  { label: 'Whiteboard',   icon: 'pencil',    path: '/student/whiteboard'   },
 ];
 
 const TEACHER_NAV = [
-  { label: 'Dashboard', icon: 'dashboard', path: '/teacher/dashboard' },
-  { label: 'Classes',   icon: 'classes',   path: '/teacher/classes'   },
-  { label: 'Students',  icon: 'students',  path: '/teacher/students'  },
-  { label: 'Quizzes',   icon: 'reports',   path: '/teacher/quizzes'   },
-  { label: 'Reports',   icon: 'chart',     path: '/teacher/reports'   },
-  { label: 'Settings',  icon: 'settings',  path: '/teacher/settings'  },
+  { label: 'Dashboard',  icon: 'dashboard', path: '/teacher/dashboard'  },
+  { label: 'Classes',    icon: 'classes',   path: '/teacher/classes'    },
+  { label: 'Students',   icon: 'students',  path: '/teacher/students'   },
+  { label: 'Quizzes',    icon: 'reports',   path: '/teacher/quizzes'    },
+  { label: 'Reports',    icon: 'chart',     path: '/teacher/reports'    },
+  { label: 'Whiteboard', icon: 'pencil',    path: '/teacher/whiteboard' },
+  { label: 'Settings',   icon: 'settings',  path: '/teacher/settings'   },
 ];
 
 const ADMIN_NAV = [
-  { label: 'Dashboard', icon: 'dashboard', path: '/admin/dashboard' },
-  { label: 'Teachers',  icon: 'teachers',  path: '/admin/teachers'  },
-  { label: 'Students',  icon: 'students',  path: '/admin/students'  },
-  { label: 'Classes',   icon: 'classes',   path: '/admin/classes'   },
-  { label: 'Reports',   icon: 'reports',   path: '/admin/reports'   },
-  { label: 'Settings',  icon: 'settings',  path: '/admin/settings'  },
+  { label: 'Dashboard',  icon: 'dashboard', path: '/admin/dashboard'  },
+  { label: 'Teachers',   icon: 'teachers',  path: '/admin/teachers'   },
+  { label: 'Students',   icon: 'students',  path: '/admin/students'   },
+  { label: 'Classes',    icon: 'classes',   path: '/admin/classes'    },
+  { label: 'Reports',    icon: 'reports',   path: '/admin/reports'    },
+  { label: 'Whiteboard', icon: 'pencil',    path: '/admin/whiteboard' },
+  { label: 'Settings',   icon: 'settings',  path: '/admin/settings'   },
 ];
 
 const NAV_MAP = { student: STUDENT_NAV, teacher: TEACHER_NAV, admin: ADMIN_NAV };
@@ -53,18 +56,21 @@ const NAV_ACCENT = {
   '/student/classes':      '#1CB0F6',
   '/student/quizzes':      '#CE82FF',
   '/student/certificates': '#FFC800',
+  '/student/whiteboard':  '#FF9600',
   '/teacher/dashboard': '#58CC02',
   '/teacher/classes':   '#1CB0F6',
   '/teacher/students':  '#FF9600',
   '/teacher/quizzes':   '#CE82FF',
-  '/teacher/reports':   '#FFC800',
-  '/teacher/settings':  '#94A3B8',
+  '/teacher/reports':     '#FFC800',
+  '/teacher/whiteboard':  '#FF9600',
+  '/teacher/settings':    '#94A3B8',
   '/admin/dashboard': '#58CC02',
   '/admin/teachers':  '#1CB0F6',
   '/admin/students':  '#FF9600',
   '/admin/classes':   '#CE82FF',
-  '/admin/reports':   '#FFC800',
-  '/admin/settings':  '#94A3B8',
+  '/admin/reports':     '#FFC800',
+  '/admin/whiteboard':  '#FF9600',
+  '/admin/settings':    '#94A3B8',
 };
 
 // ── Sidebar ───────────────────────────────────────────────────
@@ -151,17 +157,20 @@ const PAGE_TITLES = {
   '/student/classes':      'My Classes',
   '/student/quizzes':      'Quizzes',
   '/student/certificates': 'Certificates',
+  '/student/whiteboard':  'Whiteboard',
   '/teacher/dashboard': 'Dashboard',
   '/teacher/classes':   'Classes',
   '/teacher/students':  'Students',
   '/teacher/quizzes':   'Quizzes',
-  '/teacher/reports':   'Reports',
-  '/teacher/settings':  'Settings',
+  '/teacher/reports':    'Reports',
+  '/teacher/whiteboard': 'Whiteboard',
+  '/teacher/settings':   'Settings',
   '/admin/dashboard':   'Dashboard',
   '/admin/teachers':    'Teachers',
   '/admin/students':    'Students',
   '/admin/classes':     'Classes',
   '/admin/reports':     'Reports',
+  '/admin/whiteboard':  'Whiteboard',
   '/admin/settings':    'Settings',
 };
 

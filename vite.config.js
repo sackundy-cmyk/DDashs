@@ -34,8 +34,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          if (id.includes('node_modules/react')) return 'react-vendor';
+          // Konva must come before the react catch-all (react-konva contains "react")
+          if (id.includes('node_modules/konva') || id.includes('node_modules/react-konva')) return 'konva-vendor';
           if (id.includes('node_modules/react-router')) return 'router-vendor';
+          if (id.includes('node_modules/react')) return 'react-vendor';
           if (id.includes('/lessons/unit1')) return 'unit1';
           if (id.includes('/lessons/unit2')) return 'unit2';
           if (id.includes('/lessons/unit3')) return 'unit3';

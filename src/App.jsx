@@ -29,6 +29,11 @@ const TeacherSettings    = lazy(() => import('./pages/teacher/Settings.jsx'));
 const TeacherQuizzes     = lazy(() => import('./pages/teacher/Quizzes.jsx'));
 const TeacherQuizResults = lazy(() => import('./pages/teacher/QuizResults.jsx'));
 
+// ── Whiteboard pages (lazy) ──────────────────────────────────
+const TeacherWhiteboard = lazy(() => import('./pages/teacher/Whiteboard.jsx'));
+const AdminWhiteboard   = lazy(() => import('./pages/admin/Whiteboard.jsx'));
+const StudentWhiteboard = lazy(() => import('./pages/student/Whiteboard.jsx'));
+
 // ── Admin pages (lazy) ───────────────────────────────────────
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard.jsx'));
 const AdminTeachers  = lazy(() => import('./pages/admin/Teachers.jsx'));
@@ -173,6 +178,9 @@ export default function App() {
           <Route path="/student/quiz/:quizId" element={
             <ProtectedRoute roles={['student']}><StudentTakeQuiz /></ProtectedRoute>
           } />
+          <Route path="/student/whiteboard" element={
+            <ProtectedRoute roles={['student']}><StudentWhiteboard /></ProtectedRoute>
+          } />
           <Route path="/student/lesson/:unitId/:lessonId" element={
             <ProtectedRoute roles={['student']}><DashboardLayout><LessonRoute /></DashboardLayout></ProtectedRoute>
           } />
@@ -204,6 +212,9 @@ export default function App() {
           <Route path="/teacher/quizzes/:quizId/results" element={
             <ProtectedRoute roles={['teacher']}><TeacherQuizResults /></ProtectedRoute>
           } />
+          <Route path="/teacher/whiteboard" element={
+            <ProtectedRoute roles={['teacher']}><TeacherWhiteboard /></ProtectedRoute>
+          } />
 
           {/* Admin */}
           <Route path="/admin" element={
@@ -228,6 +239,9 @@ export default function App() {
           } />
           <Route path="/admin/settings" element={
             <ProtectedRoute roles={['admin']}><AdminSettings /></ProtectedRoute>
+          } />
+          <Route path="/admin/whiteboard" element={
+            <ProtectedRoute roles={['admin']}><AdminWhiteboard /></ProtectedRoute>
           } />
 
           <Route path="*" element={<NotFound />} />
