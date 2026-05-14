@@ -2,7 +2,7 @@
    whiteboard.css — interactive teaching whiteboard
    ============================================================ */
 
-/* ── Page wrapper (escapes DashboardLayout pageBody padding) ── */
+/* ── Page wrapper ──────────────────────────────────────────── */
 .wb-page-wrap {
   margin: -24px -28px;
   height: calc(100dvh - 64px);
@@ -17,7 +17,7 @@
   .wb-page-wrap { margin: -16px -16px; }
 }
 
-/* ── Fullscreen overlay (hides DashboardLayout sidebar + topbar) ── */
+/* ── Fullscreen overlay ─────────────────────────────────────── */
 .wb-page-wrap.wb-fs-mode {
   position: fixed !important;
   inset: 0 !important;
@@ -27,186 +27,44 @@
   z-index: 9999 !important;
 }
 
-/* ── Toolbar ──────────────────────────────────────────────── */
-.wb-toolbar {
-  height: 52px;
-  min-height: 52px;
-  background: #1E2130;
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  gap: 4px;
-  flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,.3);
-  z-index: 20;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-}
-.wb-toolbar::-webkit-scrollbar { display: none; }
-
-.tb-sep {
-  width: 1px;
-  height: 28px;
-  background: rgba(255,255,255,.14);
-  margin: 0 4px;
-  flex-shrink: 0;
-}
-
-.tb-label {
-  font-size: 10px;
-  font-weight: 800;
-  color: rgba(255,255,255,.35);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  margin: 0 3px;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-.tb-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  border: none;
-  background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.7);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 800;
-  transition: background .15s, color .15s;
-  flex-shrink: 0;
-  position: relative;
-}
-.tb-btn:hover { background: rgba(255,255,255,.18); color: white; }
-.tb-btn.active {
-  background: #4f8ef7;
-  color: white;
-  box-shadow: 0 0 0 2px rgba(79,142,247,.5);
-}
-.tb-btn.mode-active {
-  background: #FF9600;
-  color: white;
-  box-shadow: 0 0 0 2px rgba(255,150,0,.4);
-}
-.tb-btn.danger:hover { background: rgba(231,76,60,.35); color: #ff8a7a; }
-
-.tb-btn-wide {
-  min-width: 54px;
-  height: 36px;
-  padding: 0 10px;
-  border-radius: 8px;
-  border: none;
-  background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.7);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: .72rem;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 800;
-  letter-spacing: .01em;
-  transition: background .15s, color .15s;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-.tb-btn-wide:hover { background: rgba(255,255,255,.18); color: white; }
-.tb-btn-wide.mode-active { background: #FF9600; color: white; }
-
-/* Color dots in toolbar */
-.tb-color-dot {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: transform .15s, border-color .15s;
-  flex-shrink: 0;
-}
-.tb-color-dot:hover { transform: scale(1.2); }
-.tb-color-dot.active { border-color: white; transform: scale(1.18); box-shadow: 0 0 0 2px rgba(255,255,255,.3); }
-
-/* Brush sizes */
-.tb-brush {
-  border-radius: 50%;
-  background: white;
-  cursor: pointer;
-  opacity: .45;
-  transition: opacity .15s, transform .15s;
-  flex-shrink: 0;
-}
-.tb-brush:hover { opacity: .8; transform: scale(1.15); }
-.tb-brush.active { opacity: 1; box-shadow: 0 0 0 2px #4f8ef7; }
-
-/* Instrument add buttons */
-.tb-inst-btn {
-  height: 36px;
-  padding: 0 9px;
-  border-radius: 8px;
-  border: none;
-  background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.7);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: .68rem;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 800;
-  transition: background .15s, color .15s;
-  flex-shrink: 0;
-  white-space: nowrap;
-  letter-spacing: .01em;
-}
-.tb-inst-btn:hover { background: rgba(255,255,255,.18); color: white; }
-
-/* Timer display within toolbar */
-.tb-timer-display {
-  font-size: 1rem;
-  font-weight: 900;
-  color: #FFC800;
-  font-family: 'Nunito', sans-serif;
-  min-width: 48px;
-  text-align: center;
-  letter-spacing: .02em;
-  flex-shrink: 0;
-}
-.tb-timer-display.urgent { color: #FF4B4B; }
-
-/* ── Body (stage + panel) ─────────────────────────────────── */
+/* ── Body ────────────────────────────────────────────────────  */
 .wb-body {
   display: flex;
+  flex-direction: row;
   flex: 1;
   min-height: 0;
   overflow: hidden;
+  position: relative;
 }
 
-/* ── Board (Konva stage container) ───────────────────────── */
+/* ── Board (scrollable canvas container) ─────────────────── */
 .wb-board {
   flex: 1;
+  overflow: auto;
   position: relative;
-  overflow: hidden;
   background: #ffffff;
-  background-image:
-    linear-gradient(rgba(100,130,200,.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(100,130,200,.06) 1px, transparent 1px);
-  background-size: 40px 40px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100,130,200,.25) transparent;
+}
+.wb-board::-webkit-scrollbar { width: 6px; height: 6px; }
+.wb-board::-webkit-scrollbar-track { background: transparent; }
+.wb-board::-webkit-scrollbar-thumb { background: rgba(100,130,200,.3); border-radius: 3px; }
+
+/* Block scroll during drawing modes so touch goes to Konva */
+.wb-board.drawing-mode {
+  touch-action: none;
+  overflow: hidden; /* prevent any residual scroll during draw */
 }
 
-/* Text input overlay (for text tool) */
+/* Text input overlay (text tool) */
 .wb-text-input {
   position: absolute;
-  background: rgba(255,255,255,.92);
+  background: rgba(255,255,255,.95);
   border: 2px dashed rgba(79,142,247,.8);
   border-radius: 6px;
   padding: 4px 8px;
   font-family: 'Nunito', sans-serif;
-  font-size: 22px;
   font-weight: 800;
   outline: none;
   min-width: 80px;
@@ -219,75 +77,228 @@
   box-shadow: 0 2px 12px rgba(79,142,247,.25);
 }
 
-/* Placement cursor overlay */
-.wb-board.placing { cursor: crosshair; }
-
-/* Card hover controls (HTML overlay) */
-.wb-card-controls {
-  position: fixed;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+/* ── Right tool rail ─────────────────────────────────────── */
+.wb-right-rail {
+  width: 52px;
+  min-width: 52px;
   background: #1E2130;
-  border-radius: 8px;
-  padding: 4px 6px;
-  z-index: 100;
-  box-shadow: 0 4px 16px rgba(0,0,0,.4);
-  pointer-events: all;
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+  box-shadow: -3px 0 12px rgba(0,0,0,.3);
+  flex-shrink: 0;
+  overflow: hidden;
 }
-.wb-card-ctrl-btn {
-  width: 22px;
-  height: 22px;
-  border-radius: 5px;
+
+/* Scrollable tool strip */
+.wb-tool-strip {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 4px 4px;
+  scrollbar-width: none;
+}
+.wb-tool-strip::-webkit-scrollbar { display: none; }
+
+/* Section label inside tool strip */
+.wbt-label {
+  font-size: 9px;
+  font-weight: 800;
+  color: rgba(255,255,255,.28);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  align-self: stretch;
+  text-align: center;
+  padding: 2px 0 1px;
+  flex-shrink: 0;
+}
+
+/* Collapsible section label */
+.wbt-label-toggle {
+  cursor: pointer;
+  user-select: none;
+  transition: color .15s;
+}
+.wbt-label-toggle:hover { color: rgba(255,255,255,.65); }
+
+/* Separator */
+.wbt-sep {
+  width: 36px;
+  height: 1px;
+  background: rgba(255,255,255,.1);
+  margin: 2px 0;
+  flex-shrink: 0;
+}
+
+/* Tool button */
+.wbt-btn {
+  width: 44px;
+  height: 40px;
+  border-radius: 8px;
   border: none;
+  background: rgba(255,255,255,.07);
+  color: rgba(255,255,255,.65);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: .75rem;
-  font-weight: 900;
+  font-size: 1rem;
   font-family: 'Nunito', sans-serif;
-  transition: opacity .15s;
+  font-weight: 800;
+  transition: background .15s, color .15s;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
 }
-.wb-card-ctrl-btn:hover { opacity: .85; }
-.wb-card-ctrl-btn.size-plus  { background: #4f8ef7; color: white; }
-.wb-card-ctrl-btn.size-minus { background: #64748b; color: white; }
-.wb-card-ctrl-btn.del        { background: #e74c3c; color: white; }
-.wb-color-swatch {
-  width: 18px;
-  height: 18px;
+.wbt-btn:hover  { background: rgba(255,255,255,.16); color: white; }
+.wbt-btn.active { background: #4f8ef7; color: white; box-shadow: 0 0 0 2px rgba(79,142,247,.45); }
+.wbt-btn.mode-active { background: #FF9600; color: white; }
+.wbt-btn.danger:hover { background: rgba(231,76,60,.35); color: #ff8a7a; }
+
+/* Wide button (modes) */
+.wbt-btn-wide {
+  width: 44px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,.07);
+  color: rgba(255,255,255,.65);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .62rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  transition: background .15s, color .15s;
+  flex-shrink: 0;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.wbt-btn-wide:hover { background: rgba(255,255,255,.16); color: white; }
+.wbt-btn-wide.mode-active { background: #FF9600; color: white; }
+
+/* Color dot grid (2-column) */
+.wbt-color-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 20px);
+  gap: 4px;
+  padding: 2px 0;
+}
+.wbt-color-dot {
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   cursor: pointer;
   border: 2px solid transparent;
-  transition: transform .12s, border-color .12s;
+  transition: transform .15s, border-color .15s;
+  -webkit-tap-highlight-color: transparent;
 }
-.wb-color-swatch:hover { transform: scale(1.25); }
-.wb-color-swatch.picked { border-color: white; }
+.wbt-color-dot:hover { transform: scale(1.2); }
+.wbt-color-dot.active { border-color: white; transform: scale(1.15); box-shadow: 0 0 0 2px rgba(255,255,255,.3); }
 
-/* ── Card Panel — always visible ──────────────────────────── */
-.wb-panel {
-  width: 140px;
-  min-width: 140px;
-  background: #1E2130;
+/* Brush size dots */
+.wbt-brushes {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+}
+.wbt-brush {
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  opacity: .4;
+  transition: opacity .15s, transform .15s;
+  flex-shrink: 0;
+}
+.wbt-brush:hover { opacity: .8; transform: scale(1.15); }
+.wbt-brush.active { opacity: 1; box-shadow: 0 0 0 2px #4f8ef7; }
+
+/* Instrument add buttons */
+.wbt-inst-btn {
+  width: 44px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,.07);
+  color: rgba(255,255,255,.65);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .58rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  transition: background .15s, color .15s;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+.wbt-inst-btn:hover { background: rgba(255,255,255,.16); color: white; }
+
+/* Timer display */
+.wbt-timer-display {
+  font-size: .9rem;
+  font-weight: 900;
+  color: #FFC800;
+  font-family: 'Nunito', sans-serif;
+  text-align: center;
+  letter-spacing: .02em;
+  padding: 2px 0;
+}
+.wbt-timer-display.urgent { color: #FF4B4B; }
+
+/* Panel toggle at bottom of right rail */
+.wb-panel-toggle {
+  width: 52px;
+  height: 52px;
+  min-height: 52px;
+  border-top: 1px solid rgba(255,255,255,.1);
+  border: none;
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.wb-panel-toggle:hover { background: rgba(255,255,255,.18); color: white; }
+.wb-panel-toggle.open { background: #4f8ef7; color: white; }
+
+/* ── Card drawer (slides in from right, over board) ───────── */
+.wb-card-drawer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 52px; /* to the left of the right rail */
+  width: 160px;
+  background: #1E2130;
+  transform: translateX(100%); /* hidden behind the right rail */
+  transition: transform .28s cubic-bezier(.4,0,.2,1);
+  z-index: 15;
   overflow-y: auto;
   overflow-x: hidden;
-  flex-shrink: 0;
-  box-shadow: -3px 0 12px rgba(0,0,0,.25);
-  z-index: 10;
+  box-shadow: -6px 0 24px rgba(0,0,0,.35);
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,.1) transparent;
 }
-/* Narrow slightly on tablets */
-@media (max-width: 900px) {
-  .wb-panel { width: 110px; min-width: 110px; }
-}
-@media (max-width: 600px) {
-  .wb-panel { width: 88px; min-width: 88px; }
-}
+.wb-card-drawer::-webkit-scrollbar { width: 4px; }
+.wb-card-drawer::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 2px; }
+.wb-card-drawer.open { transform: translateX(0); }
 
-/* Panel group */
+/* Panel group inside card drawer */
 .wb-group { flex-shrink: 0; }
 
 .wb-group-header {
@@ -306,20 +317,27 @@
   border-top: 1px solid rgba(255,255,255,.06);
 }
 .wb-group-header:hover { color: rgba(255,255,255,.7); }
-.wb-group-header .badge {
-  background: rgba(255,255,255,.12);
-  color: rgba(255,255,255,.5);
-  font-size: .55rem;
-  font-weight: 700;
-  padding: 1px 5px;
-  border-radius: 99px;
-}
 .wb-group-header .chevron {
   font-size: .65rem;
   opacity: .5;
   transition: transform .2s;
 }
 .wb-group-header.open .chevron { transform: rotate(180deg); }
+
+/* Panel title strip */
+.wb-panel-header {
+  padding: 8px 8px 4px;
+  font-size: .6rem;
+  font-weight: 800;
+  color: rgba(255,255,255,.3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
 /* Panel card grid */
 .wb-group-cards {
@@ -332,22 +350,23 @@
 /* Source card in panel */
 .wb-src-card {
   width: 100%;
-  min-height: 40px;
+  min-height: 38px;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 4px 6px;
+  padding: 2px 4px;
   cursor: pointer;
   border: none;
   background: white;
   font-family: 'Nunito', sans-serif;
   font-weight: 900;
-  transition: transform .12s, box-shadow .12s, opacity .12s;
+  transition: transform .12s, box-shadow .12s;
   line-height: 1.2;
   box-shadow: 0 2px 6px rgba(0,0,0,.2);
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 .wb-src-card:hover { transform: scale(1.04) translateX(-2px); box-shadow: 0 4px 14px rgba(0,0,0,.3); }
 .wb-src-card:active { transform: scale(.96); }
@@ -418,60 +437,59 @@
   flex-shrink: 0;
 }
 .wb-eq-slot:hover { border-color: rgba(79,142,247,.7); background: rgba(79,142,247,.1); }
-.wb-eq-slot.filled { border-color: transparent; border-style: solid; border-width: 2px; border-color: rgba(255,255,255,.12); background: white; cursor: default; }
+.wb-eq-slot.filled { border-style: solid; border-color: rgba(255,255,255,.12); background: white; cursor: default; }
 
 .wb-eq-card {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
   border-radius: 5px;
   font-family: 'Nunito', sans-serif;
   font-weight: 900;
   position: relative;
 }
 .wb-eq-card .eq-del {
-  position: absolute;
-  top: -7px;
-  right: -7px;
-  width: 14px;
-  height: 14px;
-  background: #e74c3c;
-  border-radius: 50%;
-  color: white;
-  font-size: .55rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border: 1.5px solid #131929;
-  line-height: 1;
+  position: absolute; top: -7px; right: -7px;
+  width: 14px; height: 14px;
+  background: #e74c3c; border-radius: 50%;
+  color: white; font-size: .55rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; border: 1.5px solid #131929; line-height: 1;
 }
 
 .wb-eq-row-del {
-  width: 20px;
-  height: 20px;
+  width: 20px; height: 20px;
   border-radius: 5px;
   background: rgba(231,76,60,.2);
-  border: none;
-  color: #ff8a7a;
-  cursor: pointer;
-  font-size: .8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: none; color: #ff8a7a;
+  cursor: pointer; font-size: .8rem;
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   font-family: 'Nunito', sans-serif;
   transition: background .15s;
 }
 .wb-eq-row-del:hover { background: rgba(231,76,60,.4); color: white; }
 
-/* ── Timer overlay ────────────────────────────────────────── */
+.wb-eq-to-board {
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(46,204,113,.2);
+  color: #2ecc71;
+  font-family: 'Nunito', sans-serif;
+  font-size: .7rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background .15s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.wb-eq-to-board:hover { background: rgba(46,204,113,.38); }
+
+/* ── Timer overlay (floating on board) ──────────────────── */
 .wb-timer-overlay {
   position: absolute;
   bottom: 20px;
-  right: 140px;
+  right: 62px; /* clear of right rail */
   background: #1E2130;
   border-radius: 12px;
   padding: 10px 16px;
@@ -493,81 +511,61 @@
   line-height: 1;
 }
 .wb-timer-digits.urgent { color: #FF4B4B; }
-.wb-timer-controls {
-  display: flex;
-  gap: 6px;
-}
+.wb-timer-controls { display: flex; gap: 6px; }
 .wb-timer-ctrl {
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
-  border: none;
+  width: 28px; height: 28px;
+  border-radius: 7px; border: none;
   cursor: pointer;
   background: rgba(255,255,255,.1);
   color: rgba(255,255,255,.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: .7rem;
-  font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .7rem; font-weight: 900;
   font-family: 'Nunito', sans-serif;
   transition: background .15s;
 }
 .wb-timer-ctrl:hover { background: rgba(255,255,255,.2); color: white; }
-.wb-timer-presets {
-  display: flex;
-  gap: 4px;
-}
-.wb-timer-preset {
-  padding: 2px 7px;
-  border-radius: 5px;
-  border: none;
-  background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.6);
-  font-family: 'Nunito', sans-serif;
-  font-size: .65rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background .15s;
-}
-.wb-timer-preset:hover { background: rgba(255,255,255,.18); color: white; }
 
-/* ── Confirm dialog ───────────────────────────────────────── */
-.wb-overlay-dim {
+/* ── Card hover / tap controls ────────────────────────────── */
+.wb-card-controls {
   position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.5);
-  z-index: 999;
   display: flex;
   align-items: center;
-  justify-content: center;
-}
-.wb-confirm-box {
-  background: white;
-  border-radius: 16px;
-  padding: 28px 32px;
-  text-align: center;
-  max-width: 300px;
-  box-shadow: 0 16px 48px rgba(0,0,0,.3);
-}
-.wb-confirm-box h3 { font-size: 1.1rem; font-weight: 900; color: #1E2130; margin-bottom: 6px; }
-.wb-confirm-box p  { font-size: .84rem; color: #64748b; margin-bottom: 18px; line-height: 1.5; }
-.wb-confirm-btns { display: flex; gap: 8px; justify-content: center; }
-.wb-confirm-btn  {
-  padding: 8px 20px;
+  gap: 4px;
+  background: #1E2130;
   border-radius: 8px;
-  border: none;
-  font-family: 'Nunito', sans-serif;
-  font-size: .84rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: opacity .15s;
+  padding: 4px 6px;
+  z-index: 200;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  pointer-events: all;
+  flex-wrap: wrap;
+  max-width: 260px;
 }
-.wb-confirm-btn:hover { opacity: .85; }
-.wb-confirm-btn.cancel  { background: #f1f5f9; color: #475569; }
-.wb-confirm-btn.confirm { background: #e74c3c; color: white; }
+.wb-card-ctrl-btn {
+  width: 26px; height: 26px;
+  border-radius: 5px; border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; font-weight: 900;
+  font-family: 'Nunito', sans-serif;
+  transition: opacity .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.wb-card-ctrl-btn:hover { opacity: .85; }
+.wb-card-ctrl-btn.size-plus  { background: #4f8ef7; color: white; }
+.wb-card-ctrl-btn.size-minus { background: #64748b; color: white; }
+.wb-card-ctrl-btn.del        { background: #e74c3c; color: white; }
+.wb-color-swatch {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform .12s, border-color .12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.wb-color-swatch:hover { transform: scale(1.25); }
+.wb-color-swatch.picked { border-color: white; }
 
-/* ── HTML instrument overlays (tables) ───────────────────── */
+/* ── HTML instrument overlays ────────────────────────────── */
 .wb-html-layer {
   position: absolute;
   top: 0;
@@ -590,37 +588,25 @@
 .wb-table-obj.selected { border-color: #4f8ef7; box-shadow: 0 0 0 3px rgba(79,142,247,.3), 0 4px 20px rgba(0,0,0,.18); }
 
 .wb-table-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   padding: 3px 6px;
   background: #1E2130;
   cursor: move;
 }
 .wb-table-title {
-  font-size: .62rem;
-  font-weight: 800;
+  font-size: .62rem; font-weight: 800;
   color: rgba(255,255,255,.5);
-  letter-spacing: .06em;
-  text-transform: uppercase;
+  letter-spacing: .06em; text-transform: uppercase;
 }
-.wb-table-actions {
-  display: flex;
-  gap: 3px;
-}
+.wb-table-actions { display: flex; gap: 3px; }
 .wb-table-action-btn {
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  border: none;
+  width: 18px; height: 18px;
+  border-radius: 4px; border: none;
   cursor: pointer;
   background: rgba(255,255,255,.1);
   color: rgba(255,255,255,.6);
-  font-size: .65rem;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: .65rem; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
   font-family: 'Nunito', sans-serif;
   transition: background .15s;
 }
@@ -628,54 +614,40 @@
 .wb-table-action-btn.del { background: rgba(231,76,60,.25); color: #ff8a7a; }
 .wb-table-action-btn.del:hover { background: rgba(231,76,60,.5); color: white; }
 
-.wb-table-grid {
-  display: inline-grid;
-}
+.wb-table-grid { display: inline-grid; }
 .wb-table-cell {
-  width: 56px;
-  height: 36px;
+  width: 56px; height: 36px;
   border: 1px solid #e2e8f0;
-  background: white;
-  outline: none;
+  background: white; outline: none;
   text-align: center;
   font-family: 'Nunito', sans-serif;
-  font-size: .88rem;
-  font-weight: 700;
-  color: #1e293b;
-  cursor: text;
+  font-size: .88rem; font-weight: 700;
+  color: #1e293b; cursor: text;
 }
 .wb-table-cell:focus { background: #eff6ff; border-color: #4f8ef7; position: relative; z-index: 1; }
 .wb-table-cell.header-cell {
-  background: #1e6fd9;
-  color: white;
-  font-weight: 900;
-  cursor: default;
+  background: #1e6fd9; color: white; font-weight: 900; cursor: default;
 }
-
-.wb-table-row-controls, .wb-table-col-controls {
-  display: flex;
-  gap: 3px;
+.wb-table-row-controls {
+  display: flex; gap: 3px;
   padding: 3px 6px;
   background: #f8fafc;
   border-top: 1px solid #e2e8f0;
 }
 .wb-tbl-ctrl-btn {
   padding: 2px 8px;
-  border-radius: 5px;
-  border: none;
+  border-radius: 5px; border: none;
   font-family: 'Nunito', sans-serif;
-  font-size: .65rem;
-  font-weight: 800;
+  font-size: .65rem; font-weight: 800;
   cursor: pointer;
-  background: #e2e8f0;
-  color: #475569;
+  background: #e2e8f0; color: #475569;
   transition: background .15s;
 }
 .wb-tbl-ctrl-btn:hover { background: #cbd5e1; color: #1e293b; }
 .wb-tbl-ctrl-btn.remove { background: rgba(231,76,60,.1); color: #e74c3c; }
 .wb-tbl-ctrl-btn.remove:hover { background: rgba(231,76,60,.2); }
 
-/* Pending card ghost that follows cursor */
+/* ── Ghost card follows cursor ────────────────────────────── */
 .wb-ghost-card {
   position: fixed;
   pointer-events: none;
@@ -692,93 +664,64 @@
   white-space: nowrap;
 }
 
-/* ── Coord mode info strip ────────────────────────────────── */
+/* ── Mode info overlays ─────────────────────────────────── */
 .wb-coord-strip {
-  position: absolute;
-  top: 8px;
-  left: 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(30, 33, 48, 0.85);
-  border-radius: 8px;
-  padding: 4px 10px;
-  z-index: 55;
-  pointer-events: none;
+  position: absolute; top: 8px; left: 12px;
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(30,33,48,.85);
+  border-radius: 8px; padding: 4px 10px;
+  z-index: 55; pointer-events: none;
 }
 .wb-coord-strip span {
-  font-size: .68rem;
-  font-weight: 800;
+  font-size: .68rem; font-weight: 800;
   color: rgba(255,255,255,.7);
   font-family: 'Nunito', sans-serif;
 }
-
-/* Equation mode banner */
 .wb-eq-mode-banner {
-  position: absolute;
-  top: 8px;
-  left: 12px;
+  position: absolute; top: 8px; left: 12px;
   background: rgba(79,142,247,.18);
   border: 1px solid rgba(79,142,247,.4);
-  border-radius: 8px;
-  padding: 4px 12px;
-  font-size: .68rem;
-  font-weight: 800;
+  border-radius: 8px; padding: 4px 12px;
+  font-size: .68rem; font-weight: 800;
   color: #4f8ef7;
   font-family: 'Nunito', sans-serif;
   letter-spacing: .04em;
-  z-index: 55;
-  pointer-events: none;
+  z-index: 55; pointer-events: none;
 }
 
-/* Collapsible toolbar section labels */
-.tb-label-toggle {
-  cursor: pointer;
-  user-select: none;
-  transition: color .15s;
+/* ── Confirm dialog ─────────────────────────────────────── */
+.wb-overlay-dim {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 999;
+  display: flex; align-items: center; justify-content: center;
 }
-.tb-label-toggle:hover { color: rgba(255,255,255,.75); }
-
-/* Zoom percentage readout */
-.tb-zoom-pct {
-  font-size: .72rem;
-  font-weight: 800;
-  color: rgba(255,255,255,.6);
-  min-width: 38px;
-  text-align: center;
+.wb-confirm-box {
+  background: white; border-radius: 16px;
+  padding: 28px 32px; text-align: center;
+  max-width: 300px;
+  box-shadow: 0 16px 48px rgba(0,0,0,.3);
+}
+.wb-confirm-box h3 { font-size: 1.1rem; font-weight: 900; color: #1E2130; margin-bottom: 6px; }
+.wb-confirm-box p  { font-size: .84rem; color: #64748b; margin-bottom: 18px; line-height: 1.5; }
+.wb-confirm-btns { display: flex; gap: 8px; justify-content: center; }
+.wb-confirm-btn  {
+  padding: 8px 20px; border-radius: 8px; border: none;
   font-family: 'Nunito', sans-serif;
-  flex-shrink: 0;
+  font-size: .84rem; font-weight: 800;
+  cursor: pointer; transition: opacity .15s;
 }
+.wb-confirm-btn:hover { opacity: .85; }
+.wb-confirm-btn.cancel  { background: #f1f5f9; color: #475569; }
+.wb-confirm-btn.confirm { background: #e74c3c; color: white; }
 
-/* "→ Board" button in equation rows */
-.wb-eq-to-board {
-  padding: 3px 8px;
-  border-radius: 6px;
-  border: none;
-  background: rgba(46,204,113,.2);
-  color: #2ecc71;
-  font-family: 'Nunito', sans-serif;
-  font-size: .7rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: background .15s;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-.wb-eq-to-board:hover { background: rgba(46,204,113,.38); color: #27ae60; }
-
-/* ── Responsive ───────────────────────────────────────────── */
-/* Panel is NEVER absolutely positioned — always a flex child.
-   Width is handled by the panel-specific breakpoints above.  */
-@media (max-width: 900px) {
-  .tb-label { display: none; }
-  .tb-label-toggle { display: none; }
-  .tb-zoom-pct { min-width: 28px; font-size: .65rem; }
-  .wb-src-card { min-height: 44px; } /* bigger touch targets on tablet */
-}
+/* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 600px) {
-  .wb-toolbar { flex-wrap: wrap; height: auto; min-height: 44px; padding: 4px 8px; }
-  .wb-timer-overlay { right: 16px; bottom: 12px; }
-  .wb-src-card { font-size: .62rem; }
-  .wb-group-header { font-size: .55rem; padding: 5px 6px 4px; }
+  .wb-right-rail { width: 48px; min-width: 48px; }
+  .wb-card-drawer { right: 48px; width: 150px; }
+  .wbt-btn  { width: 40px; height: 38px; }
+  .wbt-btn-wide { width: 40px; height: 34px; font-size: .56rem; }
+  .wbt-inst-btn  { width: 40px; height: 34px; font-size: .52rem; }
+  .wb-panel-toggle { width: 48px; height: 48px; }
+  .wb-timer-overlay { right: 56px; bottom: 12px; }
 }
