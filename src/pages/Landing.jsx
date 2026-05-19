@@ -3,6 +3,7 @@
 //  User sees this first → clicks Sign In → goes to /login
 // ============================================================
 
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { DDashSplashMark } from '../components/DDashLogo.jsx';
@@ -18,6 +19,23 @@ const STARS = Array.from({ length: 60 }, (_, i) => ({
 export default function Landing() {
   const navigate = useNavigate();
   const { isAuthenticated, role } = useAuth();
+
+  const [score, setScore]           = useState(0);
+  const [lessonCount, setLessonCount] = useState(0);
+  useEffect(() => {
+    let frame;
+    const duration = 1500;
+    const start = performance.now();
+    const tick = (now) => {
+      const t = Math.min((now - start) / duration, 1);
+      const e = 1 - Math.pow(1 - t, 3);
+      setScore(Math.round(e * 72));
+      setLessonCount(Math.round(e * 23));
+      if (t < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   const handleSignIn = () => {
     if (isAuthenticated) {
@@ -50,6 +68,7 @@ export default function Landing() {
         @keyframes shimmer    { 0%,100%{opacity:.55} 50%{opacity:1} }
         @keyframes pulseGlow  { 0%,100%{box-shadow:0 0 24px rgba(28,176,246,.25),0 0 0 1px rgba(28,176,246,.18)}
                                 50%{box-shadow:0 0 48px rgba(28,176,246,.45),0 0 0 1px rgba(28,176,246,.35)} }
+        @keyframes ringDraw   { from{stroke-dasharray:0 100.5} to{stroke-dasharray:72.36 100.5} }
         .land-btn:hover { transform:translateY(-3px)!important; box-shadow:0 16px 48px rgba(28,176,246,.55)!important; }
       `}</style>
 
@@ -124,39 +143,44 @@ export default function Landing() {
         {/* ── Floating stat cards ── */}
         <div style={{ display:'flex', gap:14, marginBottom:28, flexWrap:'wrap', justifyContent:'center' }}>
 
-          {/* 72% Average Score */}
+          {/* Avg Score — animated ring + smiley + count-up */}
           <div style={{
             background:'rgba(255,255,255,0.07)', backdropFilter:'blur(14px)',
             border:'1px solid rgba(255,255,255,0.13)', borderRadius:18,
             padding:'12px 18px', display:'flex', alignItems:'center', gap:12,
             animation:'floatCardA 3.6s ease-in-out infinite',
           }}>
-            <svg width="42" height="42" viewBox="0 0 42 42">
-              <circle cx="21" cy="21" r="16" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="4.5" />
-              <circle cx="21" cy="21" r="16" fill="none" stroke="#1CB0F6" strokeWidth="4.5"
-                strokeDasharray={`${0.72 * 100.5} 100.5`} strokeDashoffset="25.1"
-                strokeLinecap="round" transform="rotate(-90 21 21)" />
-            </svg>
+            <div style={{ position:'relative', width:42, height:42, flexShrink:0 }}>
+              <svg width="42" height="42" viewBox="0 0 42 42" style={{ position:'absolute', inset:0 }}>
+                <circle cx="21" cy="21" r="16" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="4.5" />
+                <circle cx="21" cy="21" r="16" fill="none" stroke="#1CB0F6" strokeWidth="4.5"
+                  strokeDasharray="0 100.5" strokeDashoffset="25.1"
+                  strokeLinecap="round" transform="rotate(-90 21 21)"
+                  style={{ animation:'ringDraw 1.5s ease-out forwards' }} />
+              </svg>
+              <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', fontSize:17 }}>😊</div>
+            </div>
             <div>
-              <div style={{ fontSize:17, fontWeight:900, color:'white', lineHeight:1 }}>72%</div>
+              <div style={{ fontSize:17, fontWeight:900, color:'white', lineHeight:1 }}>{score}%</div>
               <div style={{ fontSize:11, color:'rgba(255,255,255,0.50)', fontWeight:600, marginTop:3 }}>Avg. Score</div>
             </div>
           </div>
 
-          {/* 22 Lessons Live */}
+          {/* Lessons Live — smiley + count-up */}
           <div style={{
             background:'rgba(255,255,255,0.07)', backdropFilter:'blur(14px)',
             border:'1px solid rgba(255,255,255,0.13)', borderRadius:18,
             padding:'12px 18px', display:'flex', alignItems:'center', gap:12,
             animation:'floatCardB 4.2s ease-in-out infinite',
           }}>
-            <svg width="42" height="32" viewBox="0 0 42 32">
-              <rect x="2"  y="18" width="9" height="12" rx="2.5" fill="#CE82FF" />
-              <rect x="16" y="10" width="9" height="20" rx="2.5" fill="#1CB0F6" />
-              <rect x="30" y="2"  width="9" height="28" rx="2.5" fill="#58CC02" />
-            </svg>
+            <div style={{
+              width:42, height:42, borderRadius:'50%', flexShrink:0,
+              background:'linear-gradient(135deg, #58CC02, #47A301)',
+              display:'flex', alignItems:'center', justifyContent:'center',
+              fontSize:22, boxShadow:'0 3px 12px rgba(88,204,2,0.4)',
+            }}>😄</div>
             <div>
-              <div style={{ fontSize:17, fontWeight:900, color:'white', lineHeight:1 }}>22</div>
+              <div style={{ fontSize:17, fontWeight:900, color:'white', lineHeight:1 }}>{lessonCount}</div>
               <div style={{ fontSize:11, color:'rgba(255,255,255,0.50)', fontWeight:600, marginTop:3 }}>Lessons Live</div>
             </div>
           </div>

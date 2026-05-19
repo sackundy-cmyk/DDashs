@@ -35,7 +35,7 @@ export default function Login() {
     }}>
 
       {/* ── LEFT: Brand / Splash panel ── */}
-      <div style={{
+      <div data-login-left style={{
         flex: '0 0 52%',
         background: 'linear-gradient(160deg, #0A1628 0%, #0D1F45 45%, #0C2A5C 100%)',
         display: 'flex',
@@ -141,7 +141,7 @@ export default function Login() {
       </div>
 
       {/* ── RIGHT: Login form ── */}
-      <div style={{
+      <div data-login-right style={{
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
@@ -153,7 +153,7 @@ export default function Login() {
         <div style={{ width: '100%', maxWidth: 380 }}>
 
           {/* Small logo top for mobile / small screens */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 36 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 36 }}>
             <div style={{
               width: 44, height: 44, borderRadius: 13,
               background: 'linear-gradient(135deg, #1565C0, #00B4D8)',
@@ -165,7 +165,8 @@ export default function Login() {
             </div>
             <div>
               <div style={{ fontSize: 20, fontWeight: 900, color: '#0D1B4B', letterSpacing: '0.06em', lineHeight: 1 }}>D-DASH</div>
-              <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600 }}>Grade 5 · Mathematics</div>
+              <div style={{ fontSize: 14, fontWeight: 900, color: '#1565C0', lineHeight: 1.25, marginTop: 3 }}>Mr. Mustafa</div>
+              <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600, marginTop: 1 }}>Math &amp; ICT</div>
             </div>
           </div>
 
@@ -287,6 +288,14 @@ export default function Login() {
       <style>{`
         @media (max-width: 768px) {
           [data-login-left] { display: none !important; }
+          [data-login-right] {
+            width: 100% !important;
+            min-height: 100vh !important;
+            padding: 40px 24px !important;
+            justify-content: center !important;
+          }
+        }
+        @media (max-width: 480px) {
           [data-login-right] { padding: 32px 20px !important; }
         }
       `}</style>
