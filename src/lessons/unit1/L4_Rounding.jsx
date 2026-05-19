@@ -5,6 +5,7 @@
 //    s1 Round to nearest whole unit     — MCQ a/c/e, Drag b/d/f
 //    s2 Round to nearest tenth          — MCQ a/c/e, Drag b/d/f
 //    s3 Round to nearest whole number   — MCQ a/c/e, Drag b/d/f
+//  Each digit-input question has its own palette + check button
 // ============================================================
 import { useState } from 'react';
 import Header from '../../components/Header.jsx';
@@ -67,8 +68,10 @@ function fbMsg(ok, total, att) {
   return            { type:'wrong',   text:"✗ Check rounding: look at the digit right after the place you're rounding to." };
 }
 
+// MCQ groups (indices 0 & 1) and all drag questions (b, d, f) must be correct to complete section
 function allGroupsCorrect(mcqFB, dragFB) {
-  return [0,1].every(i => mcqFB[i]?.type === 'correct') && [0,1].every(i => dragFB[i]?.type === 'correct');
+  return [0,1].every(i => mcqFB[i]?.type === 'correct') &&
+    ['b','d','f'].every(lbl => dragFB[lbl]?.type === 'correct');
 }
 
 export default function L4_Rounding() {
@@ -126,23 +129,20 @@ export default function L4_Rounding() {
     if (ok === ga.length && allGroupsCorrect(newFB, s1DragFB) && !prog.done['s1'])
       prog.markDone('s1', { score: 100 });
   };
-  const checkS1Drag = (ga, gi) => {
-    increment(`s1d${gi}`); const att = getAtt(`s1d${gi}`) + 1;
-    let ok = 0;
-    ga.forEach(q => { if ((s1Drag[q.lbl]||[]).join('') === q.ans) ok++; });
+  const checkS1Drag = (q) => {
+    increment(`s1d_${q.lbl}`); const att = getAtt(`s1d_${q.lbl}`) + 1;
+    const ok = (s1Drag[q.lbl]||[]).join('') === q.ans ? 1 : 0;
     const ns = { ...s1DragSt };
-    ga.forEach(q => {
-      if ((s1Drag[q.lbl]||[]).join('') === q.ans) { ns[q.lbl] = 'correct'; }
-      else {
-        ns[q.lbl] = 'wrong';
-        setTimeout(() => setS1DragSt(p => { const x={...p}; if (x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200);
-      }
-    });
+    if (ok) { ns[q.lbl] = 'correct'; }
+    else {
+      ns[q.lbl] = 'wrong';
+      setTimeout(() => setS1DragSt(p => { const x={...p}; if (x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200);
+    }
     setS1DragSt(ns);
-    const f = fbMsg(ok, ga.length, att);
-    const newFB = { ...s1DragFB, [gi]: f };
-    setS1DragFB(newFB);
-    if (ok === ga.length && allGroupsCorrect(s1FB, newFB) && !prog.done['s1'])
+    const f = fbMsg(ok, 1, att);
+    const newDragFB = { ...s1DragFB, [q.lbl]: f };
+    setS1DragFB(newDragFB);
+    if (ok && allGroupsCorrect(s1FB, newDragFB) && !prog.done['s1'])
       prog.markDone('s1', { score: 100 });
   };
 
@@ -164,23 +164,20 @@ export default function L4_Rounding() {
     if (ok === ga.length && allGroupsCorrect(newFB, s2DragFB) && !prog.done['s2'])
       prog.markDone('s2', { score: 100 });
   };
-  const checkS2Drag = (ga, gi) => {
-    increment(`s2d${gi}`); const att = getAtt(`s2d${gi}`) + 1;
-    let ok = 0;
-    ga.forEach(q => { if ((s2Drag[q.lbl]||[]).join('') === q.ans) ok++; });
+  const checkS2Drag = (q) => {
+    increment(`s2d_${q.lbl}`); const att = getAtt(`s2d_${q.lbl}`) + 1;
+    const ok = (s2Drag[q.lbl]||[]).join('') === q.ans ? 1 : 0;
     const ns = { ...s2DragSt };
-    ga.forEach(q => {
-      if ((s2Drag[q.lbl]||[]).join('') === q.ans) { ns[q.lbl] = 'correct'; }
-      else {
-        ns[q.lbl] = 'wrong';
-        setTimeout(() => setS2DragSt(p => { const x={...p}; if (x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200);
-      }
-    });
+    if (ok) { ns[q.lbl] = 'correct'; }
+    else {
+      ns[q.lbl] = 'wrong';
+      setTimeout(() => setS2DragSt(p => { const x={...p}; if (x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200);
+    }
     setS2DragSt(ns);
-    const f = fbMsg(ok, ga.length, att);
-    const newFB = { ...s2DragFB, [gi]: f };
-    setS2DragFB(newFB);
-    if (ok === ga.length && allGroupsCorrect(s2FB, newFB) && !prog.done['s2'])
+    const f = fbMsg(ok, 1, att);
+    const newDragFB = { ...s2DragFB, [q.lbl]: f };
+    setS2DragFB(newDragFB);
+    if (ok && allGroupsCorrect(s2FB, newDragFB) && !prog.done['s2'])
       prog.markDone('s2', { score: 100 });
   };
 
@@ -202,23 +199,20 @@ export default function L4_Rounding() {
     if (ok === ga.length && allGroupsCorrect(newFB, s3DragFB) && !prog.done['s3'])
       prog.markDone('s3', { score: 100 });
   };
-  const checkS3Drag = (ga, gi) => {
-    increment(`s3d${gi}`); const att = getAtt(`s3d${gi}`) + 1;
-    let ok = 0;
-    ga.forEach(q => { if ((s3Drag[q.lbl]||[]).join('') === q.ans) ok++; });
+  const checkS3Drag = (q) => {
+    increment(`s3d_${q.lbl}`); const att = getAtt(`s3d_${q.lbl}`) + 1;
+    const ok = (s3Drag[q.lbl]||[]).join('') === q.ans ? 1 : 0;
     const ns = { ...s3DragSt };
-    ga.forEach(q => {
-      if ((s3Drag[q.lbl]||[]).join('') === q.ans) { ns[q.lbl] = 'correct'; }
-      else {
-        ns[q.lbl] = 'wrong';
-        setTimeout(() => setS3DragSt(p => { const x={...p}; if (x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200);
-      }
-    });
+    if (ok) { ns[q.lbl] = 'correct'; }
+    else {
+      ns[q.lbl] = 'wrong';
+      setTimeout(() => setS3DragSt(p => { const x={...p}; if (x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200);
+    }
     setS3DragSt(ns);
-    const f = fbMsg(ok, ga.length, att);
-    const newFB = { ...s3DragFB, [gi]: f };
-    setS3DragFB(newFB);
-    if (ok === ga.length && allGroupsCorrect(s3FB, newFB) && !prog.done['s3'])
+    const f = fbMsg(ok, 1, att);
+    const newDragFB = { ...s3DragFB, [q.lbl]: f };
+    setS3DragFB(newDragFB);
+    if (ok && allGroupsCorrect(s3FB, newDragFB) && !prog.done['s3'])
       prog.markDone('s3', { score: 100 });
   };
 
@@ -230,10 +224,8 @@ export default function L4_Rounding() {
     drag, setDrag, dragSt, setDragSt, dragFB,
     checkMCQ, checkDrag,
   }) => {
-    const mcqG0  = [mcqQs[0], mcqQs[1]];   // a, c
-    const mcqG1  = [mcqQs[2]];              // e
-    const dragG0 = [dragQs[0], dragQs[1]];  // b, d
-    const dragG1 = [dragQs[2]];             // f
+    const mcqG0 = [mcqQs[0], mcqQs[1]];  // a, c
+    const mcqG1 = [mcqQs[2]];             // e
 
     const makeDrop = (lbl) => (raw) => {
       if (dragSt[lbl] === 'correct') return;
@@ -265,15 +257,15 @@ export default function L4_Rounding() {
       );
     };
 
-    const renderDragItem = (q, last, palIdx = 0) => (
-      <QItem key={q.lbl} last={last}>
+    const renderDragItem = (q) => (
+      <QItem key={q.lbl} last>
         {q.guided && <GuidedHint>{q.hint}</GuidedHint>}
         <QItemLabel>
           <LblCircle letter={q.lbl}/>
           <NumChip value={q.n}/>
           <span style={{ fontSize:22, fontWeight:700 }}>→</span>
           <DigitDropZone
-            paletteId={`${sid}p${palIdx}`}
+            paletteId={`${sid}_${q.lbl}`}
             digits={drag[q.lbl]||[]}
             zoneState={dragSt[q.lbl]||'default'}
             onDrop={makeDrop(q.lbl)}
@@ -298,16 +290,28 @@ export default function L4_Rounding() {
           {mcqFB[0] && <FeedbackBox type={mcqFB[0].type} message={mcqFB[0].text}/>}
         </QGroup>
 
-        {/* Drag: b & d — one palette for two questions (2-per-palette rule) */}
-        <QGroup title="Questions B & D">
-          <DigitPalette paletteId={`${sid}p0`}/>
-          {dragG0.map((q, qi) => renderDragItem(q, qi === dragG0.length - 1, 0))}
+        {/* Drag: b — own palette + check */}
+        <QGroup title="Question B">
+          <DigitPalette paletteId={`${sid}_b`}/>
+          {renderDragItem(dragQs[0])}
           <CheckButton
-            label="✓ Check B & D"
-            onClick={() => checkDrag(dragG0, 0)}
-            disabled={dragFB[0]?.type === 'correct'}
+            label="✓ Check B"
+            onClick={() => checkDrag(dragQs[0])}
+            disabled={dragFB['b']?.type === 'correct'}
           />
-          {dragFB[0] && <FeedbackBox type={dragFB[0].type} message={dragFB[0].text}/>}
+          {dragFB['b'] && <FeedbackBox type={dragFB['b'].type} message={dragFB['b'].text}/>}
+        </QGroup>
+
+        {/* Drag: d — own palette + check */}
+        <QGroup title="Question D">
+          <DigitPalette paletteId={`${sid}_d`}/>
+          {renderDragItem(dragQs[1])}
+          <CheckButton
+            label="✓ Check D"
+            onClick={() => checkDrag(dragQs[1])}
+            disabled={dragFB['d']?.type === 'correct'}
+          />
+          {dragFB['d'] && <FeedbackBox type={dragFB['d'].type} message={dragFB['d'].text}/>}
         </QGroup>
 
         {/* MCQ: e */}
@@ -321,16 +325,16 @@ export default function L4_Rounding() {
           {mcqFB[1] && <FeedbackBox type={mcqFB[1].type} message={mcqFB[1].text}/>}
         </QGroup>
 
-        {/* Drag: f — own palette */}
+        {/* Drag: f — own palette + check */}
         <QGroup title="Question F">
-          <DigitPalette paletteId={`${sid}p1`}/>
-          {dragG1.map(q => renderDragItem(q, true, 1))}
+          <DigitPalette paletteId={`${sid}_f`}/>
+          {renderDragItem(dragQs[2])}
           <CheckButton
             label="✓ Check F"
-            onClick={() => checkDrag(dragG1, 1)}
-            disabled={dragFB[1]?.type === 'correct'}
+            onClick={() => checkDrag(dragQs[2])}
+            disabled={dragFB['f']?.type === 'correct'}
           />
-          {dragFB[1] && <FeedbackBox type={dragFB[1].type} message={dragFB[1].text}/>}
+          {dragFB['f'] && <FeedbackBox type={dragFB['f'].type} message={dragFB['f'].text}/>}
         </QGroup>
       </SectionCard>
     );

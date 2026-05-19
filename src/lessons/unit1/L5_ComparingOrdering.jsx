@@ -4,6 +4,7 @@
 //  2 sections:
 //    s1  Order 3 numbers — some smallest-first, some largest-first
 //    s2  Order 4 numbers — always smallest first
+//  Each question has its own check button
 // ============================================================
 
 import React, { useState } from 'react';
@@ -46,8 +47,6 @@ const ORDER4_Q = [
   { lbl:'d', nums:['20.32','20.123','20.09','20.299'],ans:['20.09','20.123','20.299','20.32'] },
 ];
 
-// ── Helpers ──────────────────────────────────────────────────
-function grp(arr,n){ const out=[];for(let i=0;i<arr.length;i+=n)out.push(arr.slice(i,i+n));return out; }
 function sh(a){ const x=[...a]; for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]];} return x; }
 
 // ── Cloud-shaped draggable number chip ───────────────────────
@@ -106,7 +105,7 @@ function OrderDrop({ value, state, onDrop, onClick }) {
       }}
       onClick={() => !locked && value && onClick && onClick()}
       style={{
-        minWidth: 'clamp(52px,13vw,88px)', height: 'clamp(38px,7.5vw,50px)', borderRadius: 10,
+        minWidth: 'clamp(52px,13vw,88px)', height: 'clamp(40px,8vw,52px)', borderRadius: 10,
         border: bd, background: bg, color,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 'clamp(13px,3vw,18px)', fontWeight: 900,
@@ -168,68 +167,52 @@ export default function L5_ComparingOrdering() {
   const s2DropAt = makeDropAt(s2Filled, setS2Filled, 4, s2St);
   const s2Clear  = makeClear(s2Filled, setS2Filled, 4, s2St);
 
-  // ── s1 check ─────────────────────────────────────────────────
-  const checkS1Group = (ga, gi) => {
-    increment(`s1g${gi}`); const att = getAtt(`s1g${gi}`) + 1;
-    let ok = 0;
+  // ── s1 check — per-question ──────────────────────────────────
+  // ok computed BEFORE setState to avoid React async-updater bug (CLAUDE.md)
+  const checkS1Question = (q) => {
+    increment(`s1_${q.lbl}`); const att = getAtt(`s1_${q.lbl}`) + 1;
+    const filled = s1Filled[q.lbl] || [];
+    const ok = q.ans.every((a, i) => filled[i] === a) ? 1 : 0;
     const ns = { ...s1St };
-    ga.forEach(q => {
-      const filled = s1Filled[q.lbl] || [];
-      const correct = q.ans.every((a, i) => filled[i] === a);
-      if (correct) { ns[q.lbl] = 'correct'; ok++; }
-      else {
-        ns[q.lbl] = 'wrong';
-        setTimeout(() => setS1St(p => { const x={...p}; if(x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200);
-      }
-    });
+    if (ok) { ns[q.lbl] = 'correct'; }
+    else {
+      ns[q.lbl] = 'wrong';
+      setTimeout(() => setS1St(p => { const x={...p}; if(x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200);
+    }
     setS1St(ns);
-    const total = ga.length;
     let fb;
-    if (ok === total)  fb = { type:'correct', text:`🎉 ${ok}/${total} correct! Great ordering!` };
+    if (ok)           fb = { type:'correct', text:'🎉 Correct! Great ordering!' };
     else if (att >= 3) fb = { type:'hint',    text:'Keep trying! Line up the decimal points and compare digit by digit from left to right.' };
-    else if (att === 2)fb = { type:'hint',    text:`💡 ${ok}/${total} correct. Start with the leftmost digit that differs between the numbers.` };
-    else               fb = { type:'wrong',   text:`✗ ${ok}/${total} correct. Compare tenths first, then hundredths, then thousandths.` };
-    setS1FB(p => ({ ...p, [gi]: fb }));
-    if (ok === total) {
-      const allG = grp(ORDER3_Q, 2);
-      const correctGroups = Object.values({ ...s1FB, [gi]: fb }).filter(f => f.type === 'correct').length;
-      if (correctGroups >= allG.length)
-        prog.markDone('s1', { correct: ORDER3_Q.length, total: ORDER3_Q.length, attempts: att });
-    }
+    else if (att === 2)fb = { type:'hint',    text:'💡 Start with the leftmost digit that differs between the numbers.' };
+    else               fb = { type:'wrong',   text:'✗ Compare tenths first, then hundredths, then thousandths.' };
+    const newFB = { ...s1FB, [q.lbl]: fb };
+    setS1FB(newFB);
+    if (ok && ORDER3_Q.every(q2 => (newFB[q2.lbl] || {}).type === 'correct') && !prog.done['s1'])
+      prog.markDone('s1', { correct: ORDER3_Q.length, total: ORDER3_Q.length, attempts: att });
   };
 
-  // ── s2 check ─────────────────────────────────────────────────
-  const checkS2Group = (ga, gi) => {
-    increment(`s2g${gi}`); const att = getAtt(`s2g${gi}`) + 1;
-    let ok = 0;
+  // ── s2 check — per-question ──────────────────────────────────
+  const checkS2Question = (q) => {
+    increment(`s2_${q.lbl}`); const att = getAtt(`s2_${q.lbl}`) + 1;
+    const filled = s2Filled[q.lbl] || [];
+    const ok = q.ans.every((a, i) => filled[i] === a) ? 1 : 0;
     const ns = { ...s2St };
-    ga.forEach(q => {
-      const filled = s2Filled[q.lbl] || [];
-      const correct = q.ans.every((a, i) => filled[i] === a);
-      if (correct) { ns[q.lbl] = 'correct'; ok++; }
-      else {
-        ns[q.lbl] = 'wrong';
-        setTimeout(() => setS2St(p => { const x={...p}; if(x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200);
-      }
-    });
-    setS2St(ns);
-    const total = ga.length;
-    let fb;
-    if (ok === total)  fb = { type:'correct', text:`🎉 ${ok}/${total} correct!` };
-    else if (att >= 3) fb = { type:'hint',    text:'Keep trying! Ask your teacher if you need help.' };
-    else if (att === 2)fb = { type:'hint',    text:`💡 ${ok}/${total} correct. Compare place by place — tenths first, then hundredths, then thousandths.` };
-    else               fb = { type:'wrong',   text:`✗ ${ok}/${total} correct. Pad shorter decimals with zeros before comparing (e.g. 7.6 = 7.600).` };
-    setS2FB(p => ({ ...p, [gi]: fb }));
-    if (ok === total) {
-      const allG = grp(ORDER4_Q, 2);
-      const correctGroups = Object.values({ ...s2FB, [gi]: fb }).filter(f => f.type === 'correct').length;
-      if (correctGroups >= allG.length)
-        prog.markDone('s2', { correct: ORDER4_Q.length, total: ORDER4_Q.length, attempts: att });
+    if (ok) { ns[q.lbl] = 'correct'; }
+    else {
+      ns[q.lbl] = 'wrong';
+      setTimeout(() => setS2St(p => { const x={...p}; if(x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200);
     }
+    setS2St(ns);
+    let fb;
+    if (ok)           fb = { type:'correct', text:'🎉 Correct!' };
+    else if (att >= 3) fb = { type:'hint',    text:'Keep trying! Ask your teacher if you need help.' };
+    else if (att === 2)fb = { type:'hint',    text:'💡 Compare place by place — tenths first, then hundredths, then thousandths.' };
+    else               fb = { type:'wrong',   text:'✗ Pad shorter decimals with zeros before comparing (e.g. 7.6 = 7.600).' };
+    const newFB = { ...s2FB, [q.lbl]: fb };
+    setS2FB(newFB);
+    if (ok && ORDER4_Q.every(q2 => (newFB[q2.lbl] || {}).type === 'correct') && !prog.done['s2'])
+      prog.markDone('s2', { correct: ORDER4_Q.length, total: ORDER4_Q.length, attempts: att });
   };
-
-  const s1Groups = grp(ORDER3_Q, 2);
-  const s2Groups = grp(ORDER4_Q, 2);
 
   return (
     <div style={{ fontFamily:'var(--font)' }}>
@@ -253,57 +236,59 @@ export default function L5_ComparingOrdering() {
           tagType="drag" tagLabel="Drag"
           subtitle="Drag the cloud numbers into the boxes in the correct order. ★ Guided a & b"
           score={prog.done['s1']}>
-          {s1Groups.map((ga, gi) => (
-            <QGroup key={gi} title={`Questions ${ga.map(q => q.lbl.toUpperCase()).join(' & ')}`}>
-              {ga.map((q, qi) => {
-                const filled  = s1Filled[q.lbl] || [undefined, undefined, undefined];
-                const usedSet = new Set(filled.filter(Boolean));
-                const sign    = q.order === 'asc' ? '<' : '>';
-                const label   = q.order === 'asc' ? 'smallest → largest' : 'largest → smallest';
-                return (
-                  <QItem key={q.lbl} last={qi === ga.length - 1}>
-                    {q.guided && (
-                      <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:14, color:'var(--amber)', fontWeight:700, marginBottom:10 }}>
-                        💡 {q.hint}
+          {ORDER3_Q.map((q) => {
+            const filled  = s1Filled[q.lbl] || [undefined, undefined, undefined];
+            const usedSet = new Set(filled.filter(Boolean));
+            const sign    = q.order === 'asc' ? '<' : '>';
+            const label   = q.order === 'asc' ? 'smallest → largest' : 'largest → smallest';
+            return (
+              <QGroup key={q.lbl} title={`Question ${q.lbl.toUpperCase()}`}>
+                <QItem last>
+                  {q.guided && (
+                    <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:14, color:'var(--amber)', fontWeight:700, marginBottom:10 }}>
+                      💡 {q.hint}
+                    </div>
+                  )}
+                  <QItemLabel>
+                    <LblCircle letter={q.lbl}/>
+                    <span style={{ fontSize:20, fontWeight:700, color:'var(--muted)' }}>Start with the <strong style={{ color: q.order === 'asc' ? 'var(--blue-dark)' : '#DC2626' }}>{label}</strong></span>
+                  </QItemLabel>
+
+                  {/* Pool row */}
+                  <div style={{ display:'flex', flexWrap:'wrap', gap:12, marginBottom:16, padding:'12px 0' }}>
+                    {pools.s1[q.lbl].map(v => (
+                      <CloudChip key={v} value={v} disabled={usedSet.has(v) || s1St[q.lbl] === 'correct'}/>
+                    ))}
+                  </div>
+
+                  {/* Drop boxes row */}
+                  <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
+                    {[0,1,2].map(idx => (
+                      <div key={idx} style={{ display:'flex', alignItems:'center', gap:8 }}>
+                        <OrderDrop
+                          value={filled[idx]}
+                          state={s1St[q.lbl]}
+                          onDrop={s1DropAt(q.lbl, idx)}
+                          onClick={s1Clear(q.lbl, idx)}
+                        />
+                        {idx < 2 && (
+                          <span style={{ fontSize:'clamp(20px,5vw,24px)', fontWeight:900, color: q.order === 'asc' ? 'var(--blue-dark)' : '#DC2626', lineHeight:1 }}>
+                            {sign}
+                          </span>
+                        )}
                       </div>
-                    )}
-                    <QItemLabel>
-                      <LblCircle letter={q.lbl}/>
-                      <span style={{ fontSize:20, fontWeight:700, color:'var(--muted)' }}>Start with the <strong style={{ color: q.order === 'asc' ? 'var(--blue-dark)' : '#DC2626' }}>{label}</strong></span>
-                    </QItemLabel>
-
-                    {/* Pool row */}
-                    <div style={{ display:'flex', flexWrap:'wrap', gap:12, marginBottom:16, padding:'12px 0' }}>
-                      {pools.s1[q.lbl].map(v => (
-                        <CloudChip key={v} value={v} disabled={usedSet.has(v) || s1St[q.lbl] === 'correct'}/>
-                      ))}
-                    </div>
-
-                    {/* Drop boxes row — each [box + sign] is a flex item so they wrap as a pair */}
-                    <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
-                      {[0,1,2].map(idx => (
-                        <div key={idx} style={{ display:'flex', alignItems:'center', gap:8 }}>
-                          <OrderDrop
-                            value={filled[idx]}
-                            state={s1St[q.lbl]}
-                            onDrop={s1DropAt(q.lbl, idx)}
-                            onClick={s1Clear(q.lbl, idx)}
-                          />
-                          {idx < 2 && (
-                            <span style={{ fontSize:'clamp(16px,4vw,24px)', fontWeight:900, color: q.order === 'asc' ? 'var(--blue-dark)' : '#DC2626', lineHeight:1 }}>
-                              {sign}
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </QItem>
-                );
-              })}
-              <CheckButton label={`✓ Check ${ga.map(q => q.lbl.toUpperCase()).join(' & ')}`} onClick={() => checkS1Group(ga, gi)} disabled={prog.done['s1']}/>
-              {s1FB[gi] && <FeedbackBox type={s1FB[gi].type} message={s1FB[gi].text}/>}
-            </QGroup>
-          ))}
+                    ))}
+                  </div>
+                </QItem>
+                <CheckButton
+                  label={`✓ Check ${q.lbl.toUpperCase()}`}
+                  onClick={() => checkS1Question(q)}
+                  disabled={s1St[q.lbl] === 'correct'}
+                />
+                {s1FB[q.lbl] && <FeedbackBox type={s1FB[q.lbl].type} message={s1FB[q.lbl].text}/>}
+              </QGroup>
+            );
+          })}
         </SectionCard>
 
         {/* ── s2: Order 4 numbers ── */}
@@ -312,55 +297,57 @@ export default function L5_ComparingOrdering() {
           tagType="drag" tagLabel="Drag"
           subtitle="Drag all four clouds into the boxes, smallest on the left. ★ Guided a & b"
           score={prog.done['s2']}>
-          {s2Groups.map((ga, gi) => (
-            <QGroup key={gi} title={`Questions ${ga.map(q => q.lbl.toUpperCase()).join(' & ')}`}>
-              {ga.map((q, qi) => {
-                const filled  = s2Filled[q.lbl] || [undefined, undefined, undefined, undefined];
-                const usedSet = new Set(filled.filter(Boolean));
-                return (
-                  <QItem key={q.lbl} last={qi === ga.length - 1}>
-                    {q.guided && (
-                      <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:14, color:'var(--amber)', fontWeight:700, marginBottom:10 }}>
-                        💡 {q.hint}
+          {ORDER4_Q.map((q) => {
+            const filled  = s2Filled[q.lbl] || [undefined, undefined, undefined, undefined];
+            const usedSet = new Set(filled.filter(Boolean));
+            return (
+              <QGroup key={q.lbl} title={`Question ${q.lbl.toUpperCase()}`}>
+                <QItem last>
+                  {q.guided && (
+                    <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:14, color:'var(--amber)', fontWeight:700, marginBottom:10 }}>
+                      💡 {q.hint}
+                    </div>
+                  )}
+                  <QItemLabel>
+                    <LblCircle letter={q.lbl}/>
+                    <span style={{ fontSize:20, fontWeight:700, color:'var(--muted)' }}>
+                      Smallest <strong style={{ color:'var(--blue-dark)' }}>→</strong> Largest
+                    </span>
+                  </QItemLabel>
+
+                  {/* Pool row */}
+                  <div style={{ display:'flex', flexWrap:'wrap', gap:12, marginBottom:16, padding:'12px 0' }}>
+                    {pools.s2[q.lbl].map(v => (
+                      <CloudChip key={v} value={v} disabled={usedSet.has(v) || s2St[q.lbl] === 'correct'}/>
+                    ))}
+                  </div>
+
+                  {/* Drop boxes row */}
+                  <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
+                    {[0,1,2,3].map(idx => (
+                      <div key={idx} style={{ display:'flex', alignItems:'center', gap:8 }}>
+                        <OrderDrop
+                          value={filled[idx]}
+                          state={s2St[q.lbl]}
+                          onDrop={s2DropAt(q.lbl, idx)}
+                          onClick={s2Clear(q.lbl, idx)}
+                        />
+                        {idx < 3 && (
+                          <span style={{ fontSize:'clamp(20px,5vw,24px)', fontWeight:900, color:'var(--blue-dark)', lineHeight:1 }}>{'<'}</span>
+                        )}
                       </div>
-                    )}
-                    <QItemLabel>
-                      <LblCircle letter={q.lbl}/>
-                      <span style={{ fontSize:20, fontWeight:700, color:'var(--muted)' }}>
-                        Smallest <strong style={{ color:'var(--blue-dark)' }}>→</strong> Largest
-                      </span>
-                    </QItemLabel>
-
-                    {/* Pool row */}
-                    <div style={{ display:'flex', flexWrap:'wrap', gap:12, marginBottom:16, padding:'12px 0' }}>
-                      {pools.s2[q.lbl].map(v => (
-                        <CloudChip key={v} value={v} disabled={usedSet.has(v) || s2St[q.lbl] === 'correct'}/>
-                      ))}
-                    </div>
-
-                    {/* Drop boxes row — each [box + sign] is a flex item so they wrap as a pair */}
-                    <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
-                      {[0,1,2,3].map(idx => (
-                        <div key={idx} style={{ display:'flex', alignItems:'center', gap:8 }}>
-                          <OrderDrop
-                            value={filled[idx]}
-                            state={s2St[q.lbl]}
-                            onDrop={s2DropAt(q.lbl, idx)}
-                            onClick={s2Clear(q.lbl, idx)}
-                          />
-                          {idx < 3 && (
-                            <span style={{ fontSize:'clamp(16px,4vw,24px)', fontWeight:900, color:'var(--blue-dark)', lineHeight:1 }}>{'<'}</span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </QItem>
-                );
-              })}
-              <CheckButton label={`✓ Check ${ga.map(q => q.lbl.toUpperCase()).join(' & ')}`} onClick={() => checkS2Group(ga, gi)} disabled={prog.done['s2']}/>
-              {s2FB[gi] && <FeedbackBox type={s2FB[gi].type} message={s2FB[gi].text}/>}
-            </QGroup>
-          ))}
+                    ))}
+                  </div>
+                </QItem>
+                <CheckButton
+                  label={`✓ Check ${q.lbl.toUpperCase()}`}
+                  onClick={() => checkS2Question(q)}
+                  disabled={s2St[q.lbl] === 'correct'}
+                />
+                {s2FB[q.lbl] && <FeedbackBox type={s2FB[q.lbl].type} message={s2FB[q.lbl].text}/>}
+              </QGroup>
+            );
+          })}
         </SectionCard>
 
         {prog.allDone && <Summary message="Well done! You can compare and order decimals using < and > with confidence!" />}

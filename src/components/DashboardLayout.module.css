@@ -319,6 +319,9 @@
   .topBarName { display: none; }
   .topBar { padding: 0 16px; }
   .pageBody { padding: 16px 16px; }
+  .card { padding: 14px; }
+  .cardGrid { gap: 12px; }
+  .statsGrid { gap: 12px; }
 }
 
 /* ── Stats cards row ───────────────────────────────────────── */
@@ -503,6 +506,8 @@
     transition: transform 0.22s ease;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
     z-index: 300; /* above backdrop (z-280) and all page content */
+    width: min(240px, 88vw);
+    min-width: unset;
   }
   .sidebarOpen {
     transform: translateX(0);
@@ -510,4 +515,14 @@
   .mainArea { margin-left: 0; }
   .hamburger { display: inline-flex; }
   .drawerBackdrop.drawerBackdropOpen { display: block; }
+}
+
+/* ── Extra tightening for small phones (≤375px) ────────────── */
+@media (max-width: 375px) {
+  .topBar { gap: 6px; padding: 0 12px; }
+  .topBarRight { gap: 6px; }
+  .bellBtn { width: 36px; height: 36px; }
+  .pageBody { padding: 12px; }
+  .statsGrid { gap: 10px; }
+  .cardGrid { gap: 10px; }
 }

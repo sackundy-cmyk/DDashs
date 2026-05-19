@@ -17,7 +17,6 @@ const STUDENT_NAV = [
   { label: 'My Classes',   icon: 'classes',   path: '/student/classes'      },
   { label: 'Quizzes',      icon: 'reports',   path: '/student/quizzes'      },
   { label: 'Certificates', icon: 'award',     path: '/student/certificates' },
-  { label: 'Whiteboard',   icon: 'pencil',    path: '/student/whiteboard'   },
 ];
 
 const TEACHER_NAV = [
@@ -56,7 +55,6 @@ const NAV_ACCENT = {
   '/student/classes':      '#1CB0F6',
   '/student/quizzes':      '#CE82FF',
   '/student/certificates': '#FFC800',
-  '/student/whiteboard':  '#FF9600',
   '/teacher/dashboard': '#58CC02',
   '/teacher/classes':   '#1CB0F6',
   '/teacher/students':  '#FF9600',
@@ -157,7 +155,6 @@ const PAGE_TITLES = {
   '/student/classes':      'My Classes',
   '/student/quizzes':      'Quizzes',
   '/student/certificates': 'Certificates',
-  '/student/whiteboard':  'Whiteboard',
   '/teacher/dashboard': 'Dashboard',
   '/teacher/classes':   'Classes',
   '/teacher/students':  'Students',

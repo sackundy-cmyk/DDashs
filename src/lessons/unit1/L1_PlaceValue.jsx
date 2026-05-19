@@ -1,7 +1,7 @@
 // ============================================================
 //  lessons/unit1/L1_PlaceValue.jsx
 //  Unit 1 · Lesson 1: Place Value in Decimals
-//  Platform rule: every palette + check button covers ≤ 2 questions.
+//  Platform rule: each digit-input question has its own palette + check button.
 // ============================================================
 
 import React from 'react';
@@ -236,13 +236,10 @@ export default function L1_PlaceValue() {
   const v7St  = state.v7St  || {}, setV7St  = setField('v7St');
   const v7FB  = state.v7FB  || {}, setV7FB  = setField('v7FB');
 
-  // ── Groups (2 questions per palette/check button) ─────────
+  // ── Groups — MCQ sections keep 2-per-group; digit sections use 1-per-question
   const s3Groups = grp(WORDS_Q, 2);
-  const s4Groups = grp(FRAC_Q, 2);      // 4 groups of 2
-  const s5Groups = grp(WORDS_TO_DEC, 2); // 7 groups of 2
   const v7Groups = grp(VALUE_QS, 2);    // 4 groups of 2
-  // s2: pairs within each line
-  const totalS2Pairs = LINES.reduce((s, l) => s + Math.ceil(l.arrows.length / 2), 0);
+  const totalS2Arrows = LINES.reduce((s, l) => s + l.arrows.length, 0);
 
   // ── s1 ────────────────────────────────────────────────────
   const checkPVTable = () => {
@@ -278,32 +275,25 @@ export default function L1_PlaceValue() {
     if (s2St[lbl] === 'correct') return;
     setS2D(p => { const a = [...(p[lbl] || [])]; a.splice(idx, 1); return { ...p, [lbl]: a }; });
   };
-  const checkS2Pair = (line, pair, pi) => {
-    const pairId = `${line.lineId}_p${pi}`;
-    increment(`s2${pairId}`); const att = getAtt(`s2${pairId}`) + 1;
-    let ok = 0; const ns = { ...s2St };
-    pair.forEach(a => {
-      const got = (s2D[a.lbl] || []).join('');
-      if (got === a.ans.join('')) { ns[a.lbl] = 'correct'; ok++; }
-      else {
-        ns[a.lbl] = 'wrong';
-        setTimeout(() => setS2St(p => { const x = { ...p }; if (x[a.lbl] === 'wrong') delete x[a.lbl]; return x; }), 1200);
-      }
-    });
+  const checkS2Arrow = (a) => {
+    const key = `s2_${a.lbl}`;
+    increment(key); const att = getAtt(key) + 1;
+    const got = (s2D[a.lbl] || []).join('');
+    const correct = got === a.ans.join('');
+    const ns = { ...s2St, [a.lbl]: correct ? 'correct' : 'wrong' };
+    if (!correct) setTimeout(() => setS2St(p => { const x = { ...p }; if (x[a.lbl] === 'wrong') delete x[a.lbl]; return x; }), 1200);
     setS2St(ns);
-    const total = pair.length;
     let fb;
-    if (ok === total)   fb = { type: 'correct', text: `🎉 ${ok}/${total} correct!` };
-    else if (att >= 3)  fb = { type: 'hint',    text: 'Keep trying! Ask your teacher if you need help.' };
-    else if (att === 2) fb = { type: 'hint',    text: `💡 ${ok}/${total} correct. Count small ticks carefully from the nearest whole number.` };
-    else                fb = { type: 'wrong',   text: `✗ ${ok}/${total} correct. Large tick = 0.1 · Small tick = 0.01.` };
-    setS2FB(p => ({ ...p, [pairId]: fb }));
-    if (ok === total) {
-      const newFB = { ...s2FB, [pairId]: fb };
-      const correctPairs = Object.values(newFB).filter(f => f.type === 'correct').length;
-      if (correctPairs >= totalS2Pairs) {
-        const totalQs = LINES.reduce((s, l) => s + l.arrows.length, 0);
-        prog.markDone('s2', { correct: totalQs, total: totalQs, attempts: att });
+    if (correct)       fb = { type: 'correct', text: '🎉 Correct!' };
+    else if (att >= 3) fb = { type: 'hint',    text: 'Keep trying! Ask your teacher if you need help.' };
+    else if (att === 2) fb = { type: 'hint',   text: '💡 Count small ticks carefully from the nearest whole number.' };
+    else               fb = { type: 'wrong',   text: '✗ Large tick = 0.1 · Small tick = 0.01.' };
+    setS2FB(p => ({ ...p, [a.lbl]: fb }));
+    if (correct) {
+      const newSt = { ...s2St, [a.lbl]: 'correct' };
+      const correctCount = LINES.reduce((sum, l) => sum + l.arrows.filter(ar => newSt[ar.lbl] === 'correct').length, 0);
+      if (correctCount >= totalS2Arrows) {
+        prog.markDone('s2', { correct: totalS2Arrows, total: totalS2Arrows, attempts: att });
       }
     }
   };
@@ -344,28 +334,25 @@ export default function L1_PlaceValue() {
     if (s4St[lbl] === 'correct') return;
     setS4D(p => { const a = [...(p[lbl] || [])]; a.splice(idx, 1); return { ...p, [lbl]: a }; });
   };
-  const checkS4Group = (ga, gi) => {
-    increment(`s4g${gi}`); const att = getAtt(`s4g${gi}`) + 1;
-    let ok = 0; const ns = { ...s4St };
-    ga.forEach(q => {
-      const got = (s4D[q.lbl] || []).join('');
-      if (got === q.ans.join('')) { ns[q.lbl] = 'correct'; ok++; }
-      else {
-        ns[q.lbl] = 'wrong';
-        setTimeout(() => setS4St(p => { const x = { ...p }; if (x[q.lbl] === 'wrong') delete x[q.lbl]; return x; }), 1200);
-      }
-    });
+  const checkS4Question = q => {
+    const key = `s4_${q.lbl}`;
+    increment(key); const att = getAtt(key) + 1;
+    const got = (s4D[q.lbl] || []).join('');
+    const correct = got === q.ans.join('');
+    const ns = { ...s4St, [q.lbl]: correct ? 'correct' : 'wrong' };
+    if (!correct) setTimeout(() => setS4St(p => { const x = { ...p }; if (x[q.lbl] === 'wrong') delete x[q.lbl]; return x; }), 1200);
     setS4St(ns);
-    const total = ga.length;
     let fb;
-    if (ok === total)   fb = { type: 'correct', text: `🎉 ${ok}/${total} correct!` };
-    else if (att >= 3)  fb = { type: 'hint',    text: 'Keep trying! Ask your teacher if you need help.' };
-    else if (att === 2) fb = { type: 'hint',    text: `💡 ${ok}/${total} correct. /10 → 1 dp · /100 → 2 dp. Pad zeros if needed (e.g. 9/100 = 0.09).` };
-    else                fb = { type: 'wrong',   text: `✗ ${ok}/${total} correct. Match the denominator to the number of decimal places.` };
-    setS4FB(p => ({ ...p, [gi]: fb }));
-    if (ok === total) {
-      const correctGroups = Object.values({ ...s4FB, [gi]: fb }).filter(f => f.type === 'correct').length;
-      if (correctGroups >= s4Groups.length) prog.markDone('s4', { correct: FRAC_Q.length, total: FRAC_Q.length, attempts: att });
+    if (correct)       fb = { type: 'correct', text: '🎉 Correct!' };
+    else if (att >= 3) fb = { type: 'hint',    text: 'Keep trying! Ask your teacher if you need help.' };
+    else if (att === 2) fb = { type: 'hint',   text: '💡 /10 → 1 dp · /100 → 2 dp. Pad zeros if needed (e.g. 9/100 = 0.09).' };
+    else               fb = { type: 'wrong',   text: '✗ Match the denominator to the number of decimal places.' };
+    setS4FB(p => ({ ...p, [q.lbl]: fb }));
+    if (correct) {
+      const newSt = { ...s4St, [q.lbl]: 'correct' };
+      if (FRAC_Q.every(fq => newSt[fq.lbl] === 'correct')) {
+        prog.markDone('s4', { correct: FRAC_Q.length, total: FRAC_Q.length, attempts: att });
+      }
     }
   };
 
@@ -382,28 +369,25 @@ export default function L1_PlaceValue() {
     if (s5St[lbl] === 'correct') return;
     setS5D(p => { const a = [...(p[lbl] || [])]; a.splice(idx, 1); return { ...p, [lbl]: a }; });
   };
-  const checkS5Group = (ga, gi) => {
-    increment(`s5g${gi}`); const att = getAtt(`s5g${gi}`) + 1;
-    let ok = 0; const ns = { ...s5St };
-    ga.forEach(q => {
-      const got = (s5D[q.lbl] || []).join('');
-      if (got === q.ans.join('')) { ns[q.lbl] = 'correct'; ok++; }
-      else {
-        ns[q.lbl] = 'wrong';
-        setTimeout(() => setS5St(p => { const x = { ...p }; if (x[q.lbl] === 'wrong') delete x[q.lbl]; return x; }), 1200);
-      }
-    });
+  const checkS5Question = q => {
+    const key = `s5_${q.lbl}`;
+    increment(key); const att = getAtt(key) + 1;
+    const got = (s5D[q.lbl] || []).join('');
+    const correct = got === q.ans.join('');
+    const ns = { ...s5St, [q.lbl]: correct ? 'correct' : 'wrong' };
+    if (!correct) setTimeout(() => setS5St(p => { const x = { ...p }; if (x[q.lbl] === 'wrong') delete x[q.lbl]; return x; }), 1200);
     setS5St(ns);
-    const total = ga.length;
     let fb;
-    if (ok === total)   fb = { type: 'correct', text: `🎉 ${ok}/${total} correct!` };
-    else if (att >= 3)  fb = { type: 'hint',    text: 'Keep trying! Ask your teacher if you need help.' };
-    else if (att === 2) fb = { type: 'hint',    text: `💡 ${ok}/${total} correct. Drag the decimal point too — "five tenths" = 0 . 5.` };
-    else                fb = { type: 'wrong',   text: '✗ Tenths → 1 dp · Hundredths → 2 dp. Remember to drag the decimal point.' };
-    setS5FB(p => ({ ...p, [gi]: fb }));
-    if (ok === total) {
-      const correctGroups = Object.values({ ...s5FB, [gi]: fb }).filter(f => f.type === 'correct').length;
-      if (correctGroups >= s5Groups.length) prog.markDone('s5', { correct: WORDS_TO_DEC.length, total: WORDS_TO_DEC.length, attempts: att });
+    if (correct)       fb = { type: 'correct', text: '🎉 Correct!' };
+    else if (att >= 3) fb = { type: 'hint',    text: 'Keep trying! Ask your teacher if you need help.' };
+    else if (att === 2) fb = { type: 'hint',   text: '💡 Drag the decimal point too — "five tenths" = 0 . 5.' };
+    else               fb = { type: 'wrong',   text: '✗ Tenths → 1 dp · Hundredths → 2 dp. Remember to drag the decimal point.' };
+    setS5FB(p => ({ ...p, [q.lbl]: fb }));
+    if (correct) {
+      const newSt = { ...s5St, [q.lbl]: 'correct' };
+      if (WORDS_TO_DEC.every(wq => newSt[wq.lbl] === 'correct')) {
+        prog.markDone('s5', { correct: WORDS_TO_DEC.length, total: WORDS_TO_DEC.length, attempts: att });
+      }
     }
   };
 
@@ -483,7 +467,7 @@ export default function L1_PlaceValue() {
                                 }
                               }}
                               title={!locked ? 'Click a digit card first, then click here' : ''}
-                              style={{ width: 40, height: 36, textAlign: 'center', fontWeight: 900, fontSize: 20, border: 'none', background: 'transparent', cursor: locked ? 'default' : 'pointer', color: st === 'correct' ? 'var(--green)' : st === 'wrong' ? 'var(--red)' : 'var(--text)' }}
+                              style={{ width: 'clamp(32px, 9vw, 40px)', height: 'clamp(34px, 9vw, 40px)', textAlign: 'center', fontWeight: 900, fontSize: 20, border: 'none', background: 'transparent', cursor: locked ? 'default' : 'pointer', color: st === 'correct' ? 'var(--green)' : st === 'wrong' ? 'var(--red)' : 'var(--text)' }}
                             />
                           </td>
                         );
@@ -509,38 +493,31 @@ export default function L1_PlaceValue() {
               <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--blue)', marginBottom: 4, paddingLeft: 2, textTransform: 'uppercase', letterSpacing: '.5px' }}>
                 Number Line {li + 1}
               </div>
-              {/* Full ruler shown once — all arrows visible for reference */}
               <NumLine from={line.from} to={line.to} mid={line.mid} arrows={line.arrows} />
-              {/* Pairs of arrows — each pair gets its own palette + check */}
-              {grp(line.arrows, 2).map((pair, pi) => {
-                const pairId = `${line.lineId}_p${pi}`;
-                return (
-                  <QGroup key={pairId} title={`Questions ${pair.map(a => a.lbl).join(' & ')}`}>
-                    <DigitPalette paletteId={pairId} />
-                    {pair.map((a, ai) => (
-                      <QItem key={a.lbl} last={ai === pair.length - 1}>
-                        <QItemLabel>
-                          <LblCircle letter={a.lbl} />
-                          <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--muted)' }}>→</span>
-                          <DigitDropZone
-                            paletteId={pairId}
-                            digits={s2D[a.lbl] || []}
-                            zoneState={s2St[a.lbl] || 'default'}
-                            onDrop={s2Drop(a.lbl)}
-                            onRemove={s2Remove(a.lbl)}
-                          />
-                        </QItemLabel>
-                      </QItem>
-                    ))}
-                    <CheckButton
-                      label={`✓ Check ${pair.map(a => a.lbl).join(' & ')}`}
-                      onClick={() => checkS2Pair(line, pair, pi)}
-                      disabled={prog.done['s2']}
-                    />
-                    {s2FB[pairId] && <FeedbackBox type={s2FB[pairId].type} message={s2FB[pairId].text} />}
-                  </QGroup>
-                );
-              })}
+              {line.arrows.map(a => (
+                <QGroup key={a.lbl} title={`Question ${a.lbl}`}>
+                  <DigitPalette paletteId={`s2_${a.lbl}`} />
+                  <QItem last>
+                    <QItemLabel>
+                      <LblCircle letter={a.lbl} />
+                      <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--muted)' }}>→</span>
+                      <DigitDropZone
+                        paletteId={`s2_${a.lbl}`}
+                        digits={s2D[a.lbl] || []}
+                        zoneState={s2St[a.lbl] || 'default'}
+                        onDrop={s2Drop(a.lbl)}
+                        onRemove={s2Remove(a.lbl)}
+                      />
+                    </QItemLabel>
+                  </QItem>
+                  <CheckButton
+                    label={`✓ Check ${a.lbl}`}
+                    onClick={() => checkS2Arrow(a)}
+                    disabled={prog.done['s2']}
+                  />
+                  {s2FB[a.lbl] && <FeedbackBox type={s2FB[a.lbl].type} message={s2FB[a.lbl].text} />}
+                </QGroup>
+              ))}
             </div>
           ))}
         </SectionCard>
@@ -574,27 +551,25 @@ export default function L1_PlaceValue() {
         <SectionCard badge={4} title="Write these as decimals" tagType="drag" tagLabel="Drag Digits"
           subtitle="Drag all digits and the decimal point to write each mixed number as a decimal."
           score={prog.done['s4']}>
-          {s4Groups.map((ga, gi) => (
-            <QGroup key={gi} title={`Questions ${ga.map(q => q.lbl.toUpperCase()).join(' & ')}`}>
-              <DigitPalette paletteId={`s4pal_${gi}`} />
-              {ga.map((q, qi) => (
-                <QItem key={q.lbl} last={qi === ga.length - 1}>
-                  <QItemLabel>
-                    <LblCircle letter={q.lbl} />
-                    <FracCard whole={q.whole} num={q.num} den={q.den} />
-                    <span style={{ fontSize: 26, fontWeight: 800, margin: '0 6px' }}>=</span>
-                    <DigitDropZone
-                      paletteId={`s4pal_${gi}`}
-                      digits={s4D[q.lbl] || []}
-                      zoneState={s4St[q.lbl] || 'default'}
-                      onDrop={s4Drop(q.lbl)}
-                      onRemove={s4Remove(q.lbl)}
-                    />
-                  </QItemLabel>
-                </QItem>
-              ))}
-              <CheckButton label={`✓ Check ${ga.map(q => q.lbl.toUpperCase()).join(' & ')}`} onClick={() => checkS4Group(ga, gi)} disabled={prog.done['s4']} />
-              {s4FB[gi] && <FeedbackBox type={s4FB[gi].type} message={s4FB[gi].text} />}
+          {FRAC_Q.map(q => (
+            <QGroup key={q.lbl} title={`Question ${q.lbl.toUpperCase()}`}>
+              <DigitPalette paletteId={`s4pal_${q.lbl}`} />
+              <QItem last>
+                <QItemLabel>
+                  <LblCircle letter={q.lbl} />
+                  <FracCard whole={q.whole} num={q.num} den={q.den} />
+                  <span style={{ fontSize: 26, fontWeight: 800, margin: '0 6px' }}>=</span>
+                  <DigitDropZone
+                    paletteId={`s4pal_${q.lbl}`}
+                    digits={s4D[q.lbl] || []}
+                    zoneState={s4St[q.lbl] || 'default'}
+                    onDrop={s4Drop(q.lbl)}
+                    onRemove={s4Remove(q.lbl)}
+                  />
+                </QItemLabel>
+              </QItem>
+              <CheckButton label={`✓ Check ${q.lbl.toUpperCase()}`} onClick={() => checkS4Question(q)} disabled={prog.done['s4']} />
+              {s4FB[q.lbl] && <FeedbackBox type={s4FB[q.lbl].type} message={s4FB[q.lbl].text} />}
             </QGroup>
           ))}
         </SectionCard>
@@ -603,27 +578,25 @@ export default function L1_PlaceValue() {
         <SectionCard badge={5} title="Write these as decimals" tagType="drag" tagLabel="Drag Digits"
           subtitle="Drag all digits and the decimal point to convert each amount into a decimal number."
           score={prog.done['s5']}>
-          {s5Groups.map((ga, gi) => (
-            <QGroup key={gi} title={`Questions ${ga.map(q => q.lbl.toUpperCase()).join(' & ')}`}>
-              <DigitPalette paletteId={`s5pal_${gi}`} />
-              {ga.map((q, qi) => (
-                <QItem key={q.lbl} last={qi === ga.length - 1}>
-                  <QItemLabel>
-                    <LblCircle letter={q.lbl} />
-                    <span style={{ fontSize: 22, fontWeight: 700 }}>{q.words}</span>
-                    <span style={{ fontSize: 22, fontWeight: 800 }}>=</span>
-                    <DigitDropZone
-                      paletteId={`s5pal_${gi}`}
-                      digits={s5D[q.lbl] || []}
-                      zoneState={s5St[q.lbl] || 'default'}
-                      onDrop={s5Drop(q.lbl)}
-                      onRemove={s5Remove(q.lbl)}
-                    />
-                  </QItemLabel>
-                </QItem>
-              ))}
-              <CheckButton label={`✓ Check ${ga.map(q => q.lbl.toUpperCase()).join(' & ')}`} onClick={() => checkS5Group(ga, gi)} disabled={prog.done['s5']} />
-              {s5FB[gi] && <FeedbackBox type={s5FB[gi].type} message={s5FB[gi].text} />}
+          {WORDS_TO_DEC.map(q => (
+            <QGroup key={q.lbl} title={`Question ${q.lbl.toUpperCase()}`}>
+              <DigitPalette paletteId={`s5pal_${q.lbl}`} />
+              <QItem last>
+                <QItemLabel>
+                  <LblCircle letter={q.lbl} />
+                  <span style={{ fontSize: 22, fontWeight: 700 }}>{q.words}</span>
+                  <span style={{ fontSize: 22, fontWeight: 800 }}>=</span>
+                  <DigitDropZone
+                    paletteId={`s5pal_${q.lbl}`}
+                    digits={s5D[q.lbl] || []}
+                    zoneState={s5St[q.lbl] || 'default'}
+                    onDrop={s5Drop(q.lbl)}
+                    onRemove={s5Remove(q.lbl)}
+                  />
+                </QItemLabel>
+              </QItem>
+              <CheckButton label={`✓ Check ${q.lbl.toUpperCase()}`} onClick={() => checkS5Question(q)} disabled={prog.done['s5']} />
+              {s5FB[q.lbl] && <FeedbackBox type={s5FB[q.lbl].type} message={s5FB[q.lbl].text} />}
             </QGroup>
           ))}
         </SectionCard>

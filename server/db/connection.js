@@ -191,20 +191,13 @@ export async function getDb() {
     CREATE INDEX IF NOT EXISTS idx_qa_student ON quiz_attempts(student_id);
   `);
 
-  // ── Additive column migrations (idempotent) ───────────────
+  // ── Column migration helper (used by named migrations below) ─
   const addColumnIfMissing = async (table, column, decl) => {
     const cols = await _db.all(`PRAGMA table_info(${table})`);
     if (!cols.some(c => c.name === column)) {
       await _db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${decl}`);
     }
   };
-  await addColumnIfMissing('users',   'parent_email',            'TEXT');
-  await addColumnIfMissing('users',   'phone',                   'TEXT');
-  await addColumnIfMissing('users',   'weekly_report_enabled',   'INTEGER DEFAULT 1');
-  await addColumnIfMissing('users',   'unsubscribe_token',       'TEXT');
-  await addColumnIfMissing('users',   'deleted_at',              'TEXT NULL');
-  await addColumnIfMissing('classes', 'weekly_report_enabled',   'INTEGER DEFAULT 1');
-  await addColumnIfMissing('classes', 'archived_at',             'TEXT NULL');
 
   // ── Legacy tables (kept for backward compatibility) ───────
   await _db.exec(`
@@ -229,7 +222,37 @@ export async function getDb() {
     );
 
     CREATE INDEX IF NOT EXISTS idx_progress_student ON progress(student_id);
+
+    CREATE TABLE IF NOT EXISTS schema_migrations (
+      id         INTEGER PRIMARY KEY AUTOINCREMENT,
+      name       TEXT UNIQUE NOT NULL,
+      applied_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
   `);
+
+  // ── Safe migration runner — each named migration runs exactly once ──
+  const runMigration = async (name, fn) => {
+    const already = await _db.get('SELECT id FROM schema_migrations WHERE name = ?', name);
+    if (already) return;
+    await fn(_db);
+    await _db.run('INSERT INTO schema_migrations (name) VALUES (?)', name);
+  };
+
+  await runMigration('001_user_columns', async d => {
+    await addColumnIfMissing('users', 'parent_email',          'TEXT');
+    await addColumnIfMissing('users', 'phone',                 'TEXT');
+    await addColumnIfMissing('users', 'weekly_report_enabled', 'INTEGER DEFAULT 1');
+    await addColumnIfMissing('users', 'unsubscribe_token',     'TEXT');
+    await addColumnIfMissing('users', 'deleted_at',            'TEXT NULL');
+  });
+
+  await runMigration('002_class_columns', async d => {
+    await addColumnIfMissing('classes', 'weekly_report_enabled', 'INTEGER DEFAULT 1');
+    await addColumnIfMissing('classes', 'archived_at',           'TEXT NULL');
+  });
+
+  // Future migrations: add runMigration('003_...', async d => { ... }) here.
+  // Each migration runs once and is never repeated — safe on a live database.
 
   return _db;
 }

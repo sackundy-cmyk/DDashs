@@ -148,4 +148,16 @@
     margin: -16px -16px 0;
     width: calc(100% + 32px);
   }
+  .navBtn { padding: 6px 10px; font-size: 12px; }
+}
+
+@media (max-width: 375px) {
+  /* At ≤375px pageBody padding drops to 12px each side */
+  .header {
+    margin: -12px -12px 0;
+    width: calc(100% + 24px);
+    gap: 6px;
+  }
+  .navBtn { padding: 5px 9px; font-size: 11px; }
+  .chip { padding: 5px 12px; font-size: 13px; }
 }

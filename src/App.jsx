@@ -32,7 +32,6 @@ const TeacherQuizResults = lazy(() => import('./pages/teacher/QuizResults.jsx'))
 // ── Whiteboard pages (lazy) ──────────────────────────────────
 const TeacherWhiteboard = lazy(() => import('./pages/teacher/Whiteboard.jsx'));
 const AdminWhiteboard   = lazy(() => import('./pages/admin/Whiteboard.jsx'));
-const StudentWhiteboard = lazy(() => import('./pages/student/Whiteboard.jsx'));
 
 // ── Admin pages (lazy) ───────────────────────────────────────
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard.jsx'));
@@ -179,7 +178,7 @@ export default function App() {
             <ProtectedRoute roles={['student']}><StudentTakeQuiz /></ProtectedRoute>
           } />
           <Route path="/student/whiteboard" element={
-            <ProtectedRoute roles={['student']}><StudentWhiteboard /></ProtectedRoute>
+            <ProtectedRoute roles={['student']}><Navigate to="/student/dashboard" replace /></ProtectedRoute>
           } />
           <Route path="/student/lesson/:unitId/:lessonId" element={
             <ProtectedRoute roles={['student']}><DashboardLayout><LessonRoute /></DashboardLayout></ProtectedRoute>

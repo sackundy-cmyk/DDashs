@@ -161,7 +161,7 @@ export function CheckButton({ label = '✓ Check', onClick, disabled }) {
         color: '#fff', border: 'none', borderRadius: 10,
         padding: '13px 30px', fontSize: 17, fontWeight: 800,
         cursor: disabled ? 'not-allowed' : 'pointer',
-        fontFamily: 'var(--font)', marginTop: 14,
+        fontFamily: 'var(--font)', marginTop: 14, minHeight: 48,
         display: 'inline-flex', alignItems: 'center', gap: 7,
         boxShadow: disabled ? 'none' : '0 3px 12px rgba(217,119,6,0.35)',
         transition: 'background .15s, transform .1s, box-shadow .15s',

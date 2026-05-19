@@ -151,7 +151,7 @@ export function DigitDropZone({ paletteId, digits = [], zoneState = 'default', o
          : displayState === 'wrong' ? 'var(--red)' : '#7B2FA8',
     border: displayState === 'correct' || displayState === 'reveal' ? '2px solid var(--green)'
           : displayState === 'wrong' ? '2px solid var(--red)' : '2px solid #CE82FF',
-    borderRadius: 7, width: 34, height: 38,
+    borderRadius: 7, width: 34, height: 40, minHeight: 40,
     fontSize: 18, fontWeight: 900,
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
     cursor: locked ? 'default' : 'pointer', transition: 'all .15s',

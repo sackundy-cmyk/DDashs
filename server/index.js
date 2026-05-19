@@ -1,6 +1,16 @@
 // ============================================================
 //  server/index.js — Express API server
 // ============================================================
+//
+// BEFORE DEPLOYING A NEW VERSION:
+//   1. Back up the database:  cp ddash.db ddash.db.backup-YYYYMMDD
+//   2. Deploy new code
+//   3. Start the server — schema migrations run automatically on first boot
+//   4. NEVER run seed.js on a live database (it wipes ALL student data)
+//   5. NEVER rename or delete database columns (SQLite has no DROP COLUMN)
+//   6. Only append new lessons to curriculum.json (never reorder existing ones)
+//   7. When adding lessons to a class via admin UI: always append, never reorder
+//      (reordering makes existing lesson_progress records point to wrong lessons)
 
 import 'dotenv/config';
 import express from 'express';

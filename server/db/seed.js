@@ -2,6 +2,13 @@
 //  server/db/seed.js — minimal seed for real-world use
 //  Run: node server/db/seed.js
 //
+//  ⚠️  DEVELOPMENT ONLY — WIPES ALL DATA
+//  Never run this on a production server.
+//  It deletes ALL users, classes, student progress, certificates,
+//  quiz attempts, drafts, and notes — everything is destroyed.
+//  To safely add new lessons to a live database: use the Admin UI
+//  → Classes → select class → Add Lesson (append only, never reorder).
+//
 //  Seeds only:
 //    - 1 admin    (admin1@ddash.com)
 //    - 1 teacher  (teacher1@ddash.com)

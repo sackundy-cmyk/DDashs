@@ -172,7 +172,7 @@ function SeqDrop({ value, state, onDrop, onClick }) {
       onDrop={e => { e.preventDefault(); setOver(false); const d = e.dataTransfer.getData('text/plain'); if (d.startsWith('seq:')) onDrop(d.slice(4)); }}
       onClick={onClick}
       style={{
-        minWidth: 100, height: 54, borderRadius: 9,
+        minWidth: 'clamp(82px, 22vw, 100px)', height: 54, borderRadius: 9,
         border: bd, background: bg, color,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 20, fontWeight: 800, padding: '0 10px',
@@ -257,27 +257,23 @@ export default function L2_Thousandths() {
     if (s2St[lbl] === 'correct') return;
     setS2D(p => { const a=[...(p[lbl]||[])]; a.splice(idx,1); return { ...p, [lbl]:a }; });
   };
-  const checkS2Group = (ga, gi) => {
-    increment(`s2g${gi}`); const att = getAtt(`s2g${gi}`) + 1;
-    let ok = 0; const ns = { ...s2St };
-    ga.forEach(q => {
-      const got = (s2D[q.lbl]||[]).join('');
-      if (got === q.ans) { ns[q.lbl] = 'correct'; ok++; }
-      else { ns[q.lbl] = 'wrong'; setTimeout(() => setS2St(p => { const x={...p}; if (x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200); }
-    });
+  const checkS2Question = q => {
+    const key = `s2_${q.lbl}`;
+    increment(key); const att = getAtt(key) + 1;
+    const got = (s2D[q.lbl] || []).join('');
+    const correct = got === q.ans;
+    const ns = { ...s2St, [q.lbl]: correct ? 'correct' : 'wrong' };
+    if (!correct) setTimeout(() => setS2St(p => { const x={...p}; if (x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200);
     setS2St(ns);
-    const total = ga.length;
     let fb;
-    if (ok === total)  fb = { type:'correct', text:`🎉 ${ok}/${total} correct! Remember /1000 → 3 decimal places.` };
+    if (correct)       fb = { type:'correct', text:'🎉 Correct! Remember /1000 → 3 decimal places.' };
     else if (att >= 3) fb = { type:'hint',    text:'Keep trying! Ask your teacher if you need help.' };
-    else if (att === 2)fb = { type:'hint',    text:`💡 ${ok}/${total} correct. Count digits after the dot — must always be exactly 3.` };
-    else               fb = { type:'wrong',   text:`✗ ${ok}/${total} correct. Pad with leading zeros so there are 3 digits after the point.` };
-    setS2FB(p => ({ ...p, [gi]: fb }));
-
-    if (ok === total) {
-      const allG = grp(FRAC_Q, 2);
-      const correctGroups = Object.values({ ...s2FB, [gi]: fb }).filter(f => f.type === 'correct').length;
-      if (correctGroups >= allG.length) {
+    else if (att === 2) fb = { type:'hint',   text:'💡 Count digits after the dot — must always be exactly 3.' };
+    else               fb = { type:'wrong',   text:'✗ Pad with leading zeros so there are 3 digits after the point.' };
+    setS2FB(p => ({ ...p, [q.lbl]: fb }));
+    if (correct) {
+      const newSt = { ...s2St, [q.lbl]: 'correct' };
+      if (FRAC_Q.every(fq => newSt[fq.lbl] === 'correct')) {
         prog.markDone('s2', { correct: FRAC_Q.length, total: FRAC_Q.length, attempts: att });
       }
     }
@@ -300,38 +296,30 @@ export default function L2_Thousandths() {
       return { ...p, [lbl]: a };
     });
   };
-  const checkS3Group = (ga, gi) => {
-    increment(`s3g${gi}`); const att = getAtt(`s3g${gi}`) + 1;
-    let ok = 0; const ns = { ...s3St };
-    ga.forEach(q => {
-      const f = s3Filled[q.lbl] || [];
-      const correct = f[0] === q.next[0] && f[1] === q.next[1];
-      if (correct) { ns[q.lbl] = 'correct'; ok++; }
-      else { ns[q.lbl] = 'wrong'; setTimeout(() => setS3St(p => { const x={...p}; if (x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200); }
-    });
+  const checkS3Question = q => {
+    const key = `s3_${q.lbl}`;
+    increment(key); const att = getAtt(key) + 1;
+    const f = s3Filled[q.lbl] || [];
+    const correct = f[0] === q.next[0] && f[1] === q.next[1];
+    const ns = { ...s3St, [q.lbl]: correct ? 'correct' : 'wrong' };
+    if (!correct) setTimeout(() => setS3St(p => { const x={...p}; if (x[q.lbl]==='wrong') delete x[q.lbl]; return x; }), 1200);
     setS3St(ns);
-    const total = ga.length;
     let fb;
-    if (ok === total)  fb = { type:'correct', text:`🎉 ${ok}/${total} correct! The pattern adds 0.001 each step.` };
+    if (correct)       fb = { type:'correct', text:'🎉 Correct! The pattern adds 0.001 each step.' };
     else if (att >= 3) fb = { type:'hint',    text:'Keep trying! Ask your teacher if you need help.' };
-    else if (att === 2)fb = { type:'hint',    text:`💡 ${ok}/${total} correct. Each step adds 0.001 — watch the last digit, and digits roll over past 9.` };
-    else               fb = { type:'wrong',   text:`✗ ${ok}/${total} correct. Look at the gap between numbers in the sequence.` };
-    setS3FB(p => ({ ...p, [gi]: fb }));
-
-    if (ok === total) {
-      const allG = grp(SEQ_Q, 2);
-      const correctGroups = Object.values({ ...s3FB, [gi]: fb }).filter(f => f.type === 'correct').length;
-      if (correctGroups >= allG.length) {
-        const totalItems = SEQ_Q.length;
-        prog.markDone('s3', { correct: totalItems, total: totalItems, attempts: att });
+    else if (att === 2) fb = { type:'hint',   text:'💡 Each step adds 0.001 — watch the last digit, and digits roll over past 9.' };
+    else               fb = { type:'wrong',   text:'✗ Look at the gap between numbers in the sequence.' };
+    setS3FB(p => ({ ...p, [q.lbl]: fb }));
+    if (correct) {
+      const newSt = { ...s3St, [q.lbl]: 'correct' };
+      if (SEQ_Q.every(sq => newSt[sq.lbl] === 'correct')) {
+        prog.markDone('s3', { correct: SEQ_Q.length, total: SEQ_Q.length, attempts: att });
       }
     }
   };
 
-  // ── Groups ──
+  // ── Groups — s1 MCQ keeps 2-per-group; s2 and s3 use 1-per-question
   const s1Groups = grp(WORDS_Q, 2);
-  const s2Groups = grp(FRAC_Q, 2);
-  const s3Groups = grp(SEQ_Q, 2);
 
   return (
     <div style={{ fontFamily:'var(--font)' }}>
@@ -398,32 +386,30 @@ export default function L2_Thousandths() {
           tagType="drag" tagLabel="Drag Digits"
           subtitle="Write the full decimal — whole number, decimal point, then 3 decimal places. ★ Guided a–c"
           score={prog.done['s2']}>
-          {s2Groups.map((ga, gi) => (
-            <QGroup key={gi} title={`Questions ${ga.map(q=>q.lbl.toUpperCase()).join(' & ')}`}>
-              <DigitPalette paletteId={`s2pal_${gi}`}/>
-              {ga.map((q, qi) => (
-                <QItem key={q.lbl} last={qi === ga.length - 1}>
-                  {q.guided && (
-                    <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:13, color:'var(--amber)', fontWeight:700, marginBottom:8 }}>
-                      💡 {q.hint}
-                    </div>
-                  )}
-                  <QItemLabel>
-                    <LblCircle letter={q.lbl}/>
-                    <FracTile whole={q.whole} num={q.num}/>
-                    <span style={{ fontSize:22, fontWeight:800 }}>=</span>
-                    <DigitDropZone
-                      paletteId={`s2pal_${gi}`}
-                      digits={s2D[q.lbl] || []}
-                      zoneState={s2St[q.lbl] || 'default'}
-                      onDrop={s2Drop(q.lbl)}
-                      onRemove={s2Remove(q.lbl)}
-                    />
-                  </QItemLabel>
-                </QItem>
-              ))}
-              <CheckButton label={`✓ Check ${ga.map(q=>q.lbl.toUpperCase()).join(' & ')}`} onClick={() => checkS2Group(ga, gi)} disabled={prog.done['s2']}/>
-              {s2FB[gi] && <FeedbackBox type={s2FB[gi].type} message={s2FB[gi].text}/>}
+          {FRAC_Q.map(q => (
+            <QGroup key={q.lbl} title={`Question ${q.lbl.toUpperCase()}`}>
+              <DigitPalette paletteId={`s2pal_${q.lbl}`}/>
+              <QItem last>
+                {q.guided && (
+                  <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:13, color:'var(--amber)', fontWeight:700, marginBottom:8 }}>
+                    💡 {q.hint}
+                  </div>
+                )}
+                <QItemLabel>
+                  <LblCircle letter={q.lbl}/>
+                  <FracTile whole={q.whole} num={q.num}/>
+                  <span style={{ fontSize:22, fontWeight:800 }}>=</span>
+                  <DigitDropZone
+                    paletteId={`s2pal_${q.lbl}`}
+                    digits={s2D[q.lbl] || []}
+                    zoneState={s2St[q.lbl] || 'default'}
+                    onDrop={s2Drop(q.lbl)}
+                    onRemove={s2Remove(q.lbl)}
+                  />
+                </QItemLabel>
+              </QItem>
+              <CheckButton label={`✓ Check ${q.lbl.toUpperCase()}`} onClick={() => checkS2Question(q)} disabled={prog.done['s2']}/>
+              {s2FB[q.lbl] && <FeedbackBox type={s2FB[q.lbl].type} message={s2FB[q.lbl].text}/>}
             </QGroup>
           ))}
         </SectionCard>
@@ -434,64 +420,50 @@ export default function L2_Thousandths() {
           tagType="drag" tagLabel="Drag Chips"
           subtitle="Look at the pattern. Drag two chips from the pool to fill the blanks. ★ Guided a & b"
           score={prog.done['s3']}>
-          {s3Groups.map((ga, gi) => (
-            <QGroup key={gi} title={`Questions ${ga.map(q=>q.lbl.toUpperCase()).join(' & ')}`}>
-              {ga.map((q, qi) => {
-                const filled = s3Filled[q.lbl] || [undefined, undefined];
-                const usedSet = new Set(filled.filter(Boolean));
-                return (
-                  <QItem key={q.lbl} last={qi === ga.length - 1}>
-                    {q.guided && (
-                      <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:13, color:'var(--amber)', fontWeight:700, marginBottom:8 }}>
-                        💡 {q.hint}
-                      </div>
-                    )}
-                    <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10 }}>
-                      <LblCircle letter={q.lbl}/>
-                      <span style={{ fontSize:20, fontWeight:800, color:'var(--muted)' }}>Continue the sequence:</span>
+          {SEQ_Q.map(q => {
+            const filled = s3Filled[q.lbl] || [undefined, undefined];
+            const usedSet = new Set(filled.filter(Boolean));
+            return (
+              <QGroup key={q.lbl} title={`Question ${q.lbl.toUpperCase()}`}>
+                <QItem last>
+                  {q.guided && (
+                    <div style={{ background:'var(--amber-bg)', border:'1px solid var(--amber-border)', borderRadius:8, padding:'8px 12px', fontSize:13, color:'var(--amber)', fontWeight:700, marginBottom:8 }}>
+                      💡 {q.hint}
                     </div>
-                    {/* Sequence row — each [num+arrow] is a div so signs wrap with their chip */}
-                    <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', margin:'10px 0' }}>
-                      {q.seq.map((n, i) => (
-                        <div key={i} style={{ display:'flex', alignItems:'center', gap:8 }}>
-                          <div style={{ background:'#EEF4FF', border:'2px solid var(--border)', borderRadius:8, padding:'9px 16px', fontSize:22, fontWeight:800 }}>{n}</div>
-                          <span style={{ fontSize:22, color:'var(--muted)', fontWeight:700 }}>→</span>
-                        </div>
-                      ))}
-                      <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                        <SeqDrop
-                          value={filled[0]}
-                          state={s3St[q.lbl]}
-                          onDrop={s3DropAt(q.lbl, 0)}
-                          onClick={s3Clear(q.lbl, 0)}
-                        />
+                  )}
+                  <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10 }}>
+                    <LblCircle letter={q.lbl}/>
+                    <span style={{ fontSize:20, fontWeight:800, color:'var(--muted)' }}>Continue the sequence:</span>
+                  </div>
+                  <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', margin:'10px 0' }}>
+                    {q.seq.map((n, i) => (
+                      <div key={i} style={{ display:'flex', alignItems:'center', gap:8 }}>
+                        <div style={{ background:'#EEF4FF', border:'2px solid var(--border)', borderRadius:8, padding:'9px 16px', fontSize:22, fontWeight:800 }}>{n}</div>
                         <span style={{ fontSize:22, color:'var(--muted)', fontWeight:700 }}>→</span>
-                        <SeqDrop
-                          value={filled[1]}
-                          state={s3St[q.lbl]}
-                          onDrop={s3DropAt(q.lbl, 1)}
-                          onClick={s3Clear(q.lbl, 1)}
-                        />
                       </div>
+                    ))}
+                    <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                      <SeqDrop value={filled[0]} state={s3St[q.lbl]} onDrop={s3DropAt(q.lbl, 0)} onClick={s3Clear(q.lbl, 0)}/>
+                      <span style={{ fontSize:22, color:'var(--muted)', fontWeight:700 }}>→</span>
+                      <SeqDrop value={filled[1]} state={s3St[q.lbl]} onDrop={s3DropAt(q.lbl, 1)} onClick={s3Clear(q.lbl, 1)}/>
                     </div>
-                    {/* Chip bank */}
-                    <div style={{ background:'var(--blue-light)', border:'1.5px solid var(--border)', borderRadius:10, padding:'10px 12px', marginBottom:6 }}>
-                      <div style={{ fontSize:12, fontWeight:800, color:'var(--blue)', marginBottom:8, textTransform:'uppercase', letterSpacing:'.4px' }}>
-                        🎯 Pool for {q.lbl.toUpperCase()}
-                      </div>
-                      <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
-                        {s3Banks[q.lbl].map(v => (
-                          <SeqChip key={v} value={v} disabled={usedSet.has(v)}/>
-                        ))}
-                      </div>
+                  </div>
+                  <div style={{ background:'var(--blue-light)', border:'1.5px solid var(--border)', borderRadius:10, padding:'10px 12px', marginBottom:6 }}>
+                    <div style={{ fontSize:12, fontWeight:800, color:'var(--blue)', marginBottom:8, textTransform:'uppercase', letterSpacing:'.4px' }}>
+                      🎯 Pool for {q.lbl.toUpperCase()}
                     </div>
-                  </QItem>
-                );
-              })}
-              <CheckButton label={`✓ Check ${ga.map(q=>q.lbl.toUpperCase()).join(' & ')}`} onClick={() => checkS3Group(ga, gi)} disabled={prog.done['s3']}/>
-              {s3FB[gi] && <FeedbackBox type={s3FB[gi].type} message={s3FB[gi].text}/>}
-            </QGroup>
-          ))}
+                    <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
+                      {s3Banks[q.lbl].map(v => (
+                        <SeqChip key={v} value={v} disabled={usedSet.has(v)}/>
+                      ))}
+                    </div>
+                  </div>
+                </QItem>
+                <CheckButton label={`✓ Check ${q.lbl.toUpperCase()}`} onClick={() => checkS3Question(q)} disabled={prog.done['s3']}/>
+                {s3FB[q.lbl] && <FeedbackBox type={s3FB[q.lbl].type} message={s3FB[q.lbl].text}/>}
+              </QGroup>
+            );
+          })}
         </SectionCard>
 
         {prog.allDone && <Summary message="Brilliant! You can read, write and count decimals down to thousandths!" />}
