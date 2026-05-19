@@ -38,5 +38,5 @@ button { font-family: var(--font); }
 /* Mobile adjustments */
 @media (max-width: 600px) {
   body { font-size: 15px; }
-  .page { padding: 16px 12px 60px; }
+  .page { padding: 12px 8px 50px; }
 }

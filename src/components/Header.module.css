@@ -143,19 +143,19 @@
 }
 
 @media (max-width: 480px) {
-  /* At ≤480px pageBody padding drops to 16px each side */
+  /* At ≤480px pageBody padding drops to 10px each side */
   .header {
-    margin: -16px -16px 0;
-    width: calc(100% + 32px);
+    margin: -12px -10px 0;
+    width: calc(100% + 20px);
   }
   .navBtn { padding: 6px 10px; font-size: 12px; }
 }
 
 @media (max-width: 375px) {
-  /* At ≤375px pageBody padding drops to 12px each side */
+  /* At ≤375px pageBody padding drops to 8px each side */
   .header {
-    margin: -12px -12px 0;
-    width: calc(100% + 24px);
+    margin: -8px -8px 0;
+    width: calc(100% + 16px);
     gap: 6px;
   }
   .navBtn { padding: 5px 9px; font-size: 11px; }
