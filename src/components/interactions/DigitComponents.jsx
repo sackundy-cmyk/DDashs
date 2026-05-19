@@ -4,7 +4,7 @@
 //  No drag-and-drop for digit cards.
 // ============================================================
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { digitPickState } from './digitPickState.js';
 
 // Inject pulse-border keyframe animation once into the document
@@ -126,11 +126,16 @@ const ZONE_BG = {
  */
 export function DigitDropZone({ paletteId, digits = [], zoneState = 'default', onDrop, onRemove }) {
   const [selected, setSelected] = useState(() => digitPickState.get(paletteId));
+  const [pendingRemove, setPendingRemove] = useState(null);
+  const lastTapRef  = useRef({ idx: -1, time: 0 });
+  const tapTimerRef = useRef(null);
 
   useEffect(() => {
     setSelected(digitPickState.get(paletteId));
     return digitPickState.sub(paletteId, setSelected);
   }, [paletteId]);
+
+  useEffect(() => () => { clearTimeout(tapTimerRef.current); }, []);
 
   const locked = ['correct', 'reveal'].includes(zoneState);
   const displayState = locked
@@ -142,6 +147,27 @@ export function DigitDropZone({ paletteId, digits = [], zoneState = 'default', o
   const handleZoneClick = () => {
     if (locked || selected === null) return;
     if (onDrop) onDrop('digit:' + selected);
+  };
+
+  const handleDigitTap = (e, i) => {
+    e.stopPropagation();
+    if (locked || !onRemove) return;
+    const now = Date.now();
+    const { idx, time } = lastTapRef.current;
+    if (idx === i && now - time < 400) {
+      clearTimeout(tapTimerRef.current);
+      lastTapRef.current = { idx: -1, time: 0 };
+      setPendingRemove(null);
+      onRemove(i);
+    } else {
+      clearTimeout(tapTimerRef.current);
+      lastTapRef.current = { idx: i, time: now };
+      setPendingRemove(i);
+      tapTimerRef.current = setTimeout(() => {
+        lastTapRef.current = { idx: -1, time: 0 };
+        setPendingRemove(null);
+      }, 450);
+    }
   };
 
   const digitStyle = {
@@ -180,9 +206,17 @@ export function DigitDropZone({ paletteId, digits = [], zoneState = 'default', o
         digits.map((d, i) => (
           <div
             key={i}
-            onClick={(e) => { e.stopPropagation(); if (!locked && onRemove) onRemove(i); }}
-            style={digitStyle}
-            title={locked ? '' : 'Click to remove'}
+            onClick={(e) => handleDigitTap(e, i)}
+            style={{
+              ...digitStyle,
+              ...(pendingRemove === i && !locked ? {
+                background: 'rgba(217,119,6,0.18)',
+                border: '2px solid #D97706',
+                color: '#B45309',
+                transform: 'scale(0.93)',
+              } : {}),
+            }}
+            title={locked ? '' : 'Double-tap to remove'}
           >
             {d}
           </div>
